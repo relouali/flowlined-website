@@ -166,11 +166,11 @@ export default function CaseStudySection() {
                 <span className="case-study-stat-value text-[64px] lg:text-[80px]">
                   {stat.value}
                 </span>
-                <span className="text-sm font-light leading-[1.45] text-black">
+                <span className="text-base font-light leading-[1.45] text-black">
                   {stat.label}
                 </span>
               </div>
-              <p className="text-sm font-extralight leading-[1.45] text-black/50">
+              <p className="text-base font-extralight leading-[1.45] text-black/50">
                 {stat.description}
               </p>
             </li>
