@@ -1,0 +1,57 @@
+.case-study-section {
+  color: #000000;
+}
+
+/* Big stat numbers (70%, 99,99%, 3x, 100%). Uses Vercel's Geist Pixel Line
+   variant, self-hosted via the `geist` npm package. The font itself already
+   declares Geist Mono / monospace fallbacks, so the cascade stays safe. */
+.case-study-stat-value {
+  font-family: var(--font-geist-pixel-line), var(--font-geist-mono),
+    ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.05;
+  color: #000000;
+}
+
+
+/* Right column visual. Two-layer filter that mirrors the Figma cover
+   treatment: the image sits over a black base with brightness/contrast
+   pulled down for cinematic depth, and a #001A23 overlay on top uses
+   mix-blend-mode: color to force a unified teal cast on whatever colors
+   the photo contains. Result: moody, monochrome-teal portrait that reads
+   as the same visual family as the rest of the brand. */
+.case-study-visual {
+  position: relative;
+  background-color: #000000;
+  overflow: hidden;
+}
+
+.case-study-visual__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.78) contrast(1.05);
+  z-index: 1;
+}
+
+.case-study-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #001a23;
+  mix-blend-mode: color;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Vertical hairline divider between the two columns — subtle anchor so
+   the white-on-white layout reads as two deliberate regions. */
+@media (min-width: 1024px) {
+  .case-study-divider {
+    background-color: rgba(0, 26, 35, 0.06);
+    width: 1px;
+  }
+}

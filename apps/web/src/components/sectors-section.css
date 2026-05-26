@@ -1,0 +1,75 @@
+.sectors-section {
+  color: #ffffff;
+}
+
+/* Left column slides — cross-fade between sector details. */
+.sectors-detail {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Slides stack at the same position. We no longer cross-fade via opacity
+   because the masked SplitText lines (yPercent: 110 → 0) handle the
+   reveal AND the exit (inactive slides have their lines parked below the
+   line-masks, so nothing is visible). Removing the opacity transition
+   prevents double-text overlap during sector changes.
+
+   The slide is anchored to the parent's vertical center via
+   `top: 50%; translateY(-50%)` (instead of `inset: 0`) so the content's
+   own vertical mid-line lands on the same horizontal line as the
+   looping-words bracket on the right — independent of how the grid row
+   sizes itself. */
+.sectors-detail__slide {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 0 16px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.sectors-detail__slide[data-state="active"] {
+  pointer-events: auto;
+}
+
+/* Partner logo wall wrapper — caps width and applies the section opacity. */
+.sectors-logos-wrap {
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0.85;
+}
+
+/* Two-column picker grid — vertical hairline divider down the center on
+   desktop, mirroring the framed look of the logo wall below. The divider
+   is rendered as a pseudo-element so it sits perfectly between the two
+   columns regardless of internal content sizing. */
+.sectors-picker-grid {
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .sectors-picker-grid::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.07);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+}
+
+/* Reduced-motion: MaskTextReveal still works (lines just snap into place
+   instead of animating). No transition rules needed here anymore. */

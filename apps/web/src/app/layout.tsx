@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import { GeistPixelLine } from "geist/font/pixel";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "../index.css";
-import Header from "@/components/header";
+import GlobalParallax from "@/components/global-parallax";
+import LocomotiveScrollProvider from "@/components/locomotive-scroll-provider";
+import ProgressNav from "@/components/progress-nav";
 import Providers from "@/components/providers";
 
 const geistSans = Geist({
@@ -15,9 +18,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Geist Pixel (Line variant) — used for the case-study KPI numbers
+// (70%, 99,99%, 3x, 100%). The package self-hosts the woff2 file and
+// exposes the `--font-geist-pixel-line` CSS variable used by
+// case-study-section.css. See https://vercel.com/blog/introducing-geist-pixel
+
 export const metadata: Metadata = {
-  title: "flowlined-web",
-  description: "flowlined-web",
+  title: "Flowlined",
+  description: "Verticale software voor dossierwerk.",
 };
 
 export default function RootLayout({
@@ -26,13 +34,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="nl" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${GeistPixelLine.variable} ${geistSans.className} antialiased`}
+      >
         <Providers>
-          <div className="grid grid-rows-[auto_1fr] h-svh">
-            <Header />
+          <LocomotiveScrollProvider>
+            <ProgressNav />
+            {/* Hooks GSAP scroll-driven parallax to every element marked
+                with data-parallax="trigger" (see init-global-parallax.ts).
+                Must live inside <LocomotiveScrollProvider> so it can wait
+                for Locomotive's scrollerProxy to be initialised before
+                wiring ScrollTrigger animations. */}
+            <GlobalParallax />
             {children}
-          </div>
+          </LocomotiveScrollProvider>
         </Providers>
       </body>
     </html>

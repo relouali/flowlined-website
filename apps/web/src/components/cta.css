@@ -1,0 +1,121 @@
+.btn-icon-link {
+  flex-shrink: 0;
+  color: #ffffff;
+  line-height: 1.2;
+  text-decoration: none;
+  display: flex;
+}
+
+.btn-icon-content {
+  grid-column-gap: 0.5em;
+  grid-row-gap: 0.5em;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  justify-content: flex-start;
+  align-items: center;
+  height: 3.5em;
+  padding: 0 1.25em;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+
+.btn-icon-content__text {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  --text-duplicate-distance: 1.5em;
+  text-shadow: 0 var(--text-duplicate-distance) currentColor;
+}
+
+.btn-icon-content__mask {
+  z-index: 1;
+  flex: none;
+  justify-content: flex-start;
+  align-items: center;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-icon-content__bg {
+  z-index: 0;
+  background-color: #001a23;
+  width: 120%;
+  height: 100%;
+  position: absolute;
+  bottom: 0;
+  left: -10%;
+  transform: translate(0, 175%) rotate(15deg);
+}
+
+.btn-icon-icon {
+  z-index: 1;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+  width: 1.5em;
+  height: 1.5em;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-icon-icon__bg {
+  background-color: #ffffff;
+  border-radius: 0.125em;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.btn-icon-icon__wrap {
+  color: #001a23;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-icon-icon__list {
+  flex: none;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  display: flex;
+}
+
+.btn-icon-icon__arrow {
+  flex: none;
+  box-sizing: border-box;
+  width: 1.5em;
+  height: 100%;
+  padding: 0.2em;
+}
+
+[data-button-anim-target] {
+  transition: transform 0.525s cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-icon-link:hover .btn-icon-content__text {
+    transform: translate(0, calc(-1 * var(--text-duplicate-distance)));
+  }
+
+  .btn-icon-link:hover .btn-icon-icon__bg {
+    transform: rotate(90deg);
+  }
+
+  .btn-icon-link:hover .btn-icon-icon__arrow {
+    transform: translate(200%, 0);
+  }
+
+  .btn-icon-link:hover .btn-icon-content__bg {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}

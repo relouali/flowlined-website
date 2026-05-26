@@ -1,0 +1,163 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+import HighlightText from "@/components/highlight-text";
+import LogoWall, { type LogoWallLogo } from "@/components/logo-wall";
+import LoopingWords from "@/components/looping-words";
+import MaskTextReveal from "@/components/mask-text-reveal";
+
+import "./sectors-section.css";
+
+type Sector = {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+};
+
+const SECTORS: ReadonlyArray<Sector> = [
+  {
+    id: "zorg",
+    title: "Zorg",
+    subtitle: "Beoordelingen, intake en zorgplanning",
+    description:
+      "Zorgprofessionals werken in dossiergedreven processen met veel administratieve overhead. We bouwen producten die de inhoudelijke beoordeling weer centraal zetten.",
+  },
+  {
+    id: "arbeidsrecht",
+    title: "Arbeidsrecht",
+    subtitle: "Beoordelingen, re-integratie, belastbaarheid",
+    description:
+      "Arbeidsdeskundigen besteden uren aan dossierstudie, compleetheidscontroles en rapportopbouw.",
+  },
+  {
+    id: "bouw",
+    title: "Bouw",
+    subtitle: "Calculaties, vergunningen en bouwbesluit",
+    description:
+      "Bouwprofessionals navigeren door complexe regelgeving en projectdocumentatie. We bouwen tooling die het werkproces stroomlijnt zonder maatwerk-overhead.",
+  },
+];
+
+// Partner / domain-expert logos. Files live in
+// `apps/web/public/partners-logos/`. Filenames with spaces or brackets
+// are URL-encoded so they resolve correctly when used as <img src>.
+const PARTNER_LOGOS: ReadonlyArray<LogoWallLogo> = [
+  { src: "/partners-logos/uwv.svg", alt: "UWV" },
+  { src: "/partners-logos/medtronic.svg", alt: "Medtronic" },
+  { src: "/partners-logos/zuidweg-partners.svg", alt: "Zuidweg & Partners" },
+  { src: "/partners-logos/maatwerk-arbeidsavies.svg", alt: "Maatwerk Arbeidsadvies" },
+  { src: "/partners-logos/growspace.svg", alt: "GrowSpace" },
+  { src: "/partners-logos/Manta-roofs.svg", alt: "Manta Roofs" },
+  { src: "/partners-logos/Margolin.svg", alt: "Margolin" },
+  { src: "/partners-logos/bright%206.svg", alt: "Bright 6" },
+  { src: "/partners-logos/6d1ba59d-fd85-4dff-add9-aa74e12acd5c%201%20%5BVectorized%5D.svg", alt: "Partner" },
+];
+
+export default function SectorsSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Stable reference so LoopingWords doesn't re-init on every parent render.
+  const sectorTitles = useMemo(() => SECTORS.map((s) => s.title), []);
+
+  return (
+    <section
+      id="sectoren"
+      data-progress-nav-anchor
+      className="sectors-section relative flex min-h-[100dvh] flex-col overflow-hidden bg-[#000c10] px-16 pt-16 pb-6 lg:pt-24 lg:pb-8"
+    >
+      <div className="mx-auto flex w-full max-w-[1280px] flex-1 flex-col items-center">
+        {/* Top: header + picker. Anchored to the top of the available
+            space (rather than vertically centered) so the headline sits
+            high in the viewport, matching the rhythm of the problem and
+            process sections. No `flex-1` here on purpose — letting this
+            block be its natural height keeps the logo wall close
+            beneath the picker instead of pushing it to the very bottom
+            of the section and creating dead space in between. */}
+        <div className="flex w-full flex-col items-center">
+          {/* Header — same structure & spacing as the problem section */}
+          <div className="flex max-w-3xl flex-col items-center gap-8 text-center">
+            <HighlightText className="text-4xl font-light leading-[1.15] text-white lg:text-[3.25rem] lg:leading-[1.1]">
+              Met wie wij <span className="text-[#cddfed]">bouwen</span>
+            </HighlightText>
+            <p className="max-w-2xl text-lg font-light leading-relaxed text-white/80 lg:text-xl">
+              Flowlined werkt met domeinexperts in sectoren waar het vakkundige
+              oordeel centraal staat. Professionals die hun vak kennen, een
+              markt zien, en er een product van willen maken.
+            </p>
+          </div>
+
+          {/* Two-column picker. `lg:items-center` aligns the details
+              slide and the looping-words picker on the same vertical
+              mid-line so the active sector title sits next to the
+              bracketed word on the right. */}
+          <div className="sectors-picker-grid mt-16 grid w-full grid-cols-1 gap-10 lg:mt-20 lg:grid-cols-2 lg:items-center lg:gap-12">
+            {/* Left column: active sector details — each line is revealed
+                via SplitText (Osmo "MaskText" pattern) every time the
+                sector becomes active, with a stagger between title /
+                subtitle / description. */}
+            <div className="sectors-detail relative min-h-[220px] lg:min-h-[240px]">
+              {SECTORS.map((sector, idx) => {
+                const isActive = idx === activeIndex;
+                return (
+                  <article
+                    key={sector.id}
+                    data-state={isActive ? "active" : "inactive"}
+                    className="sectors-detail__slide"
+                    aria-hidden={!isActive}
+                  >
+                    <div className="flex flex-col items-center gap-3.5">
+                      <MaskTextReveal
+                        as="h3"
+                        active={isActive}
+                        className="text-3xl font-light leading-[1.15] text-white lg:text-[40px] lg:leading-[1.1]"
+                      >
+                        {sector.title}
+                      </MaskTextReveal>
+                      <MaskTextReveal
+                        as="p"
+                        active={isActive}
+                        delay={0.08}
+                        className="text-base font-light leading-relaxed text-white/70"
+                      >
+                        {sector.subtitle}
+                      </MaskTextReveal>
+                    </div>
+                    <MaskTextReveal
+                      as="p"
+                      active={isActive}
+                      delay={0.16}
+                      className="text-base font-light leading-relaxed text-white/70"
+                    >
+                      {sector.description}
+                    </MaskTextReveal>
+                  </article>
+                );
+              })}
+            </div>
+
+            {/* Right column: looping words selector — auto-cycles every
+                ~2 seconds and drives the left column via onChange. */}
+            <div className="flex items-center justify-center">
+              <LoopingWords words={sectorTitles} onChange={setActiveIndex} />
+            </div>
+          </div>
+        </div>
+
+        {/* Partner logo wall — sits a fixed distance below the picker
+            rather than being flex-pushed to the bottom of the section.
+            `mt-auto` would re-introduce the dead space we want to
+            avoid, so we use an explicit (larger) margin to give the
+            picker visible breathing room before the logos start. */}
+        <div className="sectors-logos-wrap mt-28 w-full lg:mt-40">
+          <LogoWall
+            logos={PARTNER_LOGOS}
+            shuffle={false}
+            className="logo-wall--compact"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}

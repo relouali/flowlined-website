@@ -1,0 +1,76 @@
+import HighlightText from "@/components/highlight-text";
+import LottieIcon from "@/components/lottie-icon";
+
+const ITEMS = [
+  {
+    title: "Verspreide kennis",
+    description:
+      "Cruciale expertise zit in mensen, spreadsheets en mailketens. Kwetsbaar en moeilijk toegankelijk op het moment dat het ertoe doet.",
+    lottieSrc: "/icons/spreaded-knowledge.json",
+    iconSize: 48,
+  },
+  {
+    title: "Herhalend voorwerk",
+    description:
+      "Experts besteden tot 40% van hun tijd aan werk dat ze al eerder hebben gedaan. Dezelfde output, steeds opnieuw handmatig opgebouwd.",
+    lottieSrc: "/icons/repeating-work.json",
+    iconSize: 48,
+  },
+  {
+    title: "Wisselende kwaliteit",
+    description:
+      "Zonder gestructureerde systemen levert hetzelfde proces verschillende resultaten op, afhankelijk van wie het uitvoert, wanneer, en onder welke druk.",
+    lottieSrc: "/icons/inconsistent-quality.json",
+    iconSize: 48,
+  },
+  {
+    title: "Schaalbaarheid",
+    description:
+      "Groei betekent meer experts inhuren. Maar onboarding is traag, talent is schaars, en marges krimpen met elke nieuwe aanname.",
+    lottieSrc: "/icons/scale.json",
+    iconSize: 48,
+  },
+] as const;
+
+export default function ProblemSection() {
+  return (
+    <section
+      id="probleem"
+      data-progress-nav-anchor
+      className="flex min-h-[100dvh] items-center bg-[#000c10] px-16 py-24 lg:py-32"
+    >
+      <div className="mx-auto flex w-full max-w-[1280px] flex-col">
+        <div className="flex max-w-3xl flex-col gap-8">
+          <HighlightText className="text-4xl font-light leading-[1.15] text-white lg:text-[3.25rem] lg:leading-[1.1]">
+            Dossierwerk draait op ervaring, niet op systemen.{" "}
+            <span className="text-[#cddfed]">Dat werkt, tot het niet meer schaalt.</span>
+          </HighlightText>
+
+          <p className="max-w-2xl text-lg font-light leading-relaxed text-white/80 lg:text-xl">
+            Beoordelaars, auditors en inspecteurs leveren werk van hoog niveau. Maar de
+            systemen waarop dat werk draait zijn dat niet. Dit zijn de gevolgen:
+          </p>
+
+        </div>
+
+        <div className="mt-20 grid grid-cols-1 gap-12 sm:grid-cols-2 lg:mt-28 lg:grid-cols-4 lg:gap-10">
+          {ITEMS.map((item, index) => (
+            <ProblemItem key={index} item={item} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProblemItem({ item }: { item: (typeof ITEMS)[number] }) {
+  return (
+    <div className="flex flex-col gap-6">
+      <LottieIcon size={item.iconSize} src={item.lottieSrc} />
+      <div className="flex flex-col gap-3 text-white">
+        <h3 className="text-lg font-medium leading-snug">{item.title}</h3>
+        <p className="text-base font-light leading-relaxed text-white/70">{item.description}</p>
+      </div>
+    </div>
+  );
+}

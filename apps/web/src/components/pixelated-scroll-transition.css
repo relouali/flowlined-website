@@ -1,0 +1,43 @@
+.pixelated-scroll-transition {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.pixelated-scroll-transition[data-mode="reveal"] {
+  inset: 0 0 auto;
+}
+
+.pixelated-scroll-transition__panel {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.pixelated-scroll-transition__col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.pixelated-scroll-transition__pixel {
+  aspect-ratio: 1;
+  width: 100%;
+  background-color: currentColor;
+  backface-visibility: hidden;
+  will-change: opacity;
+}
+
+.pixelated-scroll-transition[data-pixel-ratio="2.5/1"] .pixelated-scroll-transition__pixel {
+  aspect-ratio: 2.5 / 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixelated-scroll-transition {
+    display: none;
+  }
+}

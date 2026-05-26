@@ -1,0 +1,1310 @@
+.process-art {
+  isolation: isolate;
+}
+
+.process-art__svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ----- Outer breathing ring ----- */
+
+.process-art__breath {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: process-art-breath 18s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes process-art-breath {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  86% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* ----- Main survey route: slow, organic draw ----- */
+
+.process-art__route {
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: process-art-route 18s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+}
+
+@keyframes process-art-route {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  46% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  86% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+
+/* ----- Survey markers: pop in as route passes ----- */
+
+.process-art__marker {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: process-art-marker 18s ease-out infinite;
+}
+
+.process-art__marker--1 {
+  animation-delay: 2.6s;
+}
+.process-art__marker--2 {
+  animation-delay: 5.8s;
+}
+.process-art__marker--3 {
+  animation-delay: 7s;
+}
+
+@keyframes process-art-marker {
+  0% {
+    opacity: 0;
+    transform: rotate(0deg) scale(0);
+  }
+  2% {
+    opacity: 1;
+    transform: rotate(45deg) scale(1.6);
+  }
+  6% {
+    transform: rotate(90deg) scale(1);
+  }
+  82% {
+    opacity: 1;
+    transform: rotate(90deg) scale(1);
+  }
+  92% {
+    opacity: 0;
+    transform: rotate(90deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(0deg) scale(0);
+  }
+}
+
+/* ----- Destination target: revealed at end of trace ----- */
+
+.process-art__target {
+  opacity: 0;
+  animation: process-art-target 18s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+.process-art__target circle:first-of-type {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes process-art-target {
+  0% {
+    opacity: 0;
+  }
+  44% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  96% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* =================================================
+   Modelleren — decision tree growing into structure
+   ================================================= */
+
+/* ----- Tree branches: draw in level by level ----- */
+
+.process-art__branch {
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: process-art-branch 18s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+}
+
+.process-art__branch--l1-a {
+  animation-delay: 1s;
+}
+.process-art__branch--l1-b {
+  animation-delay: 1s;
+}
+.process-art__branch--l2-a {
+  animation-delay: 3.4s;
+}
+.process-art__branch--l2-b {
+  animation-delay: 3.4s;
+}
+.process-art__branch--l2-c {
+  animation-delay: 3.4s;
+}
+.process-art__branch--l2-d {
+  animation-delay: 3.4s;
+}
+
+@keyframes process-art-branch {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  16% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  82% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+
+/* ----- Tree nodes: pop in with overshoot ----- */
+
+.process-art__tree-node {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: process-art-tree-node 18s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+.process-art__tree-node--root {
+  animation-delay: 0.4s;
+}
+.process-art__tree-node--l1-a {
+  animation-delay: 2.4s;
+}
+.process-art__tree-node--l1-b {
+  animation-delay: 2.6s;
+}
+.process-art__tree-node--l2-a {
+  animation-delay: 4.6s;
+}
+.process-art__tree-node--l2-b {
+  animation-delay: 4.8s;
+}
+.process-art__tree-node--l2-c {
+  animation-delay: 5s;
+}
+.process-art__tree-node--l2-d {
+  animation-delay: 5.2s;
+}
+
+@keyframes process-art-tree-node {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  2% {
+    opacity: 1;
+    transform: scale(1.8);
+  }
+  6% {
+    transform: scale(1);
+  }
+  82% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  92% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+/* =================================================
+   Bouwen — full product narrative (18s cycle):
+     0–50%   App interface builds up
+     50–62%  Document gets dragged into the main area
+     62–67%  Document held while CTA is clicked
+     67–72%  CTA click pulse
+     72–78%  Transform: rows + small doc fade out,
+             document viewer fades in
+     78–92%  Document viewer state held
+     92–96%  Everything fades out together
+     96–100% Pause before next cycle
+   ================================================= */
+
+.process-art__frame {
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: process-art-frame-build 18s cubic-bezier(0.65, 0.05, 0.36, 1)
+    infinite;
+}
+
+@keyframes process-art-frame-build {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  18% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+
+.process-art__header-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: process-art-header-build 18s cubic-bezier(0.65, 0.05, 0.36, 1)
+    infinite;
+}
+
+@keyframes process-art-header-build {
+  0%,
+  18% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  22% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+
+.process-art__sidebar-divider {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: process-art-sidebar-divider-build 18s
+    cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+}
+
+@keyframes process-art-sidebar-divider-build {
+  0%,
+  20% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  22% {
+    opacity: 1;
+  }
+  24% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+
+.process-art__header-btn {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.process-art__header-btn--1 {
+  animation-name: process-art-header-btn-1;
+}
+.process-art__header-btn--2 {
+  animation-name: process-art-header-btn-2;
+}
+.process-art__header-btn--3 {
+  animation-name: process-art-header-btn-3;
+}
+
+@keyframes process-art-header-btn-1 {
+  0%,
+  22% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  24% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  26% {
+    transform: scale(1);
+  }
+  92% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  96% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+@keyframes process-art-header-btn-2 {
+  0%,
+  24% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  26% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  28% {
+    transform: scale(1);
+  }
+  92% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  96% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+@keyframes process-art-header-btn-3 {
+  0%,
+  26% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  28% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  30% {
+    transform: scale(1);
+  }
+  92% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  96% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+.process-art__sidebar-item {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+.process-art__sidebar-item--1 {
+  animation-name: process-art-sidebar-item-1;
+}
+.process-art__sidebar-item--2 {
+  animation-name: process-art-sidebar-item-2;
+}
+.process-art__sidebar-item--3 {
+  animation-name: process-art-sidebar-item-3;
+}
+
+@keyframes process-art-sidebar-item-1 {
+  0%,
+  28% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  32% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-sidebar-item-2 {
+  0%,
+  30% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  32% {
+    opacity: 1;
+  }
+  34% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-sidebar-item-3 {
+  0%,
+  32% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  34% {
+    opacity: 1;
+  }
+  36% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+
+/* Heading + subheading lines: draw in during build, stay visible
+   through the entire cycle (they're the persistent UI chrome,
+   not the content that gets replaced). */
+.process-art__row {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+.process-art__row--1 {
+  animation-name: process-art-row-build-1;
+}
+.process-art__row--2 {
+  animation-name: process-art-row-build-2;
+}
+
+@keyframes process-art-row-build-1 {
+  0%,
+  34% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  36% {
+    opacity: 1;
+  }
+  38% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-row-build-2 {
+  0%,
+  36% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  38% {
+    opacity: 1;
+  }
+  40% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+
+/* Drop zone: dashed container that appears during build, holds
+   while the user drags a document into it, then fades out at the
+   transform phase (replaced by result rows in the same space). */
+.process-art__drop-zone {
+  opacity: 0;
+  animation: process-art-drop-zone 18s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes process-art-drop-zone {
+  0%,
+  38% {
+    opacity: 0;
+  }
+  42% {
+    opacity: 1;
+  }
+  74% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Result rows: hidden until after the click. Fade in (staggered) in
+   the same area where the drop zone was — a state change within the
+   existing layout, not a new container. */
+.process-art__result-row {
+  opacity: 0;
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.process-art__result-row--1 {
+  animation-name: process-art-result-row-1;
+}
+.process-art__result-row--2 {
+  animation-name: process-art-result-row-2;
+}
+.process-art__result-row--3 {
+  animation-name: process-art-result-row-3;
+}
+.process-art__result-row--4 {
+  animation-name: process-art-result-row-4;
+}
+
+@keyframes process-art-result-row-1 {
+  0%,
+  77% {
+    opacity: 0;
+  }
+  79% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  96% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-result-row-2 {
+  0%,
+  78% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  96% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-result-row-3 {
+  0%,
+  79% {
+    opacity: 0;
+  }
+  81% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  96% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-result-row-4 {
+  0%,
+  80% {
+    opacity: 0;
+  }
+  82% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  96% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* CTA: only appears AFTER the document is dropped (around 64%),
+   gets clicked (pressed + bounce) at 70–74%, then holds visible
+   through the result state, and fades with everything else. */
+.process-art__cta {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: process-art-cta-build 18s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+@keyframes process-art-cta-build {
+  0%,
+  62% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  64% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+  68% {
+    transform: scale(1);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  71.5% {
+    transform: scale(0.9);
+  }
+  72.5% {
+    transform: scale(1.08);
+  }
+  74% {
+    transform: scale(1);
+  }
+  92% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  96% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+/* Small document: appears off-canvas, gets dragged into the drop zone,
+   then "drops" with a quick squash + bounce + settle (so it visibly
+   shrinks into its placed size), stays placed while the user "clicks"
+   the CTA, then fades out as the result rows replace it.
+   transform-box: fill-box so scale pivots on the document's own center
+   and translateX percents are relative to the document's own width. */
+.process-art__doc {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: process-art-doc-flow 18s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes process-art-doc-flow {
+  0%,
+  50% {
+    opacity: 0;
+    transform: translateX(-1000%) scale(1);
+  }
+  52% {
+    opacity: 1;
+    transform: translateX(-1000%) scale(1);
+  }
+  62% {
+    opacity: 1;
+    transform: translateX(0%) scale(1);
+  }
+  63.5% {
+    opacity: 1;
+    transform: translateX(0%) scale(0.7);
+  }
+  65% {
+    opacity: 1;
+    transform: translateX(0%) scale(0.92);
+  }
+  67% {
+    opacity: 1;
+    transform: translateX(0%) scale(0.82);
+  }
+  74% {
+    opacity: 1;
+    transform: translateX(0%) scale(0.82);
+  }
+  78% {
+    opacity: 0;
+    transform: translateX(0%) scale(0.82);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(0%) scale(0.82);
+  }
+}
+
+/* =================================================
+   Lanceren — nodes fall, lightning ascends. Six dots
+     drop from the sky and land along an upward
+     trajectory from lower-left to upper-right. Then
+     lightning fires from the bottom dot up the chain,
+     each arriving zap snapping the next node into an
+     active pulse. The final node at the apex flashes
+     biggest — the launch reaching escape velocity.
+   ================================================= */
+
+.process-art__node {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.55, 0.05, 0.5, 1.1);
+}
+
+.process-art__node--1 {
+  animation-name: process-art-node-1;
+}
+.process-art__node--2 {
+  animation-name: process-art-node-2;
+}
+.process-art__node--3 {
+  animation-name: process-art-node-3;
+}
+.process-art__node--4 {
+  animation-name: process-art-node-4;
+}
+.process-art__node--5 {
+  animation-name: process-art-node-5;
+}
+.process-art__node--6 {
+  animation-name: process-art-node-6;
+}
+
+@keyframes process-art-node-1 {
+  0%,
+  4% {
+    transform: translateY(-360px) scale(1);
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  15% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  28% {
+    transform: translateY(0) scale(1);
+  }
+  29% {
+    transform: translateY(0) scale(1.7);
+  }
+  31% {
+    transform: translateY(0) scale(1);
+  }
+  86% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  96%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-node-2 {
+  0%,
+  7% {
+    transform: translateY(-360px) scale(1);
+    opacity: 0;
+  }
+  9% {
+    opacity: 1;
+  }
+  18% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  33% {
+    transform: translateY(0) scale(1);
+  }
+  34% {
+    transform: translateY(0) scale(1.9);
+  }
+  36% {
+    transform: translateY(0) scale(1);
+  }
+  86% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  96%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-node-3 {
+  0%,
+  10% {
+    transform: translateY(-360px) scale(1);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  21% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  37% {
+    transform: translateY(0) scale(1);
+  }
+  38% {
+    transform: translateY(0) scale(1.9);
+  }
+  40% {
+    transform: translateY(0) scale(1);
+  }
+  86% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  96%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-node-4 {
+  0%,
+  13% {
+    transform: translateY(-360px) scale(1);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  24% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  41% {
+    transform: translateY(0) scale(1);
+  }
+  42% {
+    transform: translateY(0) scale(1.9);
+  }
+  44% {
+    transform: translateY(0) scale(1);
+  }
+  86% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  96%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-node-5 {
+  0%,
+  16% {
+    transform: translateY(-360px) scale(1);
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  27% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  45% {
+    transform: translateY(0) scale(1);
+  }
+  46% {
+    transform: translateY(0) scale(1.9);
+  }
+  48% {
+    transform: translateY(0) scale(1);
+  }
+  86% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  96%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-node-6 {
+  0%,
+  19% {
+    transform: translateY(-360px) scale(1);
+    opacity: 0;
+  }
+  21% {
+    opacity: 1;
+  }
+  30% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  49% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(0) scale(2.2);
+  }
+  54% {
+    transform: translateY(0) scale(1);
+  }
+  86% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  96%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+}
+
+.process-art__zap {
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+.process-art__zap--1 {
+  animation-name: process-art-zap-1;
+}
+.process-art__zap--2 {
+  animation-name: process-art-zap-2;
+}
+.process-art__zap--3 {
+  animation-name: process-art-zap-3;
+}
+.process-art__zap--4 {
+  animation-name: process-art-zap-4;
+}
+.process-art__zap--5 {
+  animation-name: process-art-zap-5;
+}
+
+@keyframes process-art-zap-1 {
+  0%,
+  31% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  31.5% {
+    opacity: 1;
+  }
+  33% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  86% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-zap-2 {
+  0%,
+  35% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  35.5% {
+    opacity: 1;
+  }
+  37% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  86% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-zap-3 {
+  0%,
+  39% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  39.5% {
+    opacity: 1;
+  }
+  41% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  86% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-zap-4 {
+  0%,
+  43% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  43.5% {
+    opacity: 1;
+  }
+  45% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  86% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes process-art-zap-5 {
+  0%,
+  47% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  47.5% {
+    opacity: 1;
+  }
+  49% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  86% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process-art__breath,
+  .process-art__route,
+  .process-art__marker,
+  .process-art__target,
+  .process-art__branch,
+  .process-art__tree-node,
+  .process-art__frame,
+  .process-art__header-line,
+  .process-art__sidebar-divider,
+  .process-art__header-btn,
+  .process-art__sidebar-item,
+  .process-art__row,
+  .process-art__cta,
+  .process-art__node,
+  .process-art__zap {
+    animation: none;
+    opacity: 1;
+    stroke-dashoffset: 0;
+    transform: none;
+  }
+  .process-art__doc,
+  .process-art__result-row {
+    animation: none;
+    opacity: 0;
+    transform: none;
+  }
+  .process-art__drop-zone {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .process-art__breath {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+}
