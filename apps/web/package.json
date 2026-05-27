@@ -12,6 +12,7 @@
     "@flowlined-web/ui": "*",
     "babel-plugin-react-compiler": "^1.0.0",
     "dotenv": "^17.2.2",
+    "flubber": "^0.4.2",
     "geist": "^1.7.1",
     "gsap": "^3.15.0",
     "locomotive-scroll": "^5.0.1",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@flowlined-web/config": "*",
     "@tailwindcss/postcss": "^4.1.18",
+    "@types/flubber": "^0.4.0",
     "@types/node": "^20",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
