@@ -37,9 +37,9 @@ export default function ProblemSection() {
     <section
       id="probleem"
       data-progress-nav-anchor
-      className="flex min-h-[100dvh] items-center bg-[#000c10] px-16 py-24 lg:py-32"
+      className="flex min-h-[100dvh] items-center bg-[#0a1418] px-16 py-24 lg:py-32"
     >
-      <div className="mx-auto flex w-full max-w-[1280px] flex-col">
+      <div className="mx-auto flex w-full max-w-[1320px] flex-col">
         <div className="flex max-w-3xl flex-col gap-8">
           <HighlightText className="text-4xl font-light leading-[1.15] text-white lg:text-[3.25rem] lg:leading-[1.1]">
             Dossierwerk draait op ervaring, niet op systemen.{" "}

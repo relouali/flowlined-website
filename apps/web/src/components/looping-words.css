@@ -1,5 +1,5 @@
 /* Faithful port of Osmo's "Looping Words with Selector" CSS. Only the
-   colour values are adapted to the dark section background (#000c10) and
+   colour values are adapted to the dark section background (#0a1418) and
    the font-size is tuned for the sectors picker rather than a hero element.
    Layout, spacing, and gradient stops match Osmo exactly. */
 .looping-words {
@@ -66,10 +66,10 @@
 .looping-words__fade {
   pointer-events: none;
   background-image: linear-gradient(
-    #000c10 5%,
-    rgba(0, 12, 16, 0) 40%,
-    rgba(0, 12, 16, 0) 60%,
-    #000c10 95%
+    #0a1418 5%,
+    rgba(10, 20, 24, 0) 40%,
+    rgba(10, 20, 24, 0) 60%,
+    #0a1418 95%
   );
   width: 100%;
   height: 100%;

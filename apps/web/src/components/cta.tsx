@@ -18,11 +18,48 @@ function ArrowIcon() {
   );
 }
 
+type CtaVariant = "primary" | "secondary";
+
+function ctaVariantClass(variant: CtaVariant) {
+  return variant === "secondary" ? "btn-icon-link--secondary" : null;
+}
+
+function CtaContent({
+  children,
+  showIcon = true,
+}: {
+  children: string;
+  showIcon?: boolean;
+}) {
+  return (
+    <div className="btn-icon-content">
+      <div className="btn-icon-content__mask">
+        <span className="btn-icon-content__text" data-button-anim-target>
+          {children}
+        </span>
+      </div>
+      {showIcon ? (
+        <div className="btn-icon-icon" data-icon-size="normal">
+          <div className="btn-icon-icon__bg" data-button-anim-target />
+          <div className="btn-icon-icon__wrap">
+            <div className="btn-icon-icon__list">
+              <ArrowIcon />
+              <ArrowIcon />
+              <ArrowIcon />
+            </div>
+          </div>
+        </div>
+      ) : null}
+      <div className="btn-icon-content__bg" data-button-anim-target />
+    </div>
+  );
+}
+
 type CtaProps = {
   href: string;
   children: string;
   className?: string;
-  variant?: "primary" | "secondary";
+  variant?: CtaVariant;
   onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 };
 
@@ -35,34 +72,38 @@ export default function Cta({
 }: CtaProps) {
   return (
     <a
-      className={[
-        "btn-icon-link",
-        variant === "secondary" ? "btn-icon-link--secondary" : null,
-        className,
-      ]
+      className={["btn-icon-link", ctaVariantClass(variant), className]
         .filter(Boolean)
         .join(" ")}
       href={href}
       onClick={onClick}
     >
-      <div className="btn-icon-content">
-        <div className="btn-icon-content__mask">
-          <span className="btn-icon-content__text" data-button-anim-target>
-            {children}
-          </span>
-        </div>
-        <div className="btn-icon-icon" data-icon-size="normal">
-          <div className="btn-icon-icon__bg" data-button-anim-target />
-          <div className="btn-icon-icon__wrap">
-            <div className="btn-icon-icon__list">
-              <ArrowIcon />
-              <ArrowIcon />
-              <ArrowIcon />
-            </div>
-          </div>
-        </div>
-        <div className="btn-icon-content__bg" data-button-anim-target />
-      </div>
+      <CtaContent>{children}</CtaContent>
     </a>
+  );
+}
+
+type CtaButtonProps = {
+  children: string;
+  className?: string;
+  variant?: CtaVariant;
+  type?: "button" | "submit";
+};
+
+export function CtaButton({
+  children,
+  className,
+  variant = "primary",
+  type = "button",
+}: CtaButtonProps) {
+  return (
+    <button
+      className={["btn-icon-link", ctaVariantClass(variant), className]
+        .filter(Boolean)
+        .join(" ")}
+      type={type}
+    >
+      <CtaContent showIcon={false}>{children}</CtaContent>
+    </button>
   );
 }

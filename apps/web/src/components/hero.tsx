@@ -1,5 +1,5 @@
-const HERO_VIDEO_SRC = "/videos/hero.mp4";
-const HERO_POSTER_SRC = "/images/hero-poster.jpg";
+const HERO_VIDEO_SRC = "/videos/hero-video.mp4";
+const HERO_PLACEHOLDER_SRC = "/images/hero-placeholder.png";
 
 export default function Hero() {
   return (
@@ -12,13 +12,20 @@ export default function Hero() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
       >
+        {/* Static fallback — visible while the video loads or if it fails */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          alt=""
+          className="absolute inset-0 size-full object-cover"
+          src={HERO_PLACEHOLDER_SRC}
+        />
         <video
           autoPlay
           className="absolute inset-0 size-full object-cover"
           loop
           muted
           playsInline
-          poster={HERO_POSTER_SRC}
+          poster={HERO_PLACEHOLDER_SRC}
         >
           <source src={HERO_VIDEO_SRC} type="video/mp4" />
         </video>
@@ -35,7 +42,8 @@ export default function Hero() {
             Eén product.
           </h1>
           <p className="text-base font-medium leading-relaxed text-white/70 md:text-lg">
-            Verticale software voor dossierwerk. Elk product gebouwd met een domeinpartner.
+            Verticale software voor dossierwerk. Elk product gebouwd met een
+            domeinpartner.
           </p>
         </div>
       </div>

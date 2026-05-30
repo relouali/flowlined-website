@@ -34,7 +34,7 @@ export default function Header() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 flex h-[4.5rem] items-center px-16 transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300",
         scrolled
-          ? "border-b border-white/10 bg-[#000c10]/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl backdrop-saturate-150"
+          ? "border-b border-white/10 bg-[#0a1418]/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl backdrop-saturate-150"
           : "border-b border-transparent bg-transparent",
       )}
     >

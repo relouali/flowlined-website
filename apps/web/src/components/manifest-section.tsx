@@ -30,10 +30,11 @@ export default function ManifestSection() {
       <div className="relative z-10 mx-auto flex w-full max-w-[1080px] flex-col items-center gap-8 text-center">
         <HighlightText
           as="h2"
-          className="text-4xl font-light leading-[1.15] text-white lg:text-[3.25rem] lg:leading-[1.1]"
+          className="text-4xl font-light leading-[1.15] text-white lg:text-[3.5rem] lg:leading-[1.1]"
         >
-          De beste software ontstaat wanneer engineers het domein begrijpen
-          en domeinexperts mede-eigenaar worden van wat ze bouwen.
+          Domeinkennis verdient een eigen product.
+
+
         </HighlightText>
 
         <p className="max-w-2xl text-lg font-light leading-relaxed text-white/80 lg:text-xl">
