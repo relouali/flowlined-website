@@ -1,0 +1,109 @@
+.horizontal-steps {
+  position: relative;
+  width: 100%;
+}
+
+.horizontal-steps__inner {
+  width: 100%;
+}
+
+.horizontal-steps__track {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 80px 24px;
+}
+
+.horizontal-steps__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 28px;
+  border: 1px solid rgba(0, 26, 35, 0.06);
+  border-radius: 12px;
+  background-color: transparent;
+}
+
+.horizontal-steps__pill {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  padding: 0.4em 0.875em;
+  border: 1px solid rgba(0, 26, 35, 0.1);
+  border-radius: 50em;
+  background-color: rgba(0, 26, 35, 0.04);
+  color: #001a23;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.horizontal-steps__title {
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 300;
+  line-height: 1.15;
+  color: #000c10;
+  letter-spacing: -0.005em;
+}
+
+.horizontal-steps__description {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.625;
+  color: rgba(0, 12, 16, 0.7);
+}
+
+.horizontal-steps__art {
+  margin-top: auto;
+  width: 100%;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .horizontal-steps__inner {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-block: 80px;
+    cursor: grab;
+  }
+
+  .horizontal-steps__inner.is-dragging {
+    cursor: grabbing;
+  }
+
+  .horizontal-steps__track {
+    flex-direction: row;
+    gap: 40px;
+    padding: 0 64px;
+    width: max-content;
+    will-change: transform;
+    user-select: none;
+    touch-action: pan-y;
+  }
+
+  .horizontal-steps__card {
+    flex: 0 0 auto;
+    width: min(560px, 70vw);
+    height: min(78vh, 720px);
+    padding: 36px;
+    gap: 28px;
+  }
+
+  .horizontal-steps__title {
+    font-size: 2.5rem;
+    line-height: 1.1;
+  }
+
+  .horizontal-steps__description {
+    font-size: 1.125rem;
+  }
+}
