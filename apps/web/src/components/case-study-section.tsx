@@ -1,104 +1,271 @@
 "use client";
 
 import gsap from "gsap";
-import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 import HighlightText from "@/components/highlight-text";
+import Cta from "@/components/cta";
 
 import "./case-study-section.css";
 
 type Stat = {
   value: string;
+  number: string;
+  unit: string;
+  scrambleMin: number;
+  scrambleMax: number;
   label: string;
   description: string;
 };
 
+const SCRAMBLE_DURATION = 2.8;
+const SCRAMBLE_MIN_TICK = 0.04;
+const SCRAMBLE_MAX_TICK = 0.62;
+const SCRAMBLE_SLOWDOWN = 3.8;
+
 const STATS: ReadonlyArray<Stat> = [
   {
     value: "70%",
+    number: "70",
+    unit: "%",
+    scrambleMin: 1,
+    scrambleMax: 70,
     label: "Tijdsbesparing op administratieve taken",
     description:
-      "Dossierstudie, compleetheidscontroles en rapportopbouw kosten arbeidsdeskundigen het merendeel van hun dag. ADO Pro reduceert dat voorwerk met 70%.",
+      "ADO Pro neemt 70% van het voorbereidende dossierwerk over, van studie tot rapportopbouw.",
   },
   {
     value: "99,99%",
+    number: "99,99",
+    unit: "%",
+    scrambleMin: 1,
+    scrambleMax: 99,
     label: "Nauwkeurigheid in documentenanalyse",
     description:
-      "Het systeem extraheert en structureert informatie uit complexe dossiers met een foutmarge van minder dan 0,01%. Geen gemiste documenten, geen verkeerde koppelingen.",
+      "Complexe dossiers worden geanalyseerd met een foutmarge van minder dan 0,01%.",
   },
   {
     value: "3x",
+    number: "3",
+    unit: "x",
+    scrambleMin: 1,
+    scrambleMax: 3,
     label: "Snellere complete rapportages",
     description:
-      "Van dossier tot concept-rapport in een derde van de tijd. De arbeidsdeskundige reviewt en finaliseert, het systeem doet het structuurwerk.",
+      "Van dossier tot concept-rapport in een derde van de tijd. De expert finaliseert, het systeem structureert.",
   },
   {
     value: "100%",
-    label: "AVG-compliant gegevensverwerking",
+    number: "100",
+    unit: "%",
+    scrambleMin: 1,
+    scrambleMax: 100,
+    label: "AVG-compliant",
     description:
-      "Alle data wordt verwerkt conform de AVG. Geen externe opslag, geen ongeautoriseerde toegang. Privacygevoelige dossiers blijven beschermd gedurende het hele proces.",
+      "Verwerking conform AVG. Geen externe opslag, geen ongeautoriseerde toegang.",
   },
 ];
+
+function splitNumberParts(number: string) {
+  const commaIndex = number.indexOf(",");
+  if (commaIndex === -1) {
+    return { integer: number, fraction: null as string | null };
+  }
+  return {
+    integer: number.slice(0, commaIndex),
+    fraction: number.slice(commaIndex + 1),
+  };
+}
+
+function parseScrambleTarget(finalText: string, fallbackMax: number) {
+  const parsed = parseFloat(finalText.replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : fallbackMax;
+}
+
+function scrambleTickInterval(progress: number) {
+  const eased = Math.pow(Math.min(Math.max(progress, 0), 1), SCRAMBLE_SLOWDOWN);
+  return SCRAMBLE_MIN_TICK + (SCRAMBLE_MAX_TICK - SCRAMBLE_MIN_TICK) * eased;
+}
+
+function valueForProgress(progress: number, min: number, target: number) {
+  const eased = 1 - Math.pow(1 - Math.min(Math.max(progress, 0), 1), SCRAMBLE_SLOWDOWN);
+  return min + (target - min) * eased;
+}
+
+function scrambleCapFor(target: number, min: number) {
+  return Math.max(min, target - 1);
+}
+
+function nextIndependentUpward(
+  last: number,
+  target: number,
+  progress: number,
+  min: number,
+) {
+  if (progress >= 0.93) return target;
+
+  const cap = scrambleCapFor(target, min);
+  if (cap <= min) {
+    return progress >= 0.93 ? target : min;
+  }
+
+  if (last >= cap) {
+    let candidate = min + Math.floor(Math.random() * (cap - min + 1));
+    if (candidate === last) {
+      candidate = last >= cap ? last - 1 : last + 1;
+    }
+    return Math.max(min, Math.min(candidate, cap));
+  }
+
+  const room = cap - last;
+  const slowdown = Math.pow(progress, 2.2);
+  const maxStep = Math.max(
+    1,
+    Math.floor(room * (0.1 + Math.random() * (0.5 - slowdown * 0.38))),
+  );
+
+  return Math.min(last + maxStep, cap);
+}
+
+type ScramblePartOptions = {
+  independent?: boolean;
+  seed?: number;
+  duration?: number;
+  delay?: number;
+};
+
+function animateNumericScramble(
+  el: HTMLElement,
+  finalText: string,
+  min: number,
+  max: number,
+  scrollTrigger: ScrollTrigger.Vars,
+  options: ScramblePartOptions = {},
+) {
+  let lastTick = -Infinity;
+  const countTarget = Math.floor(parseScrambleTarget(finalText, max));
+  let lastValue = options.independent
+    ? Math.min(countTarget, min + ((options.seed ?? 0) % 17))
+    : min;
+
+  const state = { t: 0 };
+  return gsap.to(state, {
+    t: 1,
+    duration: options.duration ?? SCRAMBLE_DURATION,
+    delay: options.delay ?? 0,
+    ease: "none",
+    onUpdate() {
+      const progress = this.progress();
+      if (progress >= 1) {
+        el.textContent = finalText;
+        return;
+      }
+
+      const time = this.time();
+      const tickInterval = scrambleTickInterval(progress);
+      if (time - lastTick < tickInterval) return;
+      lastTick = time;
+
+      if (progress >= 0.93) {
+        el.textContent = finalText;
+        return;
+      }
+
+      const cap = scrambleCapFor(countTarget, min);
+      const next = options.independent
+        ? nextIndependentUpward(lastValue, countTarget, progress, min)
+        : Math.min(
+            Math.max(
+              lastValue,
+              Math.round(valueForProgress(progress, min, cap)),
+            ),
+            cap,
+          );
+
+      lastValue = next;
+      el.textContent = String(lastValue);
+    },
+    onComplete() {
+      el.textContent = finalText;
+    },
+    scrollTrigger,
+  });
+}
 
 export default function CaseStudySection() {
   const statsRef = useRef<HTMLUListElement>(null);
 
-  // Scramble-reveal the KPI numbers (70%, 99,99%, 3x, 100%) as the stats
-  // grid scrolls into view. Each KPI is a single token so we scramble its
-  // textContent directly (no SplitText needed) and stagger across the four
-  // stats for a left-to-right cascade.
+  // Scramble-reveal only the numeric portion of each KPI. Digits count upward
+  // through a stat-specific range before settling on the final value.
+  // Units (% / x) stay static beside the rolling digits.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const container = statsRef.current;
     if (!container) return;
 
-    gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin);
+    gsap.registerPlugin(ScrollTrigger);
 
-    const targets = Array.from(
-      container.querySelectorAll<HTMLElement>(".case-study-stat-value"),
+    const statItems = Array.from(
+      container.querySelectorAll<HTMLElement>(".case-study-stat"),
     );
-    if (!targets.length) return;
+    if (!statItems.length) return;
 
-    const originals = targets.map((el) => el.textContent ?? "");
+    const scrambleTargets = statItems.flatMap((item) =>
+      Array.from(item.querySelectorAll<HTMLElement>(".case-study-stat-value__scramble")),
+    );
+    if (!scrambleTargets.length) return;
+
+    const originals = scrambleTargets.map((el) => el.textContent ?? "");
 
     const tweens: gsap.core.Tween[] = [];
     let cancelled = false;
 
     const start = () => {
       if (cancelled) return;
-      // One ScrollTrigger per KPI instead of a single sweep across all four.
-      // On the 2×2 desktop grid this means the top-row KPIs (70%, 99,99%)
-      // fire as a pair when their row reaches `top 80%`, then the bottom
-      // row (3x, 100%) fires once the user scrolls a little further. On
-      // single-column mobile each KPI scrambles independently as it lands.
-      targets.forEach((target) => {
-        const t = gsap.to(target, {
-          duration: 1.9,
-          ease: "none",
-          scrambleText: {
-            text: "{original}",
-            // Digits-only scramble — feels native to the numeric KPI values
-            // (uppercase letters would briefly read as "K8%" / "QM" etc.).
-            chars: "0123456789",
-            // Lower speed = chars cycle more slowly per frame, so the user
-            // can actually see the digits ticking instead of a blur.
-            speed: 0.6,
-          },
-          scrollTrigger: {
-            trigger: target,
-            scroller: document.body,
-            // Fires as the KPI is just peeking in from the bottom of the
-            // viewport — the 1.9s scramble has runway to play out so the
-            // digits are mid-roll by the time the row is fully on screen.
-            start: "top 95%",
-            once: true,
-            invalidateOnRefresh: true,
-          },
+      statItems.forEach((item, index) => {
+        const stat = STATS[index];
+        if (!stat) return;
+
+        const parts = splitNumberParts(stat.number);
+        const partValues = parts.fraction
+          ? [parts.integer, parts.fraction]
+          : [stat.number];
+
+        const scrambleEls = Array.from(
+          item.querySelectorAll<HTMLElement>(".case-study-stat-value__scramble"),
+        );
+
+        scrambleEls.forEach((target, partIndex) => {
+          const finalPart = partValues[partIndex];
+          if (!finalPart) return;
+
+          const isFraction = partIndex === 1;
+
+          const t = animateNumericScramble(
+            target,
+            finalPart,
+            stat.scrambleMin,
+            stat.scrambleMax,
+            {
+              trigger: item,
+              scroller: document.body,
+              start: "top 95%",
+              once: true,
+              invalidateOnRefresh: true,
+            },
+            isFraction
+              ? {
+                  independent: true,
+                  seed: index * 31 + partIndex * 17,
+                  duration: SCRAMBLE_DURATION * 1.08,
+                  delay: 0.14,
+                }
+              : undefined,
+          );
+          tweens.push(t);
         });
-        tweens.push(t);
       });
     };
 
@@ -120,7 +287,7 @@ export default function CaseStudySection() {
         tween.kill();
       });
       // Restore originals in case Strict Mode tore us down mid-scramble.
-      targets.forEach((el, i) => {
+      scrambleTargets.forEach((el, i) => {
         el.textContent = originals[i];
       });
     };
@@ -131,23 +298,17 @@ export default function CaseStudySection() {
       id="ado-pro"
       data-progress-nav-anchor
       data-nav-theme="light"
-      className="case-study-section relative flex min-h-[100dvh] flex-col bg-white lg:flex-row"
+      className="case-study-section relative flex min-h-[100dvh] flex-col bg-white lg:h-[100dvh] lg:max-h-[100dvh] lg:flex-row lg:overflow-hidden"
     >
-      {/* Left column — heading + stats grid. The Figma uses justify-between
-          to space the three blocks (heading, stats row 1, stats row 2)
-          evenly across the column height. */}
-      <div className="flex flex-1 flex-col justify-between gap-16 px-8 py-16 sm:px-16 lg:py-24">
-        {/* Header — matches the HighlightText pattern used by problem &
-            sectors sections (scroll-driven character fade, with a muted
-            tone on the secondary clause to inverse the dark-bg accent). */}
-        <div className="flex max-w-xl flex-col gap-8">
-          <HighlightText className="text-4xl font-light leading-[1.15] text-black lg:text-[3.25rem] lg:leading-[1.1]">
+      <div className="case-study-section__content flex flex-1 flex-col px-8 py-16 sm:px-16 lg:min-h-0 lg:px-16 lg:pt-20 lg:pb-14">
+        <div className="case-study-section__header flex max-w-3xl shrink-0 flex-col gap-8">
+          <HighlightText className="case-study-section__title text-4xl font-light leading-[1.15] text-black lg:text-[3.25rem] lg:leading-[1.1]">
             ADO Pro.{" "}
             <span className="text-black/45">
               Gebouwd voor en met arbeidsdeskundigen.
             </span>
           </HighlightText>
-          <p className="max-w-2xl text-lg font-light leading-relaxed text-black/80 lg:text-xl">
+          <p className="case-study-section__intro max-w-2xl text-lg font-light leading-relaxed text-black/80 lg:text-xl">
             ADO Pro automatiseert het voorbereidende werk van
             arbeidsdeskundigen, van dossierstudie tot rapportgeneratie. Live
             in productie, gebouwd op de methode die we voor elk domein
@@ -155,39 +316,58 @@ export default function CaseStudySection() {
           </p>
         </div>
 
-        {/* Stats grid — 1 col on mobile, 2 cols on tablet+ */}
-        <ul
-          ref={statsRef}
-          className="grid max-w-xl list-none grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2"
-        >
-          {STATS.map((stat) => (
-            <li key={stat.value} className="flex flex-col gap-4">
-              <div className="flex flex-col gap-3">
-                <span className="case-study-stat-value text-[64px] lg:text-[80px]">
-                  {stat.value}
-                </span>
-                <span className="text-base font-light leading-[1.45] text-black">
-                  {stat.label}
-                </span>
-              </div>
-              <p className="text-base font-extralight leading-[1.45] text-black/50">
-                {stat.description}
-              </p>
-            </li>
-          ))}
-        </ul>
+        <div className="case-study-section__stats-wrap flex w-full flex-1 flex-col lg:min-h-0 lg:pt-6">
+          <ul
+            ref={statsRef}
+            className="case-study-section__stats grid w-full max-w-[600px] list-none grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-x-12 lg:gap-x-24 lg:gap-y-14"
+          >
+            {STATS.map((stat) => {
+              const { integer, fraction } = splitNumberParts(stat.number);
+
+              return (
+              <li key={stat.value} className="case-study-stat flex flex-col gap-3 lg:gap-2">
+                <div className="case-study-stat__head flex flex-col gap-2 lg:gap-1.5">
+                  <span
+                    className="case-study-stat-value text-[56px] lg:text-[3.25rem]"
+                    aria-label={stat.value}
+                  >
+                    <span className="case-study-stat-value__scramble">{integer}</span>
+                    {fraction !== null ? (
+                      <>
+                        <span className="case-study-stat-value__separator">,</span>
+                        <span className="case-study-stat-value__scramble">{fraction}</span>
+                      </>
+                    ) : null}
+                    {stat.unit ? (
+                      <span className="case-study-stat-value__unit">{stat.unit}</span>
+                    ) : null}
+                  </span>
+                  <span className="text-base font-light leading-[1.45] text-black">
+                    {stat.label}
+                  </span>
+                </div>
+                <p className="case-study-stat__description text-base font-extralight leading-[1.45] text-black/50">
+                  {stat.description}
+                </p>
+              </li>
+              );
+            })}
+          </ul>
+
+          <div className="case-study-section__cta mt-auto shrink-0 pt-10 lg:pt-8">
+            <Cta href="#contact" variant="secondary">
+              Bekijk de volledige case
+            </Cta>
+          </div>
+        </div>
       </div>
 
-      {/* Subtle vertical divider between the two columns on desktop */}
       <div className="case-study-divider hidden lg:block" aria-hidden />
 
-      {/* Right column — cover photo van het ADO Pro project. The black
-          backdrop on .case-study-visual is a neutral fallback while the
-          photo decodes. */}
-      <div className="case-study-visual relative flex flex-1 min-h-[40vh] lg:min-h-0">
+      <div className="case-study-visual relative flex flex-1 min-h-[40vh] lg:min-h-0 lg:h-full">
         <Image
-          src="/images/ADOPRO-cover.jpg"
-          alt="Werksessie tijdens het ADO Pro project — domeinexperts werken samen aan dossier- en procesontwerp"
+          src="/images/ADOPRO-cover2.png"
+          alt="Werksessie tijdens het ADO Pro project, domeinexperts werken samen aan dossier- en procesontwerp"
           fill
           sizes="(min-width: 1024px) 50vw, 100vw"
           className="case-study-visual__img"

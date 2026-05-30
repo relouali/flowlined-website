@@ -16,7 +16,7 @@ export default function SiteFooter() {
   return (
     <footer
       id="contact"
-      className="bg-[#0a1418] px-8 pt-16 text-white lg:px-16 lg:pt-[74px]"
+      className="bg-[#001A23] px-8 pt-16 text-white lg:px-16 lg:pt-[74px]"
     >
       <GiantWordmark />
     </footer>

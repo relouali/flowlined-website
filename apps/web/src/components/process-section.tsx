@@ -1,14 +1,19 @@
 import HorizontalSteps from "@/components/horizontal-steps";
-import PixelatedScrollTransition from "@/components/pixelated-scroll-transition";
-import ShutterScrollTransition from "@/components/shutter-scroll-transition";
 import StickyTitleScroll from "@/components/sticky-title-scroll";
 
-const INTRO_HEADING = ["Zo bouwen wij het anders."] as const;
+import "./process-section.css";
 
 const OUTRO_HEADINGS = [
   "Geen generieke tool die je zelf moet inrichten. Geen maatwerk dat niet schaalt.",
   "Wij bouwen verticale producten van de grond af, samen met de expert die het domein kent.",
 ] as const;
+
+const STEPS_HEADING = {
+  title: "Van domeinkennis naar verticaal product.",
+  titleMuted: "In vier heldere fasen.",
+  description:
+    "Samen met de domeinexpert doorlopen we een gestructureerd traject, van eerste verkenning tot live product bij echte gebruikers.",
+} as const;
 
 const STEPS = [
   {
@@ -43,28 +48,16 @@ export default function ProcessSection() {
       id="proces"
       data-progress-nav-anchor
       data-nav-theme="light"
-      className="bg-white"
+      className="process-section"
     >
-      <div className="relative">
-        <StickyTitleScroll headings={INTRO_HEADING} heightVh={200} gradientBackground />
-        <PixelatedScrollTransition
-          mode="cover"
-          color="#ffffff"
-          columns={16}
-          columnsTablet={10}
-          columnsMobile={6}
-          rows={6}
-        />
-      </div>
+      <HorizontalSteps
+        steps={STEPS}
+        title={STEPS_HEADING.title}
+        titleMuted={STEPS_HEADING.titleMuted}
+        description={STEPS_HEADING.description}
+      />
 
-      <div className="relative">
-        <HorizontalSteps steps={STEPS} />
-        <ShutterScrollTransition mode="cover" color="#CDDFED" />
-      </div>
-
-      <div className="bg-[#CDDFED]">
-        <StickyTitleScroll headings={OUTRO_HEADINGS} heightVh={300} />
-      </div>
+      <StickyTitleScroll headings={OUTRO_HEADINGS} heightVh={300} />
     </section>
   );
 }

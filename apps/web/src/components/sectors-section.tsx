@@ -65,7 +65,7 @@ export default function SectorsSection() {
     <section
       id="sectoren"
       data-progress-nav-anchor
-      className="sectors-section relative flex min-h-[100dvh] flex-col overflow-hidden bg-[#000c10] px-16 pt-16 pb-6 lg:pt-24 lg:pb-8"
+      className="sectors-section relative flex min-h-[100dvh] flex-col overflow-hidden bg-[#000c10] px-8 py-20 sm:px-16 lg:px-16 lg:pt-28 lg:pb-10"
     >
       <div className="mx-auto flex w-full max-w-[1280px] flex-1 flex-col items-center">
         {/* Top: header + picker. Anchored to the top of the available

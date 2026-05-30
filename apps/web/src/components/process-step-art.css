@@ -1,5 +1,14 @@
 .process-art {
+  --process-art-duration: 11s;
   isolation: isolate;
+}
+
+.process-art [class*="process-art__"] {
+  animation-play-state: paused;
+}
+
+.process-art.is--playing [class*="process-art__"] {
+  animation-play-state: running;
 }
 
 .process-art__svg {
@@ -13,7 +22,7 @@
   transform-box: fill-box;
   transform-origin: center;
   opacity: 0;
-  animation: process-art-breath 18s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: process-art-breath var(--process-art-duration) cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes process-art-breath {
@@ -45,7 +54,7 @@
   fill: none;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: process-art-route 18s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+  animation: process-art-route var(--process-art-duration) cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
 }
 
 @keyframes process-art-route {
@@ -80,7 +89,7 @@
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: process-art-marker 18s ease-out infinite;
+  animation: process-art-marker var(--process-art-duration) ease-out infinite;
 }
 
 .process-art__marker--1 {
@@ -123,7 +132,7 @@
 
 .process-art__target {
   opacity: 0;
-  animation: process-art-target 18s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+  animation: process-art-target var(--process-art-duration) cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 
 .process-art__target circle:first-of-type {
@@ -163,7 +172,7 @@
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   opacity: 0;
-  animation: process-art-branch 18s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+  animation: process-art-branch var(--process-art-duration) cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
 }
 
 .process-art__branch--l1-a {
@@ -217,7 +226,7 @@
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: process-art-tree-node 18s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+  animation: process-art-tree-node var(--process-art-duration) cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 
 .process-art__tree-node--root {
@@ -269,7 +278,7 @@
 }
 
 /* =================================================
-   Bouwen — full product narrative (18s cycle):
+   Bouwen — full product narrative (var(--process-art-duration) cycle):
      0–50%   App interface builds up
      50–62%  Document gets dragged into the main area
      62–67%  Document held while CTA is clicked
@@ -286,7 +295,7 @@
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   opacity: 0;
-  animation: process-art-frame-build 18s cubic-bezier(0.65, 0.05, 0.36, 1)
+  animation: process-art-frame-build var(--process-art-duration) cubic-bezier(0.65, 0.05, 0.36, 1)
     infinite;
 }
 
@@ -320,7 +329,7 @@
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   opacity: 0;
-  animation: process-art-header-build 18s cubic-bezier(0.65, 0.05, 0.36, 1)
+  animation: process-art-header-build var(--process-art-duration) cubic-bezier(0.65, 0.05, 0.36, 1)
     infinite;
 }
 
@@ -355,7 +364,7 @@
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   opacity: 0;
-  animation: process-art-sidebar-divider-build 18s
+  animation: process-art-sidebar-divider-build var(--process-art-duration)
     cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
 }
 
@@ -390,7 +399,7 @@
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation-duration: 18s;
+  animation-duration: var(--process-art-duration);
   animation-iteration-count: infinite;
   animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -490,7 +499,7 @@
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   opacity: 0;
-  animation-duration: 18s;
+  animation-duration: var(--process-art-duration);
   animation-iteration-count: infinite;
   animation-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1);
 }
@@ -593,7 +602,7 @@
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   opacity: 0;
-  animation-duration: 18s;
+  animation-duration: var(--process-art-duration);
   animation-iteration-count: infinite;
   animation-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1);
 }
@@ -664,7 +673,7 @@
    transform phase (replaced by result rows in the same space). */
 .process-art__drop-zone {
   opacity: 0;
-  animation: process-art-drop-zone 18s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: process-art-drop-zone var(--process-art-duration) cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes process-art-drop-zone {
@@ -691,7 +700,7 @@
    existing layout, not a new container. */
 .process-art__result-row {
   opacity: 0;
-  animation-duration: 18s;
+  animation-duration: var(--process-art-duration);
   animation-iteration-count: infinite;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -792,7 +801,7 @@
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: process-art-cta-build 18s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+  animation: process-art-cta-build var(--process-art-duration) cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 
 @keyframes process-art-cta-build {
@@ -845,7 +854,7 @@
   transform-box: fill-box;
   transform-origin: center;
   opacity: 0;
-  animation: process-art-doc-flow 18s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+  animation: process-art-doc-flow var(--process-art-duration) cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
   will-change: transform, opacity;
 }
 
@@ -903,7 +912,7 @@
   transform-box: fill-box;
   transform-origin: center;
   opacity: 0;
-  animation-duration: 18s;
+  animation-duration: var(--process-art-duration);
   animation-iteration-count: infinite;
   animation-timing-function: cubic-bezier(0.55, 0.05, 0.5, 1.1);
 }
@@ -1130,7 +1139,7 @@
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   opacity: 0;
-  animation-duration: 18s;
+  animation-duration: var(--process-art-duration);
   animation-iteration-count: infinite;
   animation-timing-function: cubic-bezier(0.85, 0, 0.15, 1);
 }

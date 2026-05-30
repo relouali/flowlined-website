@@ -22,13 +22,26 @@ type CtaProps = {
   href: string;
   children: string;
   className?: string;
+  variant?: "primary" | "secondary";
   onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 };
 
-export default function Cta({ href, children, className, onClick }: CtaProps) {
+export default function Cta({
+  href,
+  children,
+  className,
+  variant = "primary",
+  onClick,
+}: CtaProps) {
   return (
     <a
-      className={["btn-icon-link", className].filter(Boolean).join(" ")}
+      className={[
+        "btn-icon-link",
+        variant === "secondary" ? "btn-icon-link--secondary" : null,
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       href={href}
       onClick={onClick}
     >
