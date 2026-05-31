@@ -5,6 +5,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, type ReactNode } from "react";
 
 import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
+import {
+  debounceOnWidthChange,
+  initGsapSlider,
+} from "@/lib/init-gsap-slider";
 import { MOBILE_CAROUSEL_MQ } from "@/lib/sync-lenis-prevent-mobile";
 
 type ProcessArtPlaybackProps = {
@@ -18,13 +22,18 @@ function setAllArtPlaying(track: HTMLElement, playing: boolean) {
 }
 
 function updateMobileArtPlayback(
-  track: HTMLOListElement,
+  slider: HTMLElement,
   currentActiveArt: { current: HTMLElement | null },
 ) {
-  const cards = track.querySelectorAll<HTMLElement>(".horizontal-steps__card");
-  const trackRect = track.getBoundingClientRect();
+  const collection = slider.querySelector<HTMLElement>(
+    "[data-gsap-slider-collection]",
+  );
 
-  if (trackRect.bottom <= 0 || trackRect.top >= window.innerHeight) {
+  if (!collection) return;
+
+  const collectionRect = collection.getBoundingClientRect();
+
+  if (collectionRect.bottom <= 0 || collectionRect.top >= window.innerHeight) {
     if (currentActiveArt.current) {
       currentActiveArt.current.classList.remove("is--playing");
       currentActiveArt.current = null;
@@ -32,23 +41,33 @@ function updateMobileArtPlayback(
     return;
   }
 
-  const trackCenter = trackRect.left + trackRect.width / 2;
   let activeArt: HTMLElement | null = null;
-  let bestDistance = Infinity;
+  const activeCard = slider.querySelector<HTMLElement>(
+    '[data-gsap-slider-item-status="active"]',
+  );
 
-  for (const card of cards) {
-    const rect = card.getBoundingClientRect();
-    const isVisible =
-      rect.right > trackRect.left + 8 && rect.left < trackRect.right - 8;
+  if (activeCard) {
+    activeArt = activeCard.querySelector<HTMLElement>(".process-art");
+  } else {
+    const viewportCenter = collectionRect.left + collectionRect.width / 2;
+    const cards = slider.querySelectorAll<HTMLElement>(".horizontal-steps__card");
+    let bestDistance = Infinity;
 
-    if (!isVisible) continue;
+    for (const card of cards) {
+      const rect = card.getBoundingClientRect();
+      const isVisible =
+        rect.right > collectionRect.left + 8 &&
+        rect.left < collectionRect.right - 8;
 
-    const cardCenter = rect.left + rect.width / 2;
-    const distance = Math.abs(cardCenter - trackCenter);
+      if (!isVisible) continue;
 
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      activeArt = card.querySelector<HTMLElement>(".process-art");
+      const cardCenter = rect.left + rect.width / 2;
+      const distance = Math.abs(cardCenter - viewportCenter);
+
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        activeArt = card.querySelector<HTMLElement>(".process-art");
+      }
     }
   }
 
@@ -68,33 +87,46 @@ function updateMobileArtPlayback(
 }
 
 export default function ProcessArtPlayback({ children }: ProcessArtPlaybackProps) {
+  const sliderRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLOListElement>(null);
   const { locomotiveScroll } = useLocomotiveScroll();
 
   useEffect(() => {
-    if (!locomotiveScroll || !trackRef.current) return;
+    if (!locomotiveScroll || !sliderRef.current || !trackRef.current) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
+    const slider = sliderRef.current;
     const track = trackRef.current;
     const mm = gsap.matchMedia();
+    const currentActiveArt = { current: null as HTMLElement | null };
+
+    const syncMobilePlayback = () => {
+      updateMobileArtPlayback(slider, currentActiveArt);
+    };
 
     mm.add(MOBILE_CAROUSEL_MQ, () => {
-      const currentActiveArt = { current: null as HTMLElement | null };
-
       setAllArtPlaying(track, false);
 
-      const syncMobilePlayback = () => {
-        updateMobileArtPlayback(track, currentActiveArt);
-      };
+      let revertSlider = initGsapSlider(slider, {
+        onUpdate: syncMobilePlayback,
+      });
 
       syncMobilePlayback();
 
-      track.addEventListener("scroll", syncMobilePlayback, { passive: true });
-      window.addEventListener("resize", syncMobilePlayback);
+      const handleResize = debounceOnWidthChange(() => {
+        revertSlider();
+        revertSlider = initGsapSlider(slider, {
+          onUpdate: syncMobilePlayback,
+        });
+        syncMobilePlayback();
+        ScrollTrigger.refresh();
+      }, 200);
+
+      window.addEventListener("resize", handleResize);
 
       const visibilityTrigger = ScrollTrigger.create({
-        trigger: track,
+        trigger: slider,
         scroller: document.body,
         start: "top bottom",
         end: "bottom top",
@@ -103,9 +135,10 @@ export default function ProcessArtPlayback({ children }: ProcessArtPlaybackProps
       });
 
       return () => {
-        track.removeEventListener("scroll", syncMobilePlayback);
-        window.removeEventListener("resize", syncMobilePlayback);
+        window.removeEventListener("resize", handleResize);
         visibilityTrigger.kill();
+        revertSlider();
+
         if (currentActiveArt.current) {
           currentActiveArt.current.classList.remove("is--playing");
           currentActiveArt.current = null;
@@ -140,8 +173,20 @@ export default function ProcessArtPlayback({ children }: ProcessArtPlaybackProps
   }, [locomotiveScroll]);
 
   return (
-    <ol ref={trackRef} className="horizontal-steps__track">
-      {children}
-    </ol>
+    <div
+      ref={sliderRef}
+      data-gsap-slider-init
+      className="horizontal-steps__slider"
+      aria-label="Processtappen"
+    >
+      <div
+        data-gsap-slider-collection
+        className="horizontal-steps__collection"
+      >
+        <ol ref={trackRef} data-gsap-slider-list className="horizontal-steps__track">
+          {children}
+        </ol>
+      </div>
+    </div>
   );
 }

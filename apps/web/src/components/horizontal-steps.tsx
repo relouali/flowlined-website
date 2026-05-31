@@ -59,7 +59,7 @@ type ProcessCardProps = {
 
 function ProcessCard({ index, step }: ProcessCardProps) {
   return (
-    <li className="horizontal-steps__card">
+    <li data-gsap-slider-item className="horizontal-steps__card">
       <span className="horizontal-steps__pill">{step.phase}</span>
       <h3 className="horizontal-steps__title type-card-title-lg">{step.title}</h3>
       <p className="horizontal-steps__description type-body">{step.description}</p>
