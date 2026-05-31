@@ -1,5 +1,6 @@
 import HighlightText from "@/components/highlight-text";
 import LottieIcon from "@/components/lottie-icon";
+import MobileScrollTrack from "@/components/mobile-scroll-track";
 
 import "./problem-section.css";
 
@@ -55,14 +56,11 @@ export default function ProblemSection() {
 
         </div>
 
-        <div
-          className="problem-items mt-20 lg:mt-28"
-          data-lenis-prevent
-        >
+        <MobileScrollTrack className="problem-items mt-20 lg:mt-28">
           {ITEMS.map((item, index) => (
             <ProblemItem key={index} item={item} />
           ))}
-        </div>
+        </MobileScrollTrack>
       </div>
     </section>
   );

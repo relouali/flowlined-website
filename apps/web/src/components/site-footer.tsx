@@ -43,10 +43,15 @@ export default function SiteFooter() {
           <div className="flex flex-col gap-8">
             <a
               aria-label="Flowlined home"
-              className="relative block h-8 w-56"
+              className="relative block h-8 w-[182px]"
               href="/"
             >
-              <Image alt="Flowlined" fill src="/logo/full-Logo.svg" />
+              <Image
+                alt="Flowlined"
+                className="object-contain object-left"
+                fill
+                src="/logo/lettermark.svg"
+              />
             </a>
 
             <div className="flex flex-col gap-6 text-sm leading-[1.5]">

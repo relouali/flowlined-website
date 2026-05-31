@@ -115,6 +115,36 @@
     [data-logo-wall-item]:nth-child(n + 4) {
     display: none;
   }
+
+  .logo-wall--compact .logo-wall__logo-before {
+    padding-top: 38%;
+  }
+
+  .logo-wall--compact .logo-wall__logo-target {
+    width: 62%;
+    height: 62%;
+  }
+}
+
+@media screen and (max-width: 639px) {
+  .logo-wall--compact .logo-wall__item {
+    width: 50%;
+  }
+
+  .logo-wall--compact
+    [data-logo-wall-list]
+    [data-logo-wall-item]:nth-child(n + 3) {
+    display: none;
+  }
+
+  .logo-wall--compact .logo-wall__logo-before {
+    padding-top: 46%;
+  }
+
+  .logo-wall--compact .logo-wall__logo-target {
+    width: 76%;
+    height: 74%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
