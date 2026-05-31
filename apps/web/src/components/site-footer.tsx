@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { CtaButton } from "@/components/cta";
 import GiantWordmark from "@/components/giant-wordmark";
 
+import "./site-footer.css";
+
 const FOOTER_NAV_LINKS = [
   { href: "/cases", label: "Cases" },
   { href: "/inzichten", label: "Inzichten" },
@@ -132,14 +134,17 @@ export default function SiteFooter() {
                 </label>
                 <input
                   autoComplete="email"
-                  className="h-[3.5em] min-w-0 flex-1 bg-[#0e181d] px-3 text-base font-light text-white placeholder:text-white/60 focus:outline-none focus:ring-1 focus:ring-white/40"
+                  className="footer-newsletter-input"
                   id="newsletter-email"
                   name="email"
                   placeholder="E-mail"
                   required
                   type="email"
                 />
-                <CtaButton className="shrink-0" type="submit">
+                <CtaButton
+                  className="footer-newsletter-submit w-full shrink-0 sm:w-auto"
+                  type="submit"
+                >
                   Aanmelden
                 </CtaButton>
               </div>

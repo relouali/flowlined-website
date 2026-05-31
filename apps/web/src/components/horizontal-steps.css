@@ -42,6 +42,36 @@
   list-style: none;
 }
 
+@media (max-width: 639px) {
+  .horizontal-steps {
+    padding: 96px 32px;
+    overflow: visible;
+  }
+
+  .horizontal-steps__track {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 2rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-inline: -2rem;
+    padding-inline: 2rem;
+    touch-action: pan-x;
+  }
+
+  .horizontal-steps__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .horizontal-steps__card {
+    flex: 0 0 min(82vw, 320px);
+    scroll-snap-align: start;
+  }
+}
+
 .horizontal-steps__card {
   position: relative;
   display: flex;

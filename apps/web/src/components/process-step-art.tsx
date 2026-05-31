@@ -1,15 +1,19 @@
 import "./process-step-art.css";
 
+import VerkennenStepArt from "@/components/verkennen-step-art";
+
 type ProcessStepArtProps = {
   step: number;
 };
 
 export default function ProcessStepArt({ step }: ProcessStepArtProps) {
+  if (step === 0) {
+    return <VerkennenStepArt />;
+  }
+
   return (
     <div className="process-art relative aspect-square w-full">
-      {step === 0 ? (
-        <VerkennenArt />
-      ) : step === 1 ? (
+      {step === 1 ? (
         <ModellerenArt />
       ) : step === 2 ? (
         <BouwenArt />
@@ -19,64 +23,6 @@ export default function ProcessStepArt({ step }: ProcessStepArtProps) {
         <PlaceholderArt step={step} />
       )}
     </div>
-  );
-}
-
-function VerkennenArt() {
-  return (
-    <svg
-      aria-hidden
-      className="process-art__svg absolute inset-0"
-      fill="none"
-      viewBox="0 0 400 400"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <circle
-        className="process-art__breath"
-        cx="200"
-        cy="200"
-        fill="none"
-        r="130"
-        stroke="#000c10"
-        strokeOpacity="0.12"
-        strokeWidth="0.75"
-      />
-
-      <path
-        className="process-art__route"
-        d="M 70 110 C 110 90 150 120 180 150 S 240 170 260 200 S 310 250 280 290 S 200 320 170 280 S 130 220 200 200"
-        pathLength="1"
-        stroke="#000c10"
-        strokeLinecap="round"
-        strokeWidth="1.1"
-      />
-
-      <g
-        className="process-art__markers"
-        fill="none"
-        stroke="#000c10"
-        strokeLinecap="round"
-        strokeWidth="1"
-      >
-        <g className="process-art__marker process-art__marker--1" transform="translate(180 150)">
-          <line x1="-4.5" x2="4.5" y1="-4.5" y2="4.5" />
-          <line x1="-4.5" x2="4.5" y1="4.5" y2="-4.5" />
-        </g>
-        <g className="process-art__marker process-art__marker--2" transform="translate(280 290)">
-          <line x1="-4.5" x2="4.5" y1="-4.5" y2="4.5" />
-          <line x1="-4.5" x2="4.5" y1="4.5" y2="-4.5" />
-        </g>
-        <g className="process-art__marker process-art__marker--3" transform="translate(170 280)">
-          <line x1="-4.5" x2="4.5" y1="-4.5" y2="4.5" />
-          <line x1="-4.5" x2="4.5" y1="4.5" y2="-4.5" />
-        </g>
-      </g>
-
-      <g className="process-art__target" transform="translate(200 200)">
-        <circle fill="none" r="12" stroke="#000c10" strokeWidth="0.9" />
-        <circle fill="#000c10" r="2" />
-      </g>
-    </svg>
   );
 }
 

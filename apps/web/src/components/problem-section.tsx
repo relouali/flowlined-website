@@ -1,6 +1,8 @@
 import HighlightText from "@/components/highlight-text";
 import LottieIcon from "@/components/lottie-icon";
 
+import "./problem-section.css";
+
 const ITEMS = [
   {
     title: "Verspreide kennis",
@@ -37,7 +39,7 @@ export default function ProblemSection() {
     <section
       id="probleem"
       data-progress-nav-anchor
-      className="flex min-h-[100dvh] items-center bg-[#0a1418] px-16 py-24 lg:py-32"
+      className="problem-section flex min-h-[100dvh] items-center bg-[#0a1418] px-8 py-24 sm:px-16 lg:py-32"
     >
       <div className="mx-auto flex w-full max-w-[1320px] flex-col">
         <div className="flex max-w-3xl flex-col gap-8">
@@ -53,7 +55,10 @@ export default function ProblemSection() {
 
         </div>
 
-        <div className="mt-20 grid grid-cols-1 gap-12 sm:grid-cols-2 lg:mt-28 lg:grid-cols-4 lg:gap-10">
+        <div
+          className="problem-items mt-20 lg:mt-28"
+          data-lenis-prevent
+        >
           {ITEMS.map((item, index) => (
             <ProblemItem key={index} item={item} />
           ))}
@@ -65,7 +70,7 @@ export default function ProblemSection() {
 
 function ProblemItem({ item }: { item: (typeof ITEMS)[number] }) {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="problem-item flex flex-col gap-6">
       <LottieIcon size={item.iconSize} src={item.lottieSrc} />
       <div className="flex flex-col gap-3 text-white">
         <h3 className="text-lg font-medium leading-snug">{item.title}</h3>

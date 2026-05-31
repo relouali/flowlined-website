@@ -45,7 +45,11 @@ export default function ProcessArtPlayback({ children }: ProcessArtPlaybackProps
   }, [locomotiveScroll]);
 
   return (
-    <ol ref={trackRef} className="horizontal-steps__track">
+    <ol
+      ref={trackRef}
+      className="horizontal-steps__track"
+      data-lenis-prevent
+    >
       {children}
     </ol>
   );

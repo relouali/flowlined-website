@@ -298,7 +298,7 @@ export default function CaseStudySection() {
       id="ado-pro"
       data-progress-nav-anchor
       data-nav-theme="light"
-      className="case-study-section relative flex min-h-[100dvh] flex-col bg-white lg:h-[100dvh] lg:max-h-[100dvh] lg:flex-row lg:overflow-hidden"
+      className="case-study-section relative flex min-h-[100dvh] flex-col bg-[#fff] lg:h-[100dvh] lg:max-h-[100dvh] lg:flex-row lg:overflow-hidden"
     >
       <div className="case-study-section__content flex flex-1 flex-col px-8 py-16 sm:px-16 lg:min-h-0 lg:px-16 lg:pt-20 lg:pb-14">
         <div className="case-study-section__header flex max-w-3xl shrink-0 flex-col gap-8">
@@ -316,7 +316,7 @@ export default function CaseStudySection() {
           </p>
         </div>
 
-        <div className="case-study-section__stats-wrap flex w-full flex-1 flex-col lg:min-h-0 lg:pt-6">
+        <div className="case-study-section__stats-wrap flex w-full flex-1 flex-col pt-12 lg:min-h-0 lg:pt-6">
           <ul
             ref={statsRef}
             className="case-study-section__stats grid w-full max-w-[600px] list-none grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-x-12 lg:gap-x-24 lg:gap-y-14"
