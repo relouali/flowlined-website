@@ -1,4 +1,5 @@
 import HighlightText from "@/components/highlight-text";
+import GsapSlider from "@/components/gsap-slider";
 import LottieIcon from "@/components/lottie-icon";
 
 import "./problem-section.css";
@@ -52,14 +53,18 @@ export default function ProblemSection() {
             Beoordelaars, auditors en inspecteurs leveren werk van hoog niveau. Maar de
             systemen waarop dat werk draait zijn dat niet. Dit zijn de gevolgen:
           </p>
-
         </div>
 
-        <div className="problem-items mt-20 lg:mt-28">
+        <GsapSlider
+          className="problem-items"
+          collectionClassName="problem-items__collection"
+          trackClassName="problem-items__track"
+          ariaLabel="Probleemstellingen"
+        >
           {ITEMS.map((item, index) => (
             <ProblemItem key={index} item={item} />
           ))}
-        </div>
+        </GsapSlider>
       </div>
     </section>
   );
@@ -67,7 +72,7 @@ export default function ProblemSection() {
 
 function ProblemItem({ item }: { item: (typeof ITEMS)[number] }) {
   return (
-    <div className="problem-item flex flex-col gap-6">
+    <div data-gsap-slider-item className="problem-item flex flex-col gap-6">
       <LottieIcon size={item.iconSize} src={item.lottieSrc} />
       <div className="flex flex-col gap-3 text-white">
         <h3 className="type-card-title text-white">{item.title}</h3>

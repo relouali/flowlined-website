@@ -56,16 +56,23 @@
 
 @media (max-width: 639px) {
   .horizontal-steps {
-    padding: 96px 32px;
+    padding: 96px 2rem;
     overflow: hidden;
   }
 
   .horizontal-steps__slider[data-gsap-slider-init] {
     --slider-status: on;
-    --slider-spv: 1.05;
-    --slider-gap: 1rem;
-    margin-inline: -2rem;
-    padding-inline: 2rem;
+    --slider-spv: 1;
+    --slider-gap: 0.75rem;
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    padding-inline: 0.75rem;
+    overflow: hidden;
+  }
+
+  .horizontal-steps__collection {
+    container-type: inline-size;
+    width: 100%;
     overflow: hidden;
   }
 
@@ -79,13 +86,18 @@
   }
 
   .horizontal-steps__card {
-    width: calc(
-      ((100% - 1px) - (var(--slider-spv) - 1) * var(--slider-gap)) /
-        var(--slider-spv)
-    );
+    width: calc(100vw - 1.5rem);
+    flex: 0 0 calc(100vw - 1.5rem);
     margin-right: var(--slider-gap);
-    flex: none;
+    box-sizing: border-box;
     transition: opacity 0.3s ease;
+  }
+
+  @supports (width: 1cqw) {
+    .horizontal-steps__card {
+      width: 100cqw;
+      flex: 0 0 100cqw;
+    }
   }
 
   .horizontal-steps__card:last-child {

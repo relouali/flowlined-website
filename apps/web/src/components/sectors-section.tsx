@@ -81,23 +81,16 @@ export default function SectorsSection() {
             <HighlightText className="type-section-title text-white">
               Met wie wij <span className="text-[#cddfed]">bouwen</span>
             </HighlightText>
-            <p className="type-section-lead max-w-2xl text-white/80">
+            <p className="type-section-lead max-w-2xl text-white/80 hidden lg:block">
               Flowlined werkt met domeinexperts in sectoren waar het vakkundige
               oordeel centraal staat. Professionals die hun vak kennen, een
               markt zien, en er een product van willen maken.
             </p>
           </div>
 
-          {/* Two-column picker. `lg:items-center` aligns the details
-              slide and the looping-words picker on the same vertical
-              mid-line so the active sector title sits next to the
-              bracketed word on the right. */}
-          <div className="sectors-picker-grid mt-16 grid w-full grid-cols-1 gap-10 lg:mt-20 lg:grid-cols-2 lg:items-center lg:gap-12">
-            {/* Left column: active sector details — each line is revealed
-                via SplitText (Osmo "MaskText" pattern) every time the
-                sector becomes active, with a stagger between title /
-                subtitle / description. */}
-            <div className="sectors-detail relative min-h-[220px] lg:min-h-[240px]">
+          {/* Mobile: title → looping words → detail. Desktop: detail | words. */}
+          <div className="sectors-picker-grid mt-10 grid w-full grid-cols-1 gap-10 lg:mt-20 lg:grid-cols-2 lg:items-center lg:gap-12">
+            <div className="sectors-detail relative order-2 min-h-[220px] lg:order-1 lg:min-h-[240px]">
               {SECTORS.map((sector, idx) => {
                 const isActive = idx === activeIndex;
                 return (
@@ -111,7 +104,7 @@ export default function SectorsSection() {
                       <MaskTextReveal
                         as="h3"
                         active={isActive}
-                        className="type-card-title-lg text-white"
+                        className="type-card-title-lg hidden text-white lg:block"
                       >
                         {sector.title}
                       </MaskTextReveal>
@@ -137,9 +130,7 @@ export default function SectorsSection() {
               })}
             </div>
 
-            {/* Right column: looping words selector — auto-cycles every
-                ~2 seconds and drives the left column via onChange. */}
-            <div className="flex items-center justify-center">
+            <div className="sectors-picker-words order-1 flex items-center justify-center lg:order-2">
               <LoopingWords words={sectorTitles} onChange={setActiveIndex} />
             </div>
           </div>

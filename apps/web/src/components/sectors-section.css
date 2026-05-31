@@ -40,6 +40,18 @@
   pointer-events: auto;
 }
 
+@media (max-width: 1023px) {
+  .sectors-picker-grid {
+    gap: 2rem;
+  }
+
+  .sectors-detail__slide {
+    top: 0;
+    left: 0;
+    transform: none;
+  }
+}
+
 /* Partner logo wall wrapper — caps width and applies the section opacity. */
 .sectors-logos-wrap {
   width: 100%;

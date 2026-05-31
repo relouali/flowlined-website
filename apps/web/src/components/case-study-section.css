@@ -3,6 +3,87 @@
   background-color: #fff;
 }
 
+.case-study-section__stats {
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+.case-study-section__stats[data-gsap-slider-init] {
+  --slider-status: off;
+  --slider-spv: 4;
+  --slider-gap: 1.5em;
+}
+
+.case-study-section__stats-collection {
+  width: 100%;
+}
+
+.case-study-section__stats-track {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 639px) {
+  .case-study-section__stats[data-gsap-slider-init] {
+    --slider-status: on;
+    --slider-spv: 1.12;
+    --slider-gap: 1.5rem;
+    overflow: hidden;
+  }
+
+  .case-study-section__stats-collection {
+    container-type: inline-size;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .case-study-section__stats-track {
+    display: flex;
+    gap: 0;
+    user-select: none;
+    will-change: transform;
+    touch-action: pan-y;
+    backface-visibility: hidden;
+  }
+
+  .case-study-stat {
+    width: calc(
+      (100cqw - (var(--slider-spv) - 1) * var(--slider-gap)) / var(--slider-spv)
+    );
+    flex: 0 0
+      calc(
+        (100cqw - (var(--slider-spv) - 1) * var(--slider-gap)) / var(--slider-spv)
+      );
+    margin-right: var(--slider-gap);
+    box-sizing: border-box;
+    transition: opacity 0.3s ease;
+  }
+
+  @supports not (width: 1cqw) {
+    .case-study-stat {
+      width: min(82vw, 320px);
+      flex: 0 0 min(82vw, 320px);
+    }
+  }
+
+  [data-gsap-slider-item-status="not-active"].case-study-stat {
+    opacity: 0.45;
+  }
+}
+
+@media (min-width: 640px) {
+  .case-study-section__stats-track {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 3rem;
+    row-gap: 2.5rem;
+  }
+}
+
 @media (min-width: 1024px) {
   .case-study-section__content {
     flex: 0 1 50%;
@@ -23,6 +104,9 @@
   .case-study-section__stats {
     width: 100%;
     max-width: 750px;
+  }
+
+  .case-study-section__stats-track {
     column-gap: 6rem;
     row-gap: 3.5rem;
   }
@@ -53,7 +137,7 @@
     font-size: 2.625rem;
   }
 
-  .case-study-section__stats {
+  .case-study-section__stats-track {
     column-gap: 3.5rem;
     row-gap: 2.25rem;
   }

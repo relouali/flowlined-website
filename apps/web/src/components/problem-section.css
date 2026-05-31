@@ -1,37 +1,83 @@
 .problem-items {
+  width: 100%;
+  position: relative;
+  margin-top: 5rem;
+}
+
+.problem-items[data-gsap-slider-init] {
+  --slider-status: off;
+  --slider-spv: 4;
+  --slider-gap: 1.5em;
+}
+
+.problem-items__collection {
+  width: 100%;
+}
+
+.problem-items__track {
   display: grid;
   grid-template-columns: 1fr;
   gap: 3rem;
 }
 
 @media (max-width: 639px) {
-  .problem-items {
-    display: flex;
-    gap: 2rem;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    overscroll-behavior-y: auto;
-    scroll-snap-type: x proximity;
-    scroll-padding-inline: 2rem;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    margin-inline: -2rem;
-    padding-inline: 2rem;
-    touch-action: pan-y;
+  .problem-items[data-gsap-slider-init] {
+    --slider-status: on;
+    --slider-spv: 1.12;
+    --slider-gap: 1.5rem;
+    overflow: hidden;
   }
 
-  .problem-items::-webkit-scrollbar {
-    display: none;
+  .problem-items__collection {
+    container-type: inline-size;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .problem-items__track {
+    display: flex;
+    gap: 0;
+    user-select: none;
+    will-change: transform;
+    touch-action: pan-y;
+    backface-visibility: hidden;
   }
 
   .problem-item {
-    flex: 0 0 min(82vw, 320px);
-    scroll-snap-align: start;
+    width: calc(
+      (100cqw - (var(--slider-spv) - 1) * var(--slider-gap)) / var(--slider-spv)
+    );
+    flex: 0 0
+      calc(
+        (100cqw - (var(--slider-spv) - 1) * var(--slider-gap)) / var(--slider-spv)
+      );
+    margin-right: var(--slider-gap);
+    box-sizing: border-box;
+    transition: opacity 0.3s ease;
+  }
+
+  @supports not (width: 1cqw) {
+    .problem-item {
+      width: min(82vw, 320px);
+      flex: 0 0 min(82vw, 320px);
+    }
+  }
+
+  .problem-item:last-child {
+    margin-right: 0;
+  }
+
+  [data-gsap-slider-item-status="not-active"].problem-item {
+    opacity: 0.45;
   }
 }
 
 @media (min-width: 640px) {
   .problem-items {
+    margin-top: 7rem;
+  }
+
+  .problem-items__track {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 3rem;
   }
@@ -39,10 +85,11 @@
 
 @media (min-width: 1024px) {
   .problem-items {
-    gap: 2.5rem;
+    margin-top: 7rem;
   }
 
-  .problem-items {
+  .problem-items__track {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2.5rem;
   }
 }

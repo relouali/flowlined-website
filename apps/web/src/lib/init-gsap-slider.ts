@@ -135,26 +135,23 @@ export function initGsapSlider(
     track.removeAttribute("data-gsap-slider-list-status");
   };
 
+  let collectionRect = collection.getBoundingClientRect();
+
+  function measureSnapPoints() {
+    collectionRect = collection!.getBoundingClientRect();
+    return items.map((item) => -item.offsetLeft);
+  }
+
   const viewportWidth = collection.clientWidth;
   const trackWidth = track.scrollWidth;
   const maxScroll = Math.max(trackWidth - viewportWidth, 0);
-  const minX = -maxScroll;
   const maxX = 0;
-  const maxIndex = maxScroll / slideWidth;
-  const fullSteps = Math.floor(maxIndex);
-  const snapPoints: number[] = [];
-
-  for (let index = 0; index <= fullSteps; index += 1) {
-    snapPoints.push(-index * slideWidth);
-  }
-
-  if (fullSteps < maxIndex) {
-    snapPoints.push(-maxIndex * slideWidth);
-  }
+  const snapPoints = measureSnapPoints();
+  const lastSnap = snapPoints[snapPoints.length - 1] ?? 0;
+  const minX = Math.min(-maxScroll, lastSnap);
 
   let activeIndex = 0;
   const setX = gsap.quickSetter(track, "x", "px");
-  let collectionRect = collection.getBoundingClientRect();
 
   function updateStatus(x: number) {
     if (x > maxX || x < minX) {

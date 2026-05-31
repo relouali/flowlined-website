@@ -7,6 +7,8 @@ import { useEffect, useRef } from "react";
 
 import HighlightText from "@/components/highlight-text";
 import Cta from "@/components/cta";
+import GsapSlider from "@/components/gsap-slider";
+import { MOBILE_CAROUSEL_MQ } from "@/lib/sync-lenis-prevent-mobile";
 
 import "./case-study-section.css";
 
@@ -141,7 +143,7 @@ function animateNumericScramble(
   finalText: string,
   min: number,
   max: number,
-  scrollTrigger: ScrollTrigger.Vars,
+  scrollTrigger: ScrollTrigger.Vars | undefined,
   options: ScramblePartOptions = {},
 ) {
   let lastTick = -Infinity;
@@ -190,12 +192,55 @@ function animateNumericScramble(
     onComplete() {
       el.textContent = finalText;
     },
-    scrollTrigger,
+    ...(scrollTrigger ? { scrollTrigger } : {}),
+  });
+}
+
+function scrambleStatItem(
+  item: HTMLElement,
+  index: number,
+  tweens: gsap.core.Tween[],
+) {
+  const stat = STATS[index];
+  if (!stat) return;
+
+  const parts = splitNumberParts(stat.number);
+  const partValues = parts.fraction
+    ? [parts.integer, parts.fraction]
+    : [stat.number];
+
+  const scrambleEls = Array.from(
+    item.querySelectorAll<HTMLElement>(".case-study-stat-value__scramble"),
+  );
+
+  scrambleEls.forEach((target, partIndex) => {
+    const finalPart = partValues[partIndex];
+    if (!finalPart) return;
+
+    const isFraction = partIndex === 1;
+
+    const tween = animateNumericScramble(
+      target,
+      finalPart,
+      stat.scrambleMin,
+      stat.scrambleMax,
+      undefined,
+      isFraction
+        ? {
+            independent: true,
+            seed: index * 31 + partIndex * 17,
+            duration: SCRAMBLE_DURATION * 1.08,
+            delay: 0.14,
+          }
+        : undefined,
+    );
+    tweens.push(tween);
   });
 }
 
 export default function CaseStudySection() {
   const statsRef = useRef<HTMLUListElement>(null);
+  const syncMobileStatScrambleRef = useRef<() => void>(() => {});
 
   // Scramble-reveal only the numeric portion of each KPI. Digits count upward
   // through a stat-specific range before settling on the final value.
@@ -222,71 +267,134 @@ export default function CaseStudySection() {
     const tweens: gsap.core.Tween[] = [];
     let cancelled = false;
 
-    const start = () => {
-      if (cancelled) return;
-      statItems.forEach((item, index) => {
-        const stat = STATS[index];
-        if (!stat) return;
+    function createScrambleIndex(scrambled: Set<number>) {
+      return (index: number) => {
+        if (cancelled || scrambled.has(index)) return;
+        scrambled.add(index);
+        const item = statItems[index];
+        if (!item) return;
+        scrambleStatItem(item, index, tweens);
+      };
+    }
 
-        const parts = splitNumberParts(stat.number);
-        const partValues = parts.fraction
-          ? [parts.integer, parts.fraction]
-          : [stat.number];
+    const track = container;
 
-        const scrambleEls = Array.from(
-          item.querySelectorAll<HTMLElement>(".case-study-stat-value__scramble"),
+    function isCollectionInView(collection: HTMLElement) {
+      const rect = collection.getBoundingClientRect();
+      return rect.bottom > 0 && rect.top < window.innerHeight * 0.92;
+    }
+
+    const mm = gsap.matchMedia();
+
+    mm.add(MOBILE_CAROUSEL_MQ, () => {
+      const scrambled = new Set<number>();
+      const scrambleIndex = createScrambleIndex(scrambled);
+      const triggers: ScrollTrigger[] = [];
+
+      function syncMobileActiveStat() {
+        const slider = track.closest<HTMLElement>("[data-gsap-slider-init]");
+        const collection =
+          slider?.querySelector<HTMLElement>("[data-gsap-slider-collection]") ??
+          track.parentElement;
+
+        if (!collection || !isCollectionInView(collection)) return;
+
+        const activeItem =
+          slider?.querySelector<HTMLElement>(
+            '[data-gsap-slider-item-status="active"]',
+          ) ?? statItems[0];
+
+        if (!activeItem) return;
+
+        const index = statItems.indexOf(activeItem);
+        if (index >= 0) {
+          scrambleIndex(index);
+        }
+      }
+
+      syncMobileStatScrambleRef.current = syncMobileActiveStat;
+
+      const setup = () => {
+        const collection =
+          track.closest<HTMLElement>("[data-gsap-slider-collection]") ??
+          track.parentElement;
+        if (!collection) return;
+
+        triggers.push(
+          ScrollTrigger.create({
+            trigger: collection,
+            scroller: document.body,
+            start: "top 88%",
+            end: "bottom top",
+            onEnter: syncMobileActiveStat,
+            onEnterBack: syncMobileActiveStat,
+          }),
         );
 
-        scrambleEls.forEach((target, partIndex) => {
-          const finalPart = partValues[partIndex];
-          if (!finalPart) return;
+        ScrollTrigger.refresh();
+      };
 
-          const isFraction = partIndex === 1;
+      const fonts = (
+        document as Document & { fonts?: { ready: Promise<unknown> } }
+      ).fonts;
 
-          const t = animateNumericScramble(
-            target,
-            finalPart,
-            stat.scrambleMin,
-            stat.scrambleMax,
-            {
+      if (fonts?.ready) {
+        fonts.ready.then(setup);
+      } else {
+        setup();
+      }
+
+      return () => {
+        triggers.forEach((trigger) => trigger.kill());
+        syncMobileStatScrambleRef.current = () => {};
+      };
+    });
+
+    mm.add("(min-width: 640px)", () => {
+      const scrambled = new Set<number>();
+      const scrambleIndex = createScrambleIndex(scrambled);
+      const triggers: ScrollTrigger[] = [];
+
+      const setup = () => {
+        statItems.forEach((item, index) => {
+          triggers.push(
+            ScrollTrigger.create({
               trigger: item,
               scroller: document.body,
-              start: "top 95%",
+              start: "top 88%",
               once: true,
               invalidateOnRefresh: true,
-            },
-            isFraction
-              ? {
-                  independent: true,
-                  seed: index * 31 + partIndex * 17,
-                  duration: SCRAMBLE_DURATION * 1.08,
-                  delay: 0.14,
-                }
-              : undefined,
+              onEnter: () => scrambleIndex(index),
+            }),
           );
-          tweens.push(t);
         });
-      });
-    };
 
-    // Wait for the pixel font to load before scrambling so character widths
-    // are measured against Geist Pixel Line rather than the Mono fallback.
-    const fonts = (
-      document as Document & { fonts?: { ready: Promise<unknown> } }
-    ).fonts;
-    if (fonts && fonts.ready) {
-      fonts.ready.then(start);
-    } else {
-      start();
-    }
+        ScrollTrigger.refresh();
+      };
+
+      const fonts = (
+        document as Document & { fonts?: { ready: Promise<unknown> } }
+      ).fonts;
+
+      if (fonts?.ready) {
+        fonts.ready.then(setup);
+      } else {
+        setup();
+      }
+
+      return () => {
+        triggers.forEach((trigger) => trigger.kill());
+      };
+    });
 
     return () => {
       cancelled = true;
+      syncMobileStatScrambleRef.current = () => {};
+      mm.revert();
       tweens.forEach((tween) => {
         tween.scrollTrigger?.kill();
         tween.kill();
       });
-      // Restore originals in case Strict Mode tore us down mid-scramble.
       scrambleTargets.forEach((el, i) => {
         el.textContent = originals[i];
       });
@@ -317,42 +425,51 @@ export default function CaseStudySection() {
         </div>
 
         <div className="case-study-section__stats-wrap flex w-full flex-1 flex-col pt-12 lg:min-h-0 lg:pt-6">
-          <ul
-            ref={statsRef}
-            className="case-study-section__stats grid w-full max-w-[600px] list-none grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-x-12 lg:gap-x-24 lg:gap-y-14"
+          <GsapSlider
+            className="case-study-section__stats"
+            collectionClassName="case-study-section__stats-collection"
+            trackClassName="case-study-section__stats-track"
+            trackAs="ul"
+            trackRef={statsRef}
+            ariaLabel="Case study statistieken"
+            onUpdate={() => syncMobileStatScrambleRef.current()}
           >
             {STATS.map((stat) => {
               const { integer, fraction } = splitNumberParts(stat.number);
 
               return (
-              <li key={stat.value} className="case-study-stat flex flex-col gap-3 lg:gap-2">
-                <div className="case-study-stat__head flex flex-col gap-2 lg:gap-1.5">
-                  <span
-                    className="case-study-stat-value type-stat"
-                    aria-label={stat.value}
-                  >
-                    <span className="case-study-stat-value__scramble">{integer}</span>
-                    {fraction !== null ? (
-                      <>
-                        <span className="case-study-stat-value__separator">,</span>
-                        <span className="case-study-stat-value__scramble">{fraction}</span>
-                      </>
-                    ) : null}
-                    {stat.unit ? (
-                      <span className="case-study-stat-value__unit">{stat.unit}</span>
-                    ) : null}
-                  </span>
-                  <span className="type-body text-black">
-                    {stat.label}
-                  </span>
-                </div>
-                <p className="case-study-stat__description type-body font-extralight text-black/50">
-                  {stat.description}
-                </p>
-              </li>
+                <li
+                  key={stat.value}
+                  data-gsap-slider-item
+                  className="case-study-stat flex flex-col gap-3 lg:gap-2"
+                >
+                  <div className="case-study-stat__head flex flex-col gap-2 lg:gap-1.5">
+                    <span
+                      className="case-study-stat-value type-stat"
+                      aria-label={stat.value}
+                    >
+                      <span className="case-study-stat-value__scramble">{integer}</span>
+                      {fraction !== null ? (
+                        <>
+                          <span className="case-study-stat-value__separator">,</span>
+                          <span className="case-study-stat-value__scramble">{fraction}</span>
+                        </>
+                      ) : null}
+                      {stat.unit ? (
+                        <span className="case-study-stat-value__unit">{stat.unit}</span>
+                      ) : null}
+                    </span>
+                    <span className="type-body text-black">
+                      {stat.label}
+                    </span>
+                  </div>
+                  <p className="case-study-stat__description type-body font-extralight text-black/50">
+                    {stat.description}
+                  </p>
+                </li>
               );
             })}
-          </ul>
+          </GsapSlider>
 
           <div className="case-study-section__cta mt-auto shrink-0 pt-10 lg:pt-8">
             <Cta href="#contact" variant="secondary">
