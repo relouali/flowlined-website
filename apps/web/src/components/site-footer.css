@@ -16,6 +16,7 @@
 }
 
 .footer-newsletter-input::placeholder {
+  font-size: 1rem;
   color: rgb(255 255 255 / 60%);
 }
 
@@ -33,7 +34,7 @@
   .footer-newsletter-input {
     height: 4rem;
     min-height: 4rem;
-    font-size: 1.125rem;
+    font-size: 1rem;
   }
 
   .footer-newsletter-submit .btn-icon-content {

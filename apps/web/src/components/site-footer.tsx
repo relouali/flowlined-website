@@ -36,7 +36,7 @@ export default function SiteFooter() {
   return (
     <footer
       id="contact"
-      className="bg-[#0a1418] px-8 pt-16 text-white lg:px-16 lg:pt-[74px]"
+      className="site-footer bg-[#0a1418] px-8 pt-16 text-white lg:px-16 lg:pt-[74px]"
     >
       <div className="mx-auto flex w-full max-w-[1320px] flex-col gap-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[572px_188px_minmax(0,1fr)] lg:gap-x-16 lg:gap-y-0">
@@ -68,7 +68,7 @@ export default function SiteFooter() {
                 </p>
               </div>
               <div className="flex flex-col gap-1">
-                <p className="font-semibold">Contact:</p>
+                <p className="font-semibold">Contact</p>
                 <a
                   className="font-light text-[#999999] transition-colors hover:text-white"
                   href="tel:+31202117832"
@@ -122,7 +122,7 @@ export default function SiteFooter() {
 
           <div className="flex min-w-0 flex-col gap-6">
             <div className="flex flex-col gap-4">
-              <p className="type-body font-semibold">Blijf op de hoogte</p>
+              <p className="type-ui py-2 font-semibold">Blijf op de hoogte</p>
               <p className="type-body font-light leading-[1.5]">
                 Ontvang inzichten over dossierwerk, Venture building en
                 nieuwe productlanceringen.

@@ -439,7 +439,7 @@ function LancerenArt() {
 function PlaceholderArt({ step }: { step: number }) {
   return (
     <div className="absolute inset-0 flex items-center justify-center">
-      <span className="font-mono text-sm font-light tracking-widest text-[#000c10]/30">
+      <span className="font-mono text-base font-light tracking-widest text-[#000c10]/30">
         0{step + 1}
       </span>
     </div>

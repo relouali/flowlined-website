@@ -86,6 +86,11 @@ function parseScrambleTarget(finalText: string, fallbackMax: number) {
   return Number.isFinite(parsed) ? parsed : fallbackMax;
 }
 
+function scrambleDurationFor(stat: Stat) {
+  const range = Math.max(stat.scrambleMax - stat.scrambleMin, 1);
+  return Math.min(0.28 + range * 0.036, SCRAMBLE_DURATION);
+}
+
 function scrambleTickInterval(progress: number) {
   const eased = Math.pow(Math.min(Math.max(progress, 0), 1), SCRAMBLE_SLOWDOWN);
   return SCRAMBLE_MIN_TICK + (SCRAMBLE_MAX_TICK - SCRAMBLE_MIN_TICK) * eased;
@@ -213,6 +218,8 @@ function scrambleStatItem(
     item.querySelectorAll<HTMLElement>(".case-study-stat-value__scramble"),
   );
 
+  const statDuration = scrambleDurationFor(stat);
+
   scrambleEls.forEach((target, partIndex) => {
     const finalPart = partValues[partIndex];
     if (!finalPart) return;
@@ -229,10 +236,10 @@ function scrambleStatItem(
         ? {
             independent: true,
             seed: index * 31 + partIndex * 17,
-            duration: SCRAMBLE_DURATION * 1.08,
-            delay: 0.14,
+            duration: statDuration * 1.08,
+            delay: 0.08,
           }
-        : undefined,
+        : { duration: statDuration },
     );
     tweens.push(tween);
   });
