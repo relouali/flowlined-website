@@ -39,7 +39,7 @@
     gap: 0;
     user-select: none;
     will-change: transform;
-    touch-action: pan-y;
+    touch-action: pan-x pan-y;
     backface-visibility: hidden;
   }
 

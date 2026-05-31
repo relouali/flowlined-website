@@ -1,6 +1,5 @@
 import gsap from "gsap";
 import Draggable from "gsap/Draggable";
-import InertiaPlugin from "gsap/InertiaPlugin";
 
 type InitGsapSliderOptions = {
   onUpdate?: () => void;
@@ -16,7 +15,7 @@ export function initGsapSlider(
 ): () => void {
   if (!root) return () => {};
 
-  gsap.registerPlugin(Draggable, InertiaPlugin);
+  gsap.registerPlugin(Draggable);
 
   const sliderRoot = root as SliderRoot;
 
@@ -151,7 +150,55 @@ export function initGsapSlider(
   const minX = Math.min(-maxScroll, lastSnap);
 
   let activeIndex = 0;
+  let pressStartX = 0;
+  let pressStartIndex = 0;
+  let lastSampleX = 0;
+  let lastSampleTime = 0;
+  let releaseVelocity = 0;
   const setX = gsap.quickSetter(track, "x", "px");
+  const slideStep =
+    snapPoints.length > 1
+      ? Math.abs(snapPoints[1] - snapPoints[0])
+      : slideWidth;
+
+  function snapToIndex(index: number, duration = 0.4) {
+    const target = Math.max(0, Math.min(index, snapPoints.length - 1));
+    const targetX = snapPoints[target];
+
+    gsap.to(track, {
+      duration,
+      ease: "power3.out",
+      x: targetX,
+      overwrite: true,
+      onUpdate: () => {
+        updateStatus(Number(gsap.getProperty(track, "x")));
+      },
+      onComplete: () => {
+        setX(targetX);
+        updateStatus(targetX);
+        sliderRoot._sliderDraggable?.update();
+      },
+    });
+  }
+
+  function resolveReleaseIndex(
+    startIndex: number,
+    delta: number,
+    velocity: number,
+  ) {
+    const moveThreshold = Math.min(slideStep * 0.08, 36);
+    const velocityThreshold = 120;
+
+    if (delta <= -moveThreshold || velocity <= -velocityThreshold) {
+      return Math.min(startIndex + 1, snapPoints.length - 1);
+    }
+
+    if (delta >= moveThreshold || velocity >= velocityThreshold) {
+      return Math.max(startIndex - 1, 0);
+    }
+
+    return startIndex;
+  }
 
   function updateStatus(x: number) {
     if (x > maxX || x < minX) {
@@ -214,16 +261,7 @@ export function initGsapSlider(
       const delta = direction === "next" ? 1 : -1;
       const target = activeIndex + delta;
 
-      gsap.to(track, {
-        duration: 0.4,
-        x: snapPoints[target],
-        onUpdate: () => {
-          updateStatus(Number(gsap.getProperty(track, "x")));
-        },
-        onComplete: () => {
-          updateStatus(Number(gsap.getProperty(track, "x")));
-        },
-      });
+      snapToIndex(target);
     };
 
     button.addEventListener("click", handler);
@@ -232,34 +270,41 @@ export function initGsapSlider(
 
   sliderRoot._sliderDraggable = Draggable.create(track, {
     type: "x",
-    inertia: true,
+    inertia: false,
     bounds: { minX, maxX },
-    throwResistance: 2000,
-    dragResistance: 0.05,
-    maxDuration: 0.6,
-    minDuration: 0.2,
-    edgeResistance: 0.75,
-    snap: { x: snapPoints, duration: 0.4 } as gsap.SnapVars,
+    dragResistance: 0,
+    edgeResistance: 0.65,
     onPress() {
+      pressStartX = this.x;
+      pressStartIndex = activeIndex;
+      lastSampleX = this.x;
+      lastSampleTime = performance.now();
+      releaseVelocity = 0;
       track.setAttribute("data-gsap-slider-list-status", "grabbing");
       collectionRect = collection.getBoundingClientRect();
     },
     onDrag() {
+      const now = performance.now();
+      const elapsed = now - lastSampleTime;
+
+      if (elapsed >= 16) {
+        releaseVelocity = ((this.x - lastSampleX) / elapsed) * 1000;
+        lastSampleX = this.x;
+        lastSampleTime = now;
+      }
+
       setX(this.x);
       updateStatus(this.x);
-    },
-    onThrowUpdate() {
-      setX(this.x);
-      updateStatus(this.x);
-    },
-    onThrowComplete() {
-      setX(this.endX);
-      updateStatus(this.endX);
-      track.setAttribute("data-gsap-slider-list-status", "grab");
     },
     onRelease() {
-      setX(this.x);
-      updateStatus(this.x);
+      const delta = this.x - pressStartX;
+      const targetIndex = resolveReleaseIndex(
+        pressStartIndex,
+        delta,
+        releaseVelocity,
+      );
+
+      snapToIndex(targetIndex);
       track.setAttribute("data-gsap-slider-list-status", "grab");
     },
   })[0];

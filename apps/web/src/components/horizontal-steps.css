@@ -62,11 +62,8 @@
 
   .horizontal-steps__slider[data-gsap-slider-init] {
     --slider-status: on;
-    --slider-spv: 1;
-    --slider-gap: 0.75rem;
-    width: 100vw;
-    margin-inline: calc(50% - 50vw);
-    padding-inline: 0.75rem;
+    --slider-spv: 1.12;
+    --slider-gap: 1.5rem;
     overflow: hidden;
   }
 
@@ -81,27 +78,28 @@
     gap: 0;
     user-select: none;
     will-change: transform;
-    touch-action: pan-y;
+    touch-action: pan-x pan-y;
     backface-visibility: hidden;
   }
 
   .horizontal-steps__card {
-    width: calc(100vw - 1.5rem);
-    flex: 0 0 calc(100vw - 1.5rem);
+    width: calc(
+      (100cqw - (var(--slider-spv) - 1) * var(--slider-gap)) / var(--slider-spv)
+    );
+    flex: 0 0
+      calc(
+        (100cqw - (var(--slider-spv) - 1) * var(--slider-gap)) / var(--slider-spv)
+      );
     margin-right: var(--slider-gap);
     box-sizing: border-box;
     transition: opacity 0.3s ease;
   }
 
-  @supports (width: 1cqw) {
+  @supports not (width: 1cqw) {
     .horizontal-steps__card {
-      width: 100cqw;
-      flex: 0 0 100cqw;
+      width: min(82vw, 320px);
+      flex: 0 0 min(82vw, 320px);
     }
-  }
-
-  .horizontal-steps__card:last-child {
-    margin-right: 0;
   }
 
   [data-gsap-slider-item-status="not-active"].horizontal-steps__card {

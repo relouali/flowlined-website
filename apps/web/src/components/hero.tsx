@@ -32,8 +32,8 @@ export default function Hero() {
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
-      <div className="relative z-10 flex flex-1 flex-col items-start justify-center px-8 pb-16 text-left sm:px-16 md:items-center md:text-center">
-        <div className="flex w-full flex-col items-start gap-8 md:items-center">
+      <div className="relative z-10 flex flex-1 flex-col items-start justify-end px-8 pb-16 text-left sm:px-16 md:items-center md:justify-center md:text-center">
+        <div className="flex w-full flex-col items-start gap-4 md:items-center md:gap-8">
           <h1 className="type-hero bg-gradient-to-b from-white/55 via-white/90 to-white bg-clip-text font-semibold capitalize tracking-tight text-transparent">
             Jouw vakkennis.
             <br />
