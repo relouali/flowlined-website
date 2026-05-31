@@ -13,7 +13,7 @@ export default function ManifestSection() {
       data-parallax="trigger"
       data-parallax-start="15"
       data-parallax-end="-15"
-      className="manifest-section relative flex min-h-[100dvh] items-center justify-center overflow-hidden px-8 py-24 sm:px-16"
+      className="manifest-section relative flex min-h-[100dvh] items-center justify-center overflow-hidden rounded-b-[1.75rem] px-8 py-24 sm:rounded-b-[2rem] sm:px-16 lg:rounded-b-[3rem]"
     >
       {/* Figma stack: Full Black → photo → blue-teal color wash → tint */}
       <div
@@ -30,14 +30,14 @@ export default function ManifestSection() {
       <div className="relative z-10 mx-auto flex w-full max-w-[1080px] flex-col items-center gap-8 text-center">
         <HighlightText
           as="h2"
-          className="text-4xl font-light leading-[1.15] text-white lg:text-[3.5rem] lg:leading-[1.1]"
+          className="type-section-title-lg text-white"
         >
           Domeinkennis verdient een eigen product.
 
 
         </HighlightText>
 
-        <p className="max-w-2xl text-lg font-light leading-relaxed text-white/80 lg:text-xl">
+        <p className="type-section-lead max-w-2xl text-white/80">
           Jij kent het domein. Wij bouwen het systeem. Samen wordt het een product waar je mede-eigenaar van bent.
           Plan een gesprek en ontdek wat een verticaal product voor jouw sector kan betekenen.
         </p>

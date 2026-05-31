@@ -54,7 +54,7 @@ export default function SiteFooter() {
               />
             </a>
 
-            <div className="flex flex-col gap-6 text-sm leading-[1.5]">
+            <div className="type-ui flex flex-col gap-6">
               <div className="flex flex-col gap-1">
                 <p className="font-semibold">Amsterdam</p>
                 <p className="font-light">
@@ -105,12 +105,12 @@ export default function SiteFooter() {
           </div>
 
           <nav aria-label="Voettekst navigatie">
-            <p className="py-2 text-sm font-semibold">Menu</p>
+            <p className="type-ui py-2 font-semibold">Menu</p>
             <ul className="flex flex-col">
               {FOOTER_NAV_LINKS.map(({ href, label }) => (
                 <li key={href}>
                   <a
-                    className="block py-2 text-sm font-light text-[#999999] transition-colors hover:text-white"
+                    className="type-ui block py-2 font-light text-[#999999] transition-colors hover:text-white"
                     href={href}
                   >
                     {label}
@@ -122,8 +122,8 @@ export default function SiteFooter() {
 
           <div className="flex min-w-0 flex-col gap-6">
             <div className="flex flex-col gap-4">
-              <p className="text-base font-semibold">Blijf op de hoogte</p>
-              <p className="text-base font-light leading-[1.5]">
+              <p className="type-body font-semibold">Blijf op de hoogte</p>
+              <p className="type-body font-light leading-[1.5]">
                 Ontvang inzichten over dossierwerk, Venture building en
                 nieuwe productlanceringen.
               </p>
@@ -153,7 +153,7 @@ export default function SiteFooter() {
                   Aanmelden
                 </CtaButton>
               </div>
-              <p className="text-xs font-light leading-[1.5] text-white/80">
+              <p className="type-caption font-light text-white/80">
                 Door je aan te melden ga je akkoord met ons privacybeleid
                 en ontvang je periodiek updates van Flowlined.
               </p>
@@ -163,7 +163,7 @@ export default function SiteFooter() {
 
         <div className="flex flex-col gap-8">
           <div aria-hidden className="h-px w-full bg-white/[0.07]" />
-          <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <div className="type-ui flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="font-light">
               © {new Date().getFullYear()} Flowlined. Alle rechten
               voorbehouden.

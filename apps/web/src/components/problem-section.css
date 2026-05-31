@@ -10,12 +10,14 @@
     gap: 2rem;
     overflow-x: auto;
     overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
     scroll-snap-type: x proximity;
     scroll-padding-inline: 2rem;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     margin-inline: -2rem;
     padding-inline: 2rem;
+    touch-action: pan-y;
   }
 
   .problem-items::-webkit-scrollbar {

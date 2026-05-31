@@ -302,13 +302,13 @@ export default function CaseStudySection() {
     >
       <div className="case-study-section__content flex flex-1 flex-col px-8 py-16 sm:px-16 lg:min-h-0 lg:px-16 lg:pt-20 lg:pb-14">
         <div className="case-study-section__header flex max-w-3xl shrink-0 flex-col gap-8">
-          <HighlightText className="case-study-section__title text-4xl font-light leading-[1.15] text-black lg:text-[3.25rem] lg:leading-[1.1]">
+          <HighlightText className="case-study-section__title type-section-title text-black">
             ADO Pro.{" "}
             <span className="text-black/45">
               Gebouwd voor en met arbeidsdeskundigen.
             </span>
           </HighlightText>
-          <p className="case-study-section__intro max-w-2xl text-lg font-light leading-relaxed text-black/80 lg:text-xl">
+          <p className="case-study-section__intro type-section-lead max-w-2xl text-black/80">
             ADO Pro automatiseert het voorbereidende werk van
             arbeidsdeskundigen, van dossierstudie tot rapportgeneratie. Live
             in productie, gebouwd op de methode die we voor elk domein
@@ -328,7 +328,7 @@ export default function CaseStudySection() {
               <li key={stat.value} className="case-study-stat flex flex-col gap-3 lg:gap-2">
                 <div className="case-study-stat__head flex flex-col gap-2 lg:gap-1.5">
                   <span
-                    className="case-study-stat-value text-[56px] lg:text-[3.25rem]"
+                    className="case-study-stat-value type-stat"
                     aria-label={stat.value}
                   >
                     <span className="case-study-stat-value__scramble">{integer}</span>
@@ -342,11 +342,11 @@ export default function CaseStudySection() {
                       <span className="case-study-stat-value__unit">{stat.unit}</span>
                     ) : null}
                   </span>
-                  <span className="text-base font-light leading-[1.45] text-black">
+                  <span className="type-body text-black">
                     {stat.label}
                   </span>
                 </div>
-                <p className="case-study-stat__description text-base font-extralight leading-[1.45] text-black/50">
+                <p className="case-study-stat__description type-body font-extralight text-black/50">
                   {stat.description}
                 </p>
               </li>

@@ -37,8 +37,8 @@ export default function StickyTitleScroll({
     <div
       ref={wrapRef}
       data-sticky-title="wrap"
+      data-sticky-height={heightVh}
       className={["sticky-title-wrap", className].filter(Boolean).join(" ")}
-      style={heightVh !== undefined ? { height: `${heightVh}vh` } : undefined}
     >
       <div className="sticky-title-container">
         {gradientBackground && (
@@ -55,7 +55,7 @@ export default function StickyTitleScroll({
               key={text}
               data-sticky-title="heading"
               className={[
-                "sticky-title-el",
+                "sticky-title-el type-section-title",
                 index > 0 ? "is--stacked" : "",
               ]
                 .filter(Boolean)

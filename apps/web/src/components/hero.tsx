@@ -32,16 +32,16 @@ export default function Hero() {
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-16 pb-16 text-center">
-        <div className="flex w-full flex-col items-center gap-8">
-          <h1 className="bg-gradient-to-b from-white/55 via-white/90 to-white bg-clip-text text-5xl font-semibold leading-[1.08] capitalize tracking-tight text-transparent sm:text-6xl md:text-7xl lg:text-[4.75rem]">
+      <div className="relative z-10 flex flex-1 flex-col items-start justify-center px-8 pb-16 text-left sm:px-16 md:items-center md:text-center">
+        <div className="flex w-full flex-col items-start gap-8 md:items-center">
+          <h1 className="type-hero bg-gradient-to-b from-white/55 via-white/90 to-white bg-clip-text font-semibold capitalize tracking-tight text-transparent">
             Jouw vakkennis.
             <br />
             Ons systeem.
             <br />
             Eén product.
           </h1>
-          <p className="text-base font-medium leading-relaxed text-white/70 md:text-lg">
+          <p className="type-hero-lead font-medium text-white/70">
             Verticale software voor dossierwerk. Elk product gebouwd met een
             domeinpartner.
           </p>

@@ -78,10 +78,10 @@ export default function SectorsSection() {
         <div className="flex w-full flex-col items-center">
           {/* Header — same structure & spacing as the problem section */}
           <div className="flex max-w-3xl flex-col items-center gap-8 text-center">
-            <HighlightText className="text-4xl font-light leading-[1.15] text-white lg:text-[3.25rem] lg:leading-[1.1]">
+            <HighlightText className="type-section-title text-white">
               Met wie wij <span className="text-[#cddfed]">bouwen</span>
             </HighlightText>
-            <p className="max-w-2xl text-lg font-light leading-relaxed text-white/80 lg:text-xl">
+            <p className="type-section-lead max-w-2xl text-white/80">
               Flowlined werkt met domeinexperts in sectoren waar het vakkundige
               oordeel centraal staat. Professionals die hun vak kennen, een
               markt zien, en er een product van willen maken.
@@ -111,7 +111,7 @@ export default function SectorsSection() {
                       <MaskTextReveal
                         as="h3"
                         active={isActive}
-                        className="text-3xl font-light leading-[1.15] text-white lg:text-[40px] lg:leading-[1.1]"
+                        className="type-card-title-lg text-white"
                       >
                         {sector.title}
                       </MaskTextReveal>
@@ -119,7 +119,7 @@ export default function SectorsSection() {
                         as="p"
                         active={isActive}
                         delay={0.08}
-                        className="text-base font-light leading-relaxed text-white/70"
+                        className="type-body text-white/70"
                       >
                         {sector.subtitle}
                       </MaskTextReveal>
@@ -128,7 +128,7 @@ export default function SectorsSection() {
                       as="p"
                       active={isActive}
                       delay={0.16}
-                      className="text-base font-light leading-relaxed text-white/70"
+                      className="type-body text-white/70"
                     >
                       {sector.description}
                     </MaskTextReveal>

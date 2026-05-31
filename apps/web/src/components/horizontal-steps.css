@@ -27,9 +27,6 @@
 .horizontal-steps__intro {
   max-width: 42rem;
   margin: 0;
-  font-size: 1.125rem;
-  font-weight: 300;
-  line-height: 1.625;
   color: rgba(0, 12, 16, 0.8);
 }
 
@@ -53,12 +50,14 @@
     gap: 2rem;
     overflow-x: auto;
     overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
     scroll-snap-type: x proximity;
     scroll-padding-inline: 2rem;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     margin-inline: -2rem;
     padding-inline: 2rem;
+    touch-action: pan-y;
   }
 
   .horizontal-steps__track::-webkit-scrollbar {
@@ -101,18 +100,11 @@
 
 .horizontal-steps__title {
   margin: 0;
-  font-size: 1.625rem;
-  font-weight: 300;
-  line-height: 1.15;
   color: #000c10;
-  letter-spacing: -0.005em;
 }
 
 .horizontal-steps__description {
   margin: 0;
-  font-size: 0.9375rem;
-  font-weight: 300;
-  line-height: 1.55;
   color: rgba(0, 12, 16, 0.7);
 }
 
@@ -144,10 +136,6 @@
 
   .horizontal-steps__header {
     margin-bottom: 112px;
-  }
-
-  .horizontal-steps__intro {
-    font-size: 1.25rem;
   }
 
   .horizontal-steps__track {

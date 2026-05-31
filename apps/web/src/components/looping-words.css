@@ -20,6 +20,12 @@
   color: #ffffff;
 }
 
+@media (min-width: 768px) {
+  .looping-words {
+    font-size: 2.625rem;
+  }
+}
+
 @media (min-width: 1024px) {
   .looping-words {
     font-size: 3rem;

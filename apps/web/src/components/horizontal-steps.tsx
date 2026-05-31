@@ -28,7 +28,7 @@ export default function HorizontalSteps({
       <div className="horizontal-steps__inner">
         <header className="horizontal-steps__header">
           <HighlightText
-            className="text-center text-4xl font-light leading-[1.15] text-[#000c10] lg:text-[3.25rem] lg:leading-[1.1]"
+            className="type-section-title text-center text-[#000c10]"
             scrollStart="top 82%"
             scrollEnd="top 48%"
             stagger={0.05}
@@ -37,7 +37,9 @@ export default function HorizontalSteps({
             <span className="text-[#000c10]/45">{titleMuted}</span>
           </HighlightText>
 
-          <p className="horizontal-steps__intro">{description}</p>
+          <p className="horizontal-steps__intro type-section-lead">
+            {description}
+          </p>
         </header>
 
         <ProcessArtPlayback>
@@ -59,8 +61,8 @@ function ProcessCard({ index, step }: ProcessCardProps) {
   return (
     <li className="horizontal-steps__card">
       <span className="horizontal-steps__pill">{step.phase}</span>
-      <h3 className="horizontal-steps__title">{step.title}</h3>
-      <p className="horizontal-steps__description">{step.description}</p>
+      <h3 className="horizontal-steps__title type-card-title-lg">{step.title}</h3>
+      <p className="horizontal-steps__description type-body">{step.description}</p>
       <div className="horizontal-steps__art">
         <ProcessStepArt step={index} />
       </div>

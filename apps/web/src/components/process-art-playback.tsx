@@ -5,10 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, type ReactNode } from "react";
 
 import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
-import {
-  MOBILE_CAROUSEL_MQ,
-  syncLenisPreventMobile,
-} from "@/lib/sync-lenis-prevent-mobile";
+import { MOBILE_CAROUSEL_MQ } from "@/lib/sync-lenis-prevent-mobile";
 
 type ProcessArtPlaybackProps = {
   children: ReactNode;
@@ -25,7 +22,6 @@ function updateMobileArtPlayback(
   currentActiveArt: { current: HTMLElement | null },
 ) {
   const cards = track.querySelectorAll<HTMLElement>(".horizontal-steps__card");
-  const arts = track.querySelectorAll<HTMLElement>(".process-art");
   const trackRect = track.getBoundingClientRect();
 
   if (trackRect.bottom <= 0 || trackRect.top >= window.innerHeight) {
@@ -40,12 +36,12 @@ function updateMobileArtPlayback(
   let activeArt: HTMLElement | null = null;
   let bestDistance = Infinity;
 
-  cards.forEach((card) => {
+  for (const card of cards) {
     const rect = card.getBoundingClientRect();
     const isVisible =
       rect.right > trackRect.left + 8 && rect.left < trackRect.right - 8;
 
-    if (!isVisible) return;
+    if (!isVisible) continue;
 
     const cardCenter = rect.left + rect.width / 2;
     const distance = Math.abs(cardCenter - trackCenter);
@@ -54,7 +50,7 @@ function updateMobileArtPlayback(
       bestDistance = distance;
       activeArt = card.querySelector<HTMLElement>(".process-art");
     }
-  });
+  }
 
   if (activeArt === currentActiveArt.current) return;
 
@@ -62,7 +58,7 @@ function updateMobileArtPlayback(
     currentActiveArt.current.classList.remove("is--playing");
   }
 
-  if (activeArt) {
+  if (activeArt !== null) {
     activeArt.classList.remove("is--playing");
     void activeArt.offsetWidth;
     activeArt.classList.add("is--playing");
@@ -74,13 +70,6 @@ function updateMobileArtPlayback(
 export default function ProcessArtPlayback({ children }: ProcessArtPlaybackProps) {
   const trackRef = useRef<HTMLOListElement>(null);
   const { locomotiveScroll } = useLocomotiveScroll();
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    return syncLenisPreventMobile(track);
-  }, []);
 
   useEffect(() => {
     if (!locomotiveScroll || !trackRef.current) return;

@@ -1,8 +1,12 @@
 .sticky-title-wrap {
   position: relative;
   width: 100%;
-  height: 350vh;
+  height: var(--sticky-title-height, 350vh);
   background: transparent;
+}
+
+.sticky-title-wrap[data-sticky-height="300"] {
+  --sticky-title-height: 300vh;
 }
 
 .sticky-title-container {
@@ -156,5 +160,19 @@
 @media (min-width: 1024px) {
   .sticky-title-el {
     font-size: 3.5rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .sticky-title-wrap[data-sticky-height="300"] {
+    --sticky-title-height: 220vh;
+  }
+
+  .sticky-title-container {
+    padding-inline: 2rem;
+  }
+
+  .sticky-title-inner {
+    text-align: left;
   }
 }

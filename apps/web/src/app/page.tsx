@@ -8,7 +8,7 @@ import SiteFooter from "@/components/site-footer";
 
 export default function Home() {
   return (
-    <>
+    <div className="bg-[#0a1418]">
       <main>
         <Hero />
         <ProblemSection />
@@ -18,6 +18,6 @@ export default function Home() {
         <ManifestSection />
       </main>
       <SiteFooter />
-    </>
+    </div>
   );
 }

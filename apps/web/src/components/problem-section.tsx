@@ -1,6 +1,5 @@
 import HighlightText from "@/components/highlight-text";
 import LottieIcon from "@/components/lottie-icon";
-import MobileScrollTrack from "@/components/mobile-scroll-track";
 
 import "./problem-section.css";
 
@@ -44,23 +43,23 @@ export default function ProblemSection() {
     >
       <div className="mx-auto flex w-full max-w-[1320px] flex-col">
         <div className="flex max-w-3xl flex-col gap-8">
-          <HighlightText className="text-4xl font-light leading-[1.15] text-white lg:text-[3.25rem] lg:leading-[1.1]">
+          <HighlightText className="type-section-title text-white">
             Dossierwerk draait op ervaring, niet op systemen.{" "}
             <span className="text-[#cddfed]">Dat werkt, tot het niet meer schaalt.</span>
           </HighlightText>
 
-          <p className="max-w-2xl text-lg font-light leading-relaxed text-white/80 lg:text-xl">
+          <p className="type-section-lead max-w-2xl text-white/80">
             Beoordelaars, auditors en inspecteurs leveren werk van hoog niveau. Maar de
             systemen waarop dat werk draait zijn dat niet. Dit zijn de gevolgen:
           </p>
 
         </div>
 
-        <MobileScrollTrack className="problem-items mt-20 lg:mt-28">
+        <div className="problem-items mt-20 lg:mt-28">
           {ITEMS.map((item, index) => (
             <ProblemItem key={index} item={item} />
           ))}
-        </MobileScrollTrack>
+        </div>
       </div>
     </section>
   );
@@ -71,8 +70,8 @@ function ProblemItem({ item }: { item: (typeof ITEMS)[number] }) {
     <div className="problem-item flex flex-col gap-6">
       <LottieIcon size={item.iconSize} src={item.lottieSrc} />
       <div className="flex flex-col gap-3 text-white">
-        <h3 className="text-lg font-medium leading-snug">{item.title}</h3>
-        <p className="text-base font-light leading-relaxed text-white/70">{item.description}</p>
+        <h3 className="type-card-title text-white">{item.title}</h3>
+        <p className="type-body text-white/70">{item.description}</p>
       </div>
     </div>
   );
