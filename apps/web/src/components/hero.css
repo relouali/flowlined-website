@@ -1,0 +1,13 @@
+.hero__video {
+  pointer-events: none;
+}
+
+.hero__video::-webkit-media-controls,
+.hero__video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+.hero__video::-webkit-media-controls-start-playback-button {
+  -webkit-appearance: none;
+  display: none !important;
+}

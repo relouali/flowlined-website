@@ -17,25 +17,25 @@ const STEPS_HEADING = {
 
 const STEPS = [
   {
-    phase: "Onderzoek",
+    phase: "Stap 1",
     title: "Verkennen",
     description:
       "Samen onderzoeken we of het domein zich leent voor een verticaal product. We brengen het werkproces in kaart, toetsen of de kennis formaliseerbaar is, en bepalen of er een markt achter zit.",
   },
   {
-    phase: "Ontwerp",
+    phase: "Stap 2",
     title: "Modelleren",
     description:
       "De domeinkennis wordt vertaald naar systeemlogica. Geen promptgestuurde AI, maar gestructureerde regels, criteria en uitzonderingen die ingebed worden in de software.",
   },
   {
-    phase: "Ontwikkeling",
+    phase: "Stap 3",
     title: "Bouwen",
     description:
       "Software engineers en AI engineers bouwen het product. Eigen merk, eigen interface, afgestemd op het dagelijkse werk van de eindgebruiker.",
   },
   {
-    phase: "Lancering",
+    phase: "Stap 4",
     title: "Lanceren",
     description:
       "Het product gaat live bij echte gebruikers. De domeinpartner beheert de klantrelatie en de markt. Flowlined levert technische doorontwikkeling en operationele support.",
