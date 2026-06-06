@@ -25,7 +25,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Flowlined",
-  description: "Verticale software voor dossierwerk.",
+  description: "Werksystemen voor experts die ze het hardst nodig hebben.",
 };
 
 export default function RootLayout({

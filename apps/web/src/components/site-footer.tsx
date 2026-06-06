@@ -124,8 +124,7 @@ export default function SiteFooter() {
             <div className="flex flex-col gap-4">
               <p className="type-ui py-2 font-semibold">Blijf op de hoogte</p>
               <p className="type-body font-light leading-[1.5]">
-                Ontvang inzichten over dossierwerk, Venture building en
-                nieuwe productlanceringen.
+              Inzichten over vakkennis, werksystemen en venture building.
               </p>
             </div>
 
@@ -186,7 +185,7 @@ export default function SiteFooter() {
       </div>
 
       <div className="mx-auto mt-16 w-full max-w-[1320px] overflow-hidden lg:mt-20">
-        <GiantWordmark />
+   
       </div>
     </footer>
   );

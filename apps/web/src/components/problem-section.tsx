@@ -45,7 +45,7 @@ export default function ProblemSection() {
       <div className="mx-auto flex w-full max-w-[1320px] flex-col">
         <div className="flex max-w-3xl flex-col gap-8">
           <HighlightText className="type-section-title text-white">
-            Dossierwerk draait op ervaring, niet op systemen.{" "}
+          Expertwerk draait op ervaring, niet op systemen.{" "}
             <span className="text-[#cddfed]">Dat werkt, tot het niet meer schaalt.</span>
           </HighlightText>
 

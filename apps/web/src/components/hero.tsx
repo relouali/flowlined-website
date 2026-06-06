@@ -97,8 +97,7 @@ export default function Hero() {
             Eén product.
           </h1>
           <p className="type-hero-lead font-medium text-white/70">
-            Verticale software voor dossierwerk. Elk product gebouwd met een
-            domeinpartner.
+          Wij bouwen werksystemen samen met de experts die ze het hardst nodig hebben.
           </p>
         </div>
       </div>

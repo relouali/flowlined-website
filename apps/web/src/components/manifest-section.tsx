@@ -38,8 +38,9 @@ export default function ManifestSection() {
         </HighlightText>
 
         <p className="type-section-lead max-w-2xl text-white/80">
-          Jij kent het domein. Wij bouwen het systeem. Samen wordt het een product waar je mede-eigenaar van bent.
-          Plan een gesprek en ontdek wat een verticaal product voor jouw sector kan betekenen.
+          Jouw vakkennis is het fundament. Wij bouwen erop.
+          <br />
+          Samen maken we er een product van dat ook van jou is.
         </p>
 
         <div className="mt-4">
