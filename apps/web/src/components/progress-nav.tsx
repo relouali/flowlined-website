@@ -3,6 +3,7 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
@@ -45,20 +46,36 @@ export default function ProgressNav() {
   const listRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
   const { locomotiveScroll } = useLocomotiveScroll();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   function handleNavigate(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
-    event.preventDefault();
+    // Smooth-scroll when the target section exists on the current page
+    // (e.g. the home page, or the footer's #contact on any page).
+    const target =
+      typeof document !== "undefined" ? document.querySelector(href) : null;
 
-    if (locomotiveScroll) {
-      locomotiveScroll.scrollTo(href, { duration: 1.2, offset: -96 });
+    if (target) {
+      event.preventDefault();
+
+      if (locomotiveScroll) {
+        locomotiveScroll.scrollTo(href, { duration: 1.2, offset: -96 });
+        return;
+      }
+
+      target.scrollIntoView({ behavior: "smooth" });
       return;
     }
 
-    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+    // Otherwise the section lives on the home page — navigate there.
+    if (!isHome) {
+      event.preventDefault();
+      window.location.href = `/${href}`;
+    }
   }
 
   useEffect(() => {
-    if (!locomotiveScroll) return;
+    if (!locomotiveScroll || !isHome) return;
 
     const navList = listRef.current;
     const indicator = indicatorRef.current;
@@ -154,7 +171,15 @@ export default function ProgressNav() {
       themeTriggers.forEach((trigger) => trigger.kill());
       window.removeEventListener("resize", onResize);
     };
-  }, [locomotiveScroll]);
+  }, [locomotiveScroll, isHome]);
+
+  // Sub-pages (e.g. case detail) render on a white background, so the nav
+  // uses its light (dark-text) theme there. The home page drives its own
+  // theme from section scroll triggers above.
+  useEffect(() => {
+    if (isHome) return;
+    navRef.current?.classList.add("is--light");
+  }, [isHome]);
 
   return (
     <nav ref={navRef} className="progress-nav" aria-label="Pagina navigatie">

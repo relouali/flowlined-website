@@ -1,0 +1,574 @@
+/* Case detail page — reuses the site's typography tokens and colour system.
+   Styling intentionally mirrors the home page (white sections, #f8fafd cards,
+   Geist Pixel KPI numbers) rather than the raw Figma font sizes. */
+
+.case-detail {
+  --case-title-desc-gap: 1rem;
+  --case-desc-media-gap: 2.5rem;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Shared title → description → media rhythm used across case sections. */
+.case-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: var(--case-desc-media-gap);
+}
+
+.case-section__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--case-title-desc-gap);
+  width: 100%;
+  text-align: center;
+}
+
+.case-section--align-left {
+  align-items: stretch;
+}
+
+.case-section--align-left .case-section__header {
+  text-align: left;
+}
+
+/* Consistent 246px of breathing room between the page's top-level sections. */
+.case-detail main {
+  display: flex;
+  flex-direction: column;
+  gap: 246px;
+}
+
+/* ------------------------------------------------------------------ Hero */
+/* Centered hero (Runway-style): brand mark, title, lead, actions, then a
+   large product screenshot that bleeds below the fold. Top padding clears
+   the fixed floating ProgressNav inherited from layout. */
+.case-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--case-desc-media-gap);
+  padding: 8rem 1.5rem 0;
+  text-align: center;
+  overflow: hidden;
+  /* Soft left-to-right brand gradient (blue -> peach) over a light wash,
+     fading to white toward the screenshot so it blends into the next section. */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0) 38%, #ffffff 100%),
+    linear-gradient(
+      90deg,
+      rgba(77, 163, 217, 0.11) 0%,
+      rgba(253, 205, 154, 0.11) 100%
+    ),
+    linear-gradient(180deg, #eef3f6 0%, #f5f8f9 46%, #ffffff 100%);
+}
+
+.case-hero__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--case-title-desc-gap);
+  width: 100%;
+  max-width: 860px;
+}
+
+.case-hero__logo {
+  position: relative;
+  width: 160px;
+  height: 46px;
+}
+
+.case-hero__lead {
+  max-width: 40rem;
+}
+
+/* Large screenshot, rounded top, flat bottom so it reads as continuing
+   below the fold. max-height crops the lower rows of the UI. */
+.case-hero__visual {
+  width: 100%;
+  max-width: 1180px;
+  max-height: 360px;
+  overflow: hidden;
+  border-radius: 14px 14px 0 0;
+  box-shadow: 0 30px 70px -34px rgba(0, 26, 35, 0.3);
+}
+
+.case-hero__visual-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (min-width: 768px) {
+  .case-hero {
+    padding: 9.5rem 2rem 0;
+  }
+
+  .case-hero__logo {
+    width: 184px;
+    height: 52px;
+  }
+
+  .case-hero__visual {
+    max-height: min(58vh, 560px);
+  }
+}
+
+/* --------------------------------------------------------- KPI bento grid */
+.case-kpis {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .case-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .case-kpis {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.case-kpi {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2.5rem;
+  min-height: 200px;
+  padding: 1.5rem;
+  background-color: #f8fafd;
+  border-radius: 10px;
+}
+
+.case-kpi__label {
+  max-width: 14rem;
+}
+
+/* Big KPI number — same Geist Pixel Line + vertical fade as the home case study. */
+.case-kpi__value {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-geist-pixel-line), var(--font-geist-mono),
+    ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.05;
+  background-image: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0.28) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ------------------------------------------------------------- Collage */
+.case-collage {
+  width: 100%;
+}
+
+.case-collage__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ----------------------------------------------------------- Step / video */
+.case-step__frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 12px;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(100, 168, 209, 0.25),
+    rgba(244, 203, 158, 0.25)
+  );
+}
+
+.case-step__media {
+  position: relative;
+  aspect-ratio: 1228 / 720;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.case-step__video {
+  pointer-events: none;
+}
+
+.case-step__video::-webkit-media-controls,
+.case-step__video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+.case-step__video::-webkit-media-controls-start-playback-button {
+  -webkit-appearance: none;
+  display: none !important;
+}
+
+/* Centered GSAP slider (Osmo pattern, adapted for light case page). */
+.case-step-slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.case-step-slider__controls {
+  position: relative;
+  width: 100%;
+  padding-inline: 3.75rem;
+  container-type: inline-size;
+  --case-step-slide-width: min(1040px, calc(100cqw - 9rem));
+}
+
+/* Vertically center arrows on the video frame, not the full slide + copy. */
+.case-step-slider__button.is--side {
+  position: absolute;
+  top: calc(
+    3.5rem + (var(--case-step-slide-width) - 4rem) * 360 / 1228
+  );
+  transform: translateY(-50%);
+}
+
+.case-step-slider__button.is--prev.is--side {
+  left: 0;
+  transform: translateY(-50%) rotate(-180deg);
+}
+
+.case-step-slider__button.is--next.is--side {
+  right: 0;
+}
+
+.case-step-slider__row {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  padding-block: 0.75rem;
+  overflow: clip;
+}
+
+.case-step-slider__list {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  width: 100%;
+}
+
+.case-step-slider__slide {
+  position: relative;
+  flex: none;
+  padding: 0.75rem;
+  cursor: pointer;
+  backface-visibility: hidden;
+  transition: opacity 0.25s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.case-step-slider__slide-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--case-desc-media-gap);
+  width: var(--case-step-slide-width);
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.case-step-slider__row:has(.case-step-slider__slide.active)
+  .case-step-slider__slide:not(.active) {
+  opacity: 0.45;
+}
+
+.case-step-slider__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--case-title-desc-gap);
+  text-align: center;
+}
+
+.case-step-slider__button {
+  display: flex;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 1px solid rgba(0, 12, 16, 0.12);
+  border-radius: 0.25rem;
+  background-color: rgba(0, 12, 16, 0.04);
+  color: #000c10;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.case-step-slider__button:hover {
+  background-color: rgba(0, 12, 16, 0.08);
+  border-color: rgba(0, 12, 16, 0.2);
+}
+
+.case-step-slider__button.is--invisible {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.case-step-slider__button-arrow {
+  width: 1.25rem;
+}
+
+.case-step-slider__indicators {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.case-step-slider__indicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 50em;
+  background-color: rgba(0, 12, 16, 0.18);
+  cursor: pointer;
+  transition:
+    width 0.25s cubic-bezier(0.77, 0, 0.175, 1),
+    background-color 0.2s ease;
+}
+
+.case-step-slider__indicator.is--active {
+  width: 1.5rem;
+  background-color: rgba(0, 12, 16, 0.72);
+}
+
+.case-step-slider__indicator:hover {
+  background-color: rgba(0, 12, 16, 0.4);
+}
+
+.case-step-slider__indicator.is--active:hover {
+  background-color: rgba(0, 12, 16, 0.85);
+}
+
+@media (max-width: 479px) {
+  .case-step-slider__controls {
+    padding-inline: 3.25rem;
+    --case-step-slide-width: calc(85vw - 1.5rem);
+  }
+
+  .case-step-slider__button.is--side {
+    top: calc(3.5rem + (var(--case-step-slide-width) - 4rem) * 360 / 1228);
+  }
+
+  .case-step-slider__button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .case-step-slider__slide {
+    width: 85vw;
+  }
+
+  .case-step-slider__slide-inner {
+    width: 100%;
+  }
+}
+
+/* ----------------------------------------------------- Comparison table */
+.case-section__header--center {
+  align-items: center;
+  text-align: center;
+}
+
+.case-compare {
+  position: relative;
+  width: 100%;
+}
+
+/* Decorative dotted grids flanking the table (desktop only). */
+.case-compare__dots {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Left: dense small-dot grid in an L-shape — a wide band across the top
+   plus a narrower column descending down the left edge. */
+.case-compare__dots--left {
+  top: 1.25rem;
+  left: 8rem;
+  width: 3.75rem;
+  height: 9rem;
+  background-image: radial-gradient(
+    rgba(0, 12, 16, 0.11) 1.1px,
+    transparent 1.1px
+  );
+  background-size: 14px 14px;
+}
+
+.case-compare__dots--left::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 17rem;
+  height: 3rem;
+  background-image: inherit;
+  background-size: inherit;
+}
+
+/* Right: same dot size/spacing as the left grid, top-aligned with it. */
+.case-compare__dots--right {
+  top: 1.25rem;
+  right: 3rem;
+  width: 9rem;
+  height: 12.5rem;
+  background-image: radial-gradient(
+    rgba(0, 12, 16, 0.11) 1.1px,
+    transparent 1.1px
+  );
+  background-size: 14px 14px;
+}
+
+@media (max-width: 1023px) {
+  .case-compare__dots {
+    display: none;
+  }
+}
+
+.case-compare__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 2fr);
+  grid-template-rows: repeat(var(--compare-rows, 11), auto);
+  width: 100%;
+  max-width: 880px;
+  margin-inline: auto;
+}
+
+.case-compare__features {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  display: grid;
+  grid-template-rows: subgrid;
+}
+
+.case-compare__card {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-template-columns: 1fr 1fr;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 26, 35, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 30px 60px -42px rgba(0, 26, 35, 0.28);
+  overflow: hidden;
+}
+
+.case-compare__cell {
+  display: flex;
+  align-items: center;
+  min-height: 3.25rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9375rem;
+}
+
+.case-compare__cell--feature {
+  color: #000c10;
+  font-weight: 500;
+  padding-left: 0;
+}
+
+.case-compare__cell--value {
+  justify-content: center;
+  border-bottom: 1px solid rgba(0, 26, 35, 0.04);
+  color: rgba(0, 12, 16, 0.7);
+  text-align: center;
+}
+
+/* Drop the divider under the final pair of value cells. */
+.case-compare__card .case-compare__cell--value:nth-last-child(-n + 2) {
+  border-bottom: none;
+}
+
+.case-compare__cell--head {
+  min-height: 4.5rem;
+  align-items: flex-end;
+  padding-bottom: 1rem;
+}
+
+.case-compare__cell--feature.case-compare__cell--head {
+  align-items: flex-end;
+}
+
+.case-compare__cell--value.case-compare__cell--head {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.125rem;
+  border-bottom: 1px solid rgba(0, 26, 35, 0.04);
+  background-color: #f8fafd;
+}
+
+.case-compare__col-title {
+  color: #000c10;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.case-compare__col-subtitle {
+  color: rgba(0, 12, 16, 0.5);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.case-compare__value-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #000c10;
+}
+
+.case-compare__icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.case-compare__icon--yes {
+  color: #1f9d57;
+}
+
+.case-compare__icon--no {
+  color: #d1495b;
+}
+
+@media (max-width: 639px) {
+  .case-compare__grid {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.4fr);
+  }
+
+  .case-compare__cell {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .case-compare__col-title {
+    font-size: 0.9375rem;
+  }
+}
