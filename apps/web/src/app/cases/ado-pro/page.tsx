@@ -180,7 +180,7 @@ export default function AdoProCasePage() {
                   Rommelige workflows.{" "}
                   <span className="text-black/45">Voor elk rapport.</span>
                 </h2>
-                <p className="type-section-lead text-black">
+                <p className="type-section-lead text-black/60">
                   Een arbeidsdeskundige beoordeelt arbeidsmogelijkheden van
                   mensen met een beperking. In de praktijk betekent dat: medische
                   dossiers doorwerken, belastbaarheid afwegen, en alles vertalen
@@ -218,7 +218,7 @@ export default function AdoProCasePage() {
                 Orde in het voorwerk.{" "}
                 <span className="text-black/45">Regie bij de expert.</span>
               </h2>
-              <p className="type-section-lead text-black">
+              <p className="type-section-lead text-black/60">
                 Waar dossierwerk nu verspreid ligt over mappen, mails en
                 spreadsheets, brengt ADO Pro alles samen in één gestructureerd
                 proces. Het systeem neemt het voorbereidende werk over. De
@@ -235,11 +235,16 @@ export default function AdoProCasePage() {
           <div className="case-section mx-auto max-w-[1312px]">
             <div className="case-section__header case-section__header--center">
               <h2 className="type-section-title text-black">
-              Wat er is
+              Wat er is veranderd.
               {" "}
                 <span className="text-black/45">In één overzicht.</span>
               </h2>
-       
+              <p className="type-section-lead text-black/60">
+                Het voorbereidende werk dat voorheen uren kostte, neemt ADO Pro
+                grotendeels over. Dezelfde stappen, maar geautomatiseerd, zodat
+                de arbeidsdeskundige tijd overhoudt voor het oordeel dat er
+                echt toe doet.
+              </p>
             </div>
 
             <div className="case-compare">
@@ -297,12 +302,23 @@ export default function AdoProCasePage() {
           </div>
         </section>
 
-        <div className="bg-[#0a1418]">
-          <ManifestSection />
+        <div className="bg-[#0a1418]" data-nav-theme="dark">
+          <ManifestSection
+            title={
+              <>
+                Herken je dit patroon
+                <br />
+                in jouw vakgebied?
+              </>
+            }
+            lead=" Als experts in jouw vakgebied uren besteden aan werk dat systematischer kan, bouwen wij daar samen een product voor."
+          />
         </div>
       </main>
 
-      <SiteFooter />
+      <div data-nav-theme="dark">
+        <SiteFooter />
+      </div>
     </div>
   );
 }

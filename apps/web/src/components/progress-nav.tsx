@@ -174,12 +174,52 @@ export default function ProgressNav() {
   }, [locomotiveScroll, isHome]);
 
   // Sub-pages (e.g. case detail) render on a white background, so the nav
-  // uses its light (dark-text) theme there. The home page drives its own
-  // theme from section scroll triggers above.
+  // defaults to its light (dark-text) theme. Sections marked
+  // data-nav-theme="dark" (e.g. the manifest + footer) flip it back to the
+  // dark-background theme while they sit under the nav.
   useEffect(() => {
     if (isHome) return;
-    navRef.current?.classList.add("is--light");
-  }, [isHome]);
+
+    const navEl = navRef.current;
+    if (!navEl) return;
+
+    const setNavLight = (isLight: boolean) => {
+      navEl.classList.toggle("is--light", isLight);
+    };
+
+    setNavLight(true);
+
+    if (!locomotiveScroll) return;
+
+    const darkSections = gsap.utils.toArray<HTMLElement>(
+      '[data-nav-theme="dark"]',
+    );
+
+    const triggers = darkSections.map((section) =>
+      ScrollTrigger.create({
+        trigger: section,
+        scroller: document.body,
+        start: "top top",
+        end: "bottom top",
+        onEnter: () => setNavLight(false),
+        onLeave: () => setNavLight(true),
+        onEnterBack: () => setNavLight(false),
+        onLeaveBack: () => setNavLight(true),
+      }),
+    );
+
+    const initialDark = darkSections.some((section) => {
+      const rect = section.getBoundingClientRect();
+      return rect.top <= 0 && rect.bottom > 0;
+    });
+    setNavLight(!initialDark);
+
+    ScrollTrigger.refresh();
+
+    return () => {
+      triggers.forEach((trigger) => trigger.kill());
+    };
+  }, [isHome, locomotiveScroll]);
 
   return (
     <nav ref={navRef} className="progress-nav" aria-label="Pagina navigatie">

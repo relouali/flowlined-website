@@ -1,11 +1,29 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import Cta from "@/components/cta";
 import HighlightText from "@/components/highlight-text";
 
 import "./manifest-section.css";
 
-export default function ManifestSection() {
+type ManifestSectionProps = {
+  title?: ReactNode;
+  lead?: ReactNode;
+};
+
+const DEFAULT_LEAD = (
+  <>
+    Jouw vakkennis is het fundament. Wij bouwen erop.
+    <br />
+    Samen maken we er een product van dat ook van jou is.
+  </>
+);
+
+export default function ManifestSection({
+  title = "Domeinkennis verdient een eigen product.",
+  lead = DEFAULT_LEAD,
+}: ManifestSectionProps = {}) {
   return (
     <section
       id="manifest"
@@ -32,16 +50,10 @@ export default function ManifestSection() {
           as="h2"
           className="type-section-title-lg text-white"
         >
-          Domeinkennis verdient een eigen product.
-
-
+          {title}
         </HighlightText>
 
-        <p className="type-section-lead max-w-2xl text-white/80">
-          Jouw vakkennis is het fundament. Wij bouwen erop.
-          <br />
-          Samen maken we er een product van dat ook van jou is.
-        </p>
+        <p className="type-section-lead max-w-2xl text-white/80">{lead}</p>
 
         <div className="mt-4">
           <Cta href="#contact">Plan een gesprek</Cta>
