@@ -217,7 +217,7 @@ export function horizontalLoop(
 
     curIndex = newIndex;
     vars.overwrite = true;
-    gsap.killTweensOf(proxy);
+    if (proxy) gsap.killTweensOf(proxy);
 
     if (vars.duration === 0) {
       timeline.time(timeWrap(time));
@@ -267,7 +267,8 @@ export function horizontalLoop(
   let proxy: HTMLDivElement | undefined;
 
   if (config.draggable) {
-    proxy = document.createElement("div");
+    const proxyEl = document.createElement("div");
+    proxy = proxyEl;
     const wrap = gsap.utils.wrap(0, 1);
     let ratio = 0;
     let startProgress = 0;
@@ -282,7 +283,7 @@ export function horizontalLoop(
       );
     const syncIndex = () => timeline.closestIndex(true);
 
-    draggable = Draggable.create(proxy, {
+    draggable = Draggable.create(proxyEl, {
       trigger: (items[0].parentNode as Element) || undefined,
       type: "x",
       inertia: false,
@@ -295,7 +296,7 @@ export function horizontalLoop(
         refresh();
         ratio = 1 / totalWidth;
         initChangeX = startProgress / -ratio - x;
-        gsap.set(proxy, { x: startProgress / -ratio });
+        gsap.set(proxyEl, { x: startProgress / -ratio });
       },
       onDrag: align,
       onRelease() {
