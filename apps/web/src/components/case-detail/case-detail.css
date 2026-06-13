@@ -81,6 +81,28 @@
   height: 46px;
 }
 
+.case-hero__title {
+  font-size: clamp(1.875rem, 8vw, 3rem);
+}
+
+@media (min-width: 640px) {
+  .case-hero__title {
+    font-size: 3.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .case-hero__title {
+    font-size: 4.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .case-hero__title {
+    font-size: 4.75rem;
+  }
+}
+
 .case-hero__lead {
   max-width: 40rem;
 }
@@ -88,18 +110,20 @@
 /* Large screenshot, rounded top, flat bottom so it reads as continuing
    below the fold. max-height crops the lower rows of the UI. */
 .case-hero__visual {
-  width: 100%;
-  max-width: 1180px;
-  max-height: 360px;
+  width: calc(100% + 3rem);
+  max-width: none;
+  height: 340px;
   overflow: hidden;
-  border-radius: 14px 14px 0 0;
+  border-radius: 8px 8px 0 0;
   box-shadow: 0 30px 70px -34px rgba(0, 26, 35, 0.3);
 }
 
 .case-hero__visual-img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
 }
 
 @media (min-width: 768px) {
@@ -113,7 +137,16 @@
   }
 
   .case-hero__visual {
+    width: 100%;
+    max-width: 1180px;
+    height: auto;
     max-height: min(58vh, 560px);
+    border-radius: 14px 14px 0 0;
+  }
+
+  .case-hero__visual-img {
+    height: auto;
+    object-fit: unset;
   }
 }
 
@@ -365,27 +398,40 @@
   background-color: rgba(0, 12, 16, 0.85);
 }
 
-@media (max-width: 479px) {
+@media (max-width: 639px) {
   .case-step-slider__controls {
-    padding-inline: 3.25rem;
-    --case-step-slide-width: calc(85vw - 1.5rem);
+    padding-inline: 0;
   }
 
-  .case-step-slider__button.is--side {
-    top: calc(3.5rem + (var(--case-step-slide-width) - 4rem) * 360 / 1228);
+  .case-step-slider__button.is--side,
+  .case-step-slider__indicators {
+    display: none;
   }
 
-  .case-step-slider__button {
-    width: 2.5rem;
-    height: 2.5rem;
+  .case-step-slider__row {
+    overflow: visible;
+  }
+
+  .case-step-slider__list {
+    flex-direction: column;
+    gap: 2rem;
   }
 
   .case-step-slider__slide {
-    width: 85vw;
+    width: 100%;
+    padding: 0;
+    opacity: 1 !important;
+    cursor: default;
   }
 
   .case-step-slider__slide-inner {
     width: 100%;
+    padding: 0;
+  }
+
+  .case-step-slider__copy {
+    align-items: flex-start;
+    text-align: left;
   }
 }
 
@@ -396,134 +442,66 @@
 }
 
 .case-compare {
-  position: relative;
-  width: 100%;
+  width: calc(100% + 4rem);
+  margin-inline: -2rem;
 }
 
-/* Decorative dotted grids flanking the table (desktop only). */
-.case-compare__dots {
-  position: absolute;
-  pointer-events: none;
-}
-
-/* Left: dense small-dot grid in an L-shape — a wide band across the top
-   plus a narrower column descending down the left edge. */
-.case-compare__dots--left {
-  top: 1.25rem;
-  left: 8rem;
-  width: 3.75rem;
-  height: 9rem;
-  background-image: radial-gradient(
-    rgba(0, 12, 16, 0.11) 1.1px,
-    transparent 1.1px
-  );
-  background-size: 14px 14px;
-}
-
-.case-compare__dots--left::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 17rem;
-  height: 3rem;
-  background-image: inherit;
-  background-size: inherit;
-}
-
-/* Right: same dot size/spacing as the left grid, top-aligned with it. */
-.case-compare__dots--right {
-  top: 1.25rem;
-  right: 3rem;
-  width: 9rem;
-  height: 12.5rem;
-  background-image: radial-gradient(
-    rgba(0, 12, 16, 0.11) 1.1px,
-    transparent 1.1px
-  );
-  background-size: 14px 14px;
-}
-
-@media (max-width: 1023px) {
-  .case-compare__dots {
-    display: none;
+@media (min-width: 640px) {
+  .case-compare {
+    width: 100%;
+    margin-inline: 0;
   }
 }
 
-.case-compare__grid {
+.case-compare__table {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 2fr);
-  grid-template-rows: repeat(var(--compare-rows, 11), auto);
   width: 100%;
-  max-width: 880px;
-  margin-inline: auto;
 }
 
-.case-compare__features {
-  grid-column: 1;
-  grid-row: 1 / -1;
+.case-compare__row {
   display: grid;
-  grid-template-rows: subgrid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
 }
 
-.case-compare__card {
-  grid-column: 2;
-  grid-row: 1 / -1;
-  display: grid;
-  grid-template-rows: subgrid;
-  grid-template-columns: 1fr 1fr;
-  background-color: #ffffff;
-  border: 1px solid rgba(0, 26, 35, 0.05);
-  border-radius: 12px;
-  box-shadow: 0 30px 60px -42px rgba(0, 26, 35, 0.28);
-  overflow: hidden;
+.case-compare__row--head {
+  border-bottom: 1px solid rgba(0, 26, 35, 0.12);
+}
+
+.case-compare__cell--col-label {
+  align-items: center;
+}
+
+.case-compare__row--alt {
+  background-color: rgba(0, 12, 16, 0.035);
+  border-radius: 8px;
 }
 
 .case-compare__cell {
   display: flex;
   align-items: center;
   min-height: 3.25rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1rem;
   font-size: 0.9375rem;
 }
 
 .case-compare__cell--feature {
   color: #000c10;
   font-weight: 500;
-  padding-left: 0;
+  padding-left: 1rem;
 }
 
 .case-compare__cell--value {
   justify-content: center;
-  border-bottom: 1px solid rgba(0, 26, 35, 0.04);
   color: rgba(0, 12, 16, 0.7);
   text-align: center;
 }
 
-/* Drop the divider under the final pair of value cells. */
-.case-compare__card .case-compare__cell--value:nth-last-child(-n + 2) {
-  border-bottom: none;
-}
-
-.case-compare__cell--head {
-  min-height: 4.5rem;
-  align-items: flex-end;
-  padding-bottom: 1rem;
-}
-
-.case-compare__cell--feature.case-compare__cell--head {
-  align-items: flex-end;
-}
-
-.case-compare__cell--value.case-compare__cell--head {
+.case-compare__cell--col-head {
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.125rem;
-  border-bottom: 1px solid rgba(0, 26, 35, 0.04);
-  background-color: #f8fafd;
+  justify-content: center;
+  min-height: 4.5rem;
 }
 
 .case-compare__col-title {
@@ -559,13 +537,21 @@
 }
 
 @media (max-width: 639px) {
-  .case-compare__grid {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.4fr);
+  .case-compare__row {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
   }
 
   .case-compare__cell {
     padding: 0.625rem 0.75rem;
     font-size: 0.8125rem;
+  }
+
+  .case-compare__cell--feature {
+    padding-left: 1rem;
+  }
+
+  .case-compare__cell--col-head {
+    min-height: 4rem;
   }
 
   .case-compare__col-title {

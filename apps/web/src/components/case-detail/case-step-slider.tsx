@@ -93,6 +93,8 @@ export default function CaseStepSlider() {
       gsap.set(slides, { x: 0, xPercent: 0, clearProps: "transform" });
     };
 
+    if (!window.matchMedia("(min-width: 640px)").matches) return;
+
     const init = () => {
       if (cancelled) return;
 

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import type { CSSProperties } from "react";
 
 import CaseStepSlider from "@/components/case-detail/case-step-slider";
 import ManifestSection from "@/components/manifest-section";
@@ -25,7 +24,7 @@ type CompareValue = boolean | string;
 
 const COMPARE_COLUMNS = [
   { title: "Handmatig", subtitle: "Zonder ADO Pro" },
-  { title: "Met ADO Pro", subtitle: "Slim voorwerk" },
+  { title: "ADO Pro", subtitle: "Slim voorwerk" },
 ] as const;
 
 const COMPARE_ROWS: {
@@ -248,55 +247,41 @@ export default function AdoProCasePage() {
             </div>
 
             <div className="case-compare">
-              <span aria-hidden className="case-compare__dots case-compare__dots--left" />
-              <span aria-hidden className="case-compare__dots case-compare__dots--right" />
-
-              <div
-                className="case-compare__grid"
-                style={
-                  {
-                    "--compare-rows": COMPARE_ROWS.length + 1,
-                  } as CSSProperties
-                }
-              >
-                <div className="case-compare__features">
-                  <div className="case-compare__cell case-compare__cell--feature case-compare__cell--head" />
-                  {COMPARE_ROWS.map((row) => (
-                    <div
-                      key={row.feature}
-                      className="case-compare__cell case-compare__cell--feature"
-                    >
-                      {row.feature}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="case-compare__card">
+              <div className="case-compare__table">
+                <div className="case-compare__row case-compare__row--head">
+                  <div className="case-compare__cell case-compare__cell--feature case-compare__cell--col-label">
+                    <span className="case-compare__col-title">Onderdeel</span>
+                  </div>
                   {COMPARE_COLUMNS.map((column) => (
                     <div
                       key={column.title}
-                      className="case-compare__cell case-compare__cell--value case-compare__cell--head"
+                      className="case-compare__cell case-compare__cell--col-head"
                     >
                       <span className="case-compare__col-title">
                         {column.title}
                       </span>
-                      <span className="case-compare__col-subtitle">
-                        {column.subtitle}
-                      </span>
                     </div>
                   ))}
+                </div>
 
-                  {COMPARE_ROWS.map((row) =>
-                    row.values.map((value, columnIndex) => (
+                {COMPARE_ROWS.map((row, i) => (
+                  <div
+                    key={row.feature}
+                    className={`case-compare__row${i % 2 === 1 ? " case-compare__row--alt" : ""}`}
+                  >
+                    <div className="case-compare__cell case-compare__cell--feature">
+                      {row.feature}
+                    </div>
+                    {row.values.map((value, columnIndex) => (
                       <div
                         key={`${row.feature}-${COMPARE_COLUMNS[columnIndex].title}`}
                         className="case-compare__cell case-compare__cell--value"
                       >
                         <CompareCell value={value} />
                       </div>
-                    )),
-                  )}
-                </div>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
