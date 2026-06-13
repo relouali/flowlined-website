@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import HighlightText from "@/components/highlight-text";
 import GsapSlider from "@/components/gsap-slider";
@@ -40,19 +40,6 @@ const ITEMS = [
 ] as const;
 
 export default function ProblemSection() {
-  // On touch / no-hover devices (mobile) there is no hover to trigger the icon
-  // animations, so play them immediately. Desktop keeps the hover behavior.
-  const [autoPlay, setAutoPlay] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(hover: none)");
-    const update = () => setAutoPlay(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
   return (
     <section
       id="probleem"
@@ -79,7 +66,7 @@ export default function ProblemSection() {
           ariaLabel="Probleemstellingen"
         >
           {ITEMS.map((item, index) => (
-            <ProblemItem key={index} item={item} autoPlay={autoPlay} />
+            <ProblemItem key={index} item={item} />
           ))}
         </GsapSlider>
       </div>
@@ -87,17 +74,37 @@ export default function ProblemSection() {
   );
 }
 
-function ProblemItem({
-  item,
-  autoPlay,
-}: {
-  item: (typeof ITEMS)[number];
-  autoPlay: boolean;
-}) {
+function ProblemItem({ item }: { item: (typeof ITEMS)[number] }) {
   const [hovered, setHovered] = useState(false);
+  // On mobile the items become a carousel; the slider tags the slide currently
+  // in focus with data-gsap-slider-item-status="active". We mirror that so the
+  // icon only plays once you've actually landed on its slide. On desktop the
+  // attribute is absent, so playback falls back to hover.
+  const [isActiveSlide, setIsActiveSlide] = useState(false);
+  const itemRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = itemRef.current;
+    if (!el) return;
+
+    const read = () =>
+      setIsActiveSlide(
+        el.getAttribute("data-gsap-slider-item-status") === "active",
+      );
+
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(el, {
+      attributes: true,
+      attributeFilter: ["data-gsap-slider-item-status"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div
+      ref={itemRef}
       data-gsap-slider-item
       className="problem-item flex flex-col gap-6"
       onMouseEnter={() => setHovered(true)}
@@ -106,7 +113,7 @@ function ProblemItem({
       <LottieIcon
         size={item.iconSize}
         src={item.lottieSrc}
-        play={hovered || autoPlay}
+        play={hovered || isActiveSlide}
       />
       <div className="flex flex-col gap-3 text-white">
         <h3 className="type-card-title text-white">{item.title}</h3>

@@ -131,7 +131,11 @@ export default function SectorsSection() {
             </div>
 
             <div className="sectors-picker-words order-1 flex items-center justify-center lg:order-2">
-              <LoopingWords words={sectorTitles} onChange={setActiveIndex} />
+              <LoopingWords
+              words={sectorTitles}
+              onChange={setActiveIndex}
+              intervalSeconds={5.5}
+            />
             </div>
           </div>
         </div>

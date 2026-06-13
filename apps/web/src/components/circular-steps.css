@@ -23,14 +23,15 @@
   --mark-size: 3rem;
   position: relative;
   width: 100%;
-  height: calc(var(--step-count) * 100vh);
 }
 
+/* Mobile: the section is a single, non-pinned full-screen panel. Scrolling
+   moves on to the next section; the numbered nodes switch steps on tap. The
+   scroll-driven pin is added back only on desktop (see the media query). */
 .circular-steps__stage {
-  position: sticky;
-  top: 0;
+  position: relative;
   width: 100%;
-  height: 100vh;
+  min-height: 100dvh;
   padding: 4.5rem 1.5rem 2rem;
   display: flex;
   flex-direction: column;
@@ -125,7 +126,9 @@
   margin-top: calc(var(--node-size) / -2);
   border-radius: 999px;
   border: 1px solid rgba(0, 12, 16, 0.22);
-  background-color: #ffffff;
+  /* Transparent so the section's gradient background shows through and the
+     node blends in (a flat colour can't match the tinted gradient). */
+  background-color: transparent;
   color: var(--ink);
   cursor: pointer;
   transform-origin: center;
@@ -228,9 +231,16 @@
     --dome-lift: 2.5rem;
     --node-size: 2.75rem;
     --mark-size: 3.5rem;
+    /* Tall wrapper provides the scroll distance for the pinned stage. */
+    height: calc(var(--step-count) * 100vh);
   }
 
+  /* Pin the stage and scroll-drive the steps (desktop only). */
   .circular-steps__stage {
+    position: sticky;
+    top: 0;
+    min-height: 0;
+    height: 100vh;
     padding: 0;
     flex-direction: row;
     align-items: stretch;

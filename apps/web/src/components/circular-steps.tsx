@@ -2,7 +2,7 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import HighlightText from "@/components/highlight-text";
 import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
@@ -74,6 +74,30 @@ export default function CircularSteps({
   const stepCount = steps.length;
   const anglePer = 360 / stepCount;
 
+  // Punch a transparent hole in the ring line at every node position so the
+  // hairline arc connects to each node's edge but never crosses through its
+  // (transparent) interior. The line + nodes share the rotating ring, so these
+  // hole positions stay aligned with the nodes regardless of rotation.
+  const ringLineMaskStyle = useMemo(() => {
+    const hole = "calc(var(--node-size) / 2 + 2px)";
+    const edge = "calc(var(--node-size) / 2 + 3px)";
+    const layers = steps
+      .map((_, index) => {
+        const theta = (index * anglePer * Math.PI) / 180;
+        const x = ((1 + Math.sin(theta)) / 2) * 100;
+        const y = ((1 - Math.cos(theta)) / 2) * 100;
+        return `radial-gradient(circle at ${x}% ${y}%, rgba(0,0,0,0) ${hole}, #000 ${edge})`;
+      })
+      .join(", ");
+
+    return {
+      WebkitMaskImage: layers,
+      maskImage: layers,
+      WebkitMaskComposite: "source-in",
+      maskComposite: "intersect",
+    } as CSSProperties;
+  }, [steps, anglePer]);
+
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -87,8 +111,8 @@ export default function CircularSteps({
   }, [activeIndex]);
 
   // Map scroll progress through the pinned stage onto a discrete step index.
-  // Runs on every viewport — the stepper is pinned and scroll-driven on mobile
-  // and desktop alike (only the layout differs, via CSS).
+  // Desktop only — on mobile the section is not pinned, so scrolling just moves
+  // to the next section and steps are changed by tapping the numbered nodes.
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!locomotiveScroll || !wrapRef.current) return;
@@ -98,7 +122,7 @@ export default function CircularSteps({
     const wrap = wrapRef.current;
     const mm = gsap.matchMedia();
 
-    mm.add("(min-width: 0px)", () => {
+    mm.add("(min-width: 768px)", () => {
       const trigger = ScrollTrigger.create({
         trigger: wrap,
         scroller: document.body,
@@ -120,8 +144,19 @@ export default function CircularSteps({
     };
   }, [locomotiveScroll, stepCount]);
 
-  // Click-to-jump: scroll the pinned stage to the position of the chosen step.
+  // Click-to-jump. On desktop the stage is pinned, so we scroll to the step's
+  // position and let the ScrollTrigger update the active index. On mobile the
+  // section isn't pinned, so we just set the active step directly.
   const goToStep = (index: number) => {
+    const isDesktop =
+      typeof window !== "undefined" &&
+      window.matchMedia("(min-width: 768px)").matches;
+
+    if (!isDesktop) {
+      setActiveIndex(index);
+      return;
+    }
+
     const wrap = wrapRef.current;
     if (!wrap || !locomotiveScroll || stepCount < 2) return;
 
@@ -159,7 +194,10 @@ export default function CircularSteps({
               className="circular-steps__ring"
               style={{ transform: `rotate(${-activeIndex * anglePer}deg)` }}
             >
-              <span className="circular-steps__ring-line" />
+              <span
+                className="circular-steps__ring-line"
+                style={ringLineMaskStyle}
+              />
               {steps.map((step, index) => {
                 const isActive = index === activeIndex;
                 return (
