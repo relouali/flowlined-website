@@ -26,14 +26,20 @@ type MaskTextRevealProps = {
   children: ReactNode;
   className?: string;
   /**
-   * When true, the lines animate from below the mask (yPercent: 110) up to
-   * their natural position. When false, lines are snapped back below the
-   * mask so the next reveal can replay cleanly.
+   * When true the lines roll up from below the mask into place. When it
+   * flips back to false the lines roll further up and out of the mask
+   * (rather than snapping), so swapping `active` between sibling elements
+   * reads as one continuous vertical rotation — old text exits the top
+   * while new text enters from the bottom.
    */
   active?: boolean;
+  /** Enter (roll-in) duration. */
   duration?: number;
+  /** Exit (roll-out) duration. */
+  exitDuration?: number;
   stagger?: number;
   delay?: number;
+  ease?: string;
 };
 
 type SplitTextInstance = {
@@ -41,19 +47,27 @@ type SplitTextInstance = {
   lines: Element[];
 };
 
+// Masked-line states. Lines enter from below (+) and exit through the top (−);
+// autoAlpha cross-fades them so overlapping in/out text stays clean.
+const ENTER_FROM = { yPercent: 150, autoAlpha: 0 };
+const EXIT_TO = { yPercent: -150, autoAlpha: 0 };
+const VISIBLE = { yPercent: 0, autoAlpha: 1 };
+
 /**
- * Osmo "MaskText Scroll Reveal" pattern as a React component. The reveal
- * fires each time `active` toggles from false → true so the same component
- * can replay infinitely (e.g. driven by a cycling LoopingWords picker).
+ * Vertical "rotating text" reveal. Each time `active` toggles the SplitText
+ * lines roll in or out of their line-masks, so a cycling picker (e.g.
+ * LoopingWords) produces a continuous upward rotation between items.
  */
 export default function MaskTextReveal({
   as: Tag = "div",
   children,
   className,
   active = false,
-  duration = 0.8,
-  stagger = 0.08,
+  duration = 0.75,
+  exitDuration = 0.6,
+  stagger = 0.05,
   delay = 0,
+  ease = "power4.inOut",
 }: MaskTextRevealProps) {
   const elRef = useRef<HTMLElement | null>(null);
   const splitRef = useRef<SplitTextInstance | null>(null);
@@ -80,17 +94,13 @@ export default function MaskTextReveal({
       const s = splitRef.current;
       if (!s) return;
       if (tweenRef.current) tweenRef.current.kill();
-      tweenRef.current = gsap.fromTo(
-        s.lines,
-        { yPercent: 110 },
-        {
-          yPercent: 0,
-          duration,
-          stagger,
-          delay,
-          ease: "expo.out",
-        },
-      );
+      tweenRef.current = gsap.fromTo(s.lines, ENTER_FROM, {
+        ...VISIBLE,
+        duration,
+        stagger,
+        delay,
+        ease,
+      });
     };
 
     const setup = () => {
@@ -105,9 +115,10 @@ export default function MaskTextReveal({
           onSplit: (instance: SplitTextInstance) => {
             // Whenever the text resplits (resize / font load), reset the
             // lines to whichever state matches the current active flag.
-            gsap.set(instance.lines, {
-              yPercent: activeRef.current ? 0 : 110,
-            });
+            gsap.set(
+              instance.lines,
+              activeRef.current ? VISIBLE : ENTER_FROM,
+            );
           },
         }) as unknown as SplitTextInstance;
 
@@ -144,15 +155,13 @@ export default function MaskTextReveal({
         splitRef.current = null;
       }
     };
-    // We intentionally do NOT include duration/stagger/delay here. Those
-    // props are read fresh on every active-effect run via the closure
-    // below, and the initial setup uses them once at mount.
+    // We intentionally do NOT include the motion props here. They are read
+    // fresh on every active-effect run via the closure below, and the
+    // initial setup uses them once at mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Replay the reveal whenever `active` flips on. When `active` flips off,
-  // snap the lines back below the mask so the next reveal starts from a
-  // clean hidden state.
+  // Roll the lines in (active) or out (inactive) whenever `active` changes.
   useEffect(() => {
     const s = splitRef.current;
     if (!s) return;
@@ -160,28 +169,27 @@ export default function MaskTextReveal({
     if (tweenRef.current) tweenRef.current.kill();
 
     if (active) {
-      tweenRef.current = gsap.fromTo(
-        s.lines,
-        { yPercent: 110 },
-        {
-          yPercent: 0,
-          duration,
-          stagger,
-          delay,
-          ease: "expo.out",
-        },
-      );
+      tweenRef.current = gsap.fromTo(s.lines, ENTER_FROM, {
+        ...VISIBLE,
+        duration,
+        stagger,
+        delay,
+        ease,
+      });
     } else {
-      gsap.set(s.lines, { yPercent: 110 });
+      tweenRef.current = gsap.to(s.lines, {
+        ...EXIT_TO,
+        duration: exitDuration,
+        stagger,
+        delay,
+        ease,
+      });
     }
-  }, [active, duration, stagger, delay]);
+  }, [active, duration, exitDuration, stagger, delay, ease]);
 
   const TagComponent = Tag as ElementType;
   return (
-    <TagComponent
-      ref={elRef as Ref<HTMLElement>}
-      className={className}
-    >
+    <TagComponent ref={elRef as Ref<HTMLElement>} className={className}>
       {children}
     </TagComponent>
   );

@@ -1,4 +1,4 @@
-import HorizontalSteps from "@/components/horizontal-steps";
+import CircularSteps from "@/components/circular-steps";
 import StickyTitleScroll from "@/components/sticky-title-scroll";
 
 import "./process-section.css";
@@ -10,7 +10,7 @@ const OUTRO_HEADINGS = [
 
 const STEPS_HEADING = {
   title: "Van domeinkennis naar verticaal product.",
-  titleMuted: "In vier heldere fasen.",
+  titleMuted: "In vier fasen.",
   description:
     "Samen met de domeinexpert doorlopen we een gestructureerd traject, van eerste verkenning tot live product bij echte gebruikers.",
 } as const;
@@ -50,7 +50,7 @@ export default function ProcessSection() {
       data-nav-theme="light"
       className="process-section"
     >
-      <HorizontalSteps
+      <CircularSteps
         steps={STEPS}
         title={STEPS_HEADING.title}
         titleMuted={STEPS_HEADING.titleMuted}

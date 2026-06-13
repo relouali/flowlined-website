@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import HighlightText from "@/components/highlight-text";
 import GsapSlider from "@/components/gsap-slider";
 import LottieIcon from "@/components/lottie-icon";
@@ -36,6 +40,19 @@ const ITEMS = [
 ] as const;
 
 export default function ProblemSection() {
+  // On touch / no-hover devices (mobile) there is no hover to trigger the icon
+  // animations, so play them immediately. Desktop keeps the hover behavior.
+  const [autoPlay, setAutoPlay] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(hover: none)");
+    const update = () => setAutoPlay(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   return (
     <section
       id="probleem"
@@ -43,7 +60,7 @@ export default function ProblemSection() {
       className="problem-section flex min-h-[100dvh] items-center bg-[#0a1418] px-8 py-24 sm:px-16 lg:py-32"
     >
       <div className="mx-auto flex w-full max-w-[1320px] flex-col">
-        <div className="flex max-w-3xl flex-col gap-8">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center">
           <HighlightText className="type-section-title text-white">
           Expertwerk draait op ervaring, niet op systemen.{" "}
             <span className="text-[#cddfed]">Dat werkt, tot het niet meer schaalt.</span>
@@ -62,7 +79,7 @@ export default function ProblemSection() {
           ariaLabel="Probleemstellingen"
         >
           {ITEMS.map((item, index) => (
-            <ProblemItem key={index} item={item} />
+            <ProblemItem key={index} item={item} autoPlay={autoPlay} />
           ))}
         </GsapSlider>
       </div>
@@ -70,10 +87,27 @@ export default function ProblemSection() {
   );
 }
 
-function ProblemItem({ item }: { item: (typeof ITEMS)[number] }) {
+function ProblemItem({
+  item,
+  autoPlay,
+}: {
+  item: (typeof ITEMS)[number];
+  autoPlay: boolean;
+}) {
+  const [hovered, setHovered] = useState(false);
+
   return (
-    <div data-gsap-slider-item className="problem-item flex flex-col gap-6">
-      <LottieIcon size={item.iconSize} src={item.lottieSrc} />
+    <div
+      data-gsap-slider-item
+      className="problem-item flex flex-col gap-6"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <LottieIcon
+        size={item.iconSize}
+        src={item.lottieSrc}
+        play={hovered || autoPlay}
+      />
       <div className="flex flex-col gap-3 text-white">
         <h3 className="type-card-title text-white">{item.title}</h3>
         <p className="type-body text-white/70">{item.description}</p>

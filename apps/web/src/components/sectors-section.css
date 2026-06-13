@@ -9,11 +9,12 @@
   height: 100%;
 }
 
-/* Slides stack at the same position. We no longer cross-fade via opacity
-   because the masked SplitText lines (yPercent: 110 → 0) handle the
-   reveal AND the exit (inactive slides have their lines parked below the
-   line-masks, so nothing is visible). Removing the opacity transition
-   prevents double-text overlap during sector changes.
+/* Slides stack at the same position. We don't cross-fade via opacity at the
+   slide level because the masked SplitText lines handle both the reveal and
+   the exit themselves: the new sector's lines roll up into view (yPercent
+   150 → 0) while the outgoing sector's lines roll up and out of the top
+   (0 → -150), producing one continuous vertical rotation. Keeping opacity
+   off the slide avoids double-text overlap during sector changes.
 
    The slide is anchored to the parent's vertical center via
    `top: 50%; translateY(-50%)` (instead of `inset: 0`) so the content's

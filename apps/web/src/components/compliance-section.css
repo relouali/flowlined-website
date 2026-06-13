@@ -1,0 +1,54 @@
+/* Compliance section — closing trust block listing security & privacy
+   standards. Dark editorial layout: left-aligned headline + lead, then a
+   row of certificate columns separated by hairline dividers.
+
+   Dividers use the classic 1px-gap grid trick so the vertical/horizontal
+   separators render correctly at any column count without per-cell
+   nth-child math. The grid background is the line color; each card paints
+   over it with the section background, leaving 1px seams between cells. */
+.compliance-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background-color: rgba(255, 255, 255, 0.09);
+  /* Mobile: fully enclose the stack so every card reads as a complete,
+     bordered box (left/right rails + top/bottom caps). The 1px gap
+     supplies the dividers between cards. */
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+@media (min-width: 768px) {
+  .compliance-grid {
+    grid-template-columns: repeat(2, 1fr);
+    /* Tablet: drop the side/bottom rails, keep only the top hairline. */
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+  }
+}
+
+@media (min-width: 1024px) {
+  .compliance-grid {
+    grid-template-columns: repeat(4, 1fr);
+    /* Far-left hairline aligned under the headline, matching the
+       internal dividers — only on desktop where the row reads as a
+       single horizontal band. */
+    border-left: 1px solid rgba(255, 255, 255, 0.09);
+  }
+}
+
+.compliance-card {
+  background-color: #0a1418;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+  min-height: 13.5rem;
+  padding: 2.25rem 1.75rem 2rem;
+}
+
+.compliance-card__icon {
+  width: 3.75rem;
+  height: 3.75rem;
+  opacity: 0.7;
+  flex-shrink: 0;
+}

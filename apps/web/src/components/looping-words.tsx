@@ -25,8 +25,10 @@ type LoopingWordsProps = {
  *     word lists (3 items) the recycle happens on every cycle and the
  *     previously-top word visibly "pops" into the bottom row.
  *
- * Everything else (gradient, bracket easing, slide elastic, dwell time)
- * matches the Osmo reference exactly.
+ * Everything else (gradient, bracket easing, dwell time) matches the Osmo
+ * reference. The slide easing is the one intentional departure: Osmo's
+ * `elastic.out` is swapped for `power3.out` so the framed word settles
+ * cleanly without wiggling inside the selector.
  */
 export default function LoopingWords({
   words,
@@ -104,7 +106,10 @@ export default function LoopingWords({
       gsap.to(wordList, {
         yPercent: -wordHeight * currentIndex,
         duration: durationSeconds,
-        ease: "elastic.out(1, 0.85)",
+        // Smooth settle (no overshoot). The Osmo reference uses
+        // `elastic.out(1, 0.85)`, but its bounce makes the framed word visibly
+        // wiggle inside the static selector after the slide finishes.
+        ease: "power3.out",
         onStart: () => {
           updateEdgeWidth();
           notifyActive();

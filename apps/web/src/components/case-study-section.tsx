@@ -480,7 +480,7 @@ export default function CaseStudySection() {
 
           <div className="case-study-section__cta mt-auto shrink-0 pt-10 lg:pt-8">
             <Cta href="#contact" variant="secondary">
-              Bekijk de volledige case
+              Plan een gesprek
             </Cta>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import CaseStudySection from "@/components/case-study-section";
+import ComplianceSection from "@/components/compliance-section";
 import Hero from "@/components/hero";
 import ManifestSection from "@/components/manifest-section";
 import ProblemSection from "@/components/problem-section";
@@ -15,6 +16,7 @@ export default function Home() {
         <ProcessSection />
         <SectorsSection />
         <CaseStudySection />
+        <ComplianceSection />
         <ManifestSection />
       </main>
       <SiteFooter />

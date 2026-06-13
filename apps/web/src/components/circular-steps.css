@@ -1,0 +1,351 @@
+/* Circular, scroll-driven process stepper.
+
+   A tall wrapper provides scroll distance while an inner stage is pinned with
+   position: sticky (same technique as sticky-title-scroll, which plays nicely
+   with Locomotive/Lenis). Scroll progress maps to a discrete step; the ring
+   rotates so the active number animates to the top (the dome's apex) where a
+   connector links it to the centered Flowlined mark.
+
+   Mobile: single column — title on top, a width-fitted dome in the middle, and
+   the active step's content flowing below it.
+   Desktop (>= 768px): two columns — title on the left, and a large dome filling
+   the right side with the content nested inside it. */
+
+.circular-steps {
+  --accent: #cddfed;
+  --ink: #000c10;
+  --hairline: rgba(0, 12, 16, 0.12);
+  /* Mobile geometry: the dome fits the viewport width with the side nodes kept
+     fully inside (radius + node radius <= half the available width). */
+  --ring-radius: min(calc(50vw - 3.25rem), 12rem);
+  --connector-h: 2.5rem;
+  --node-size: 2.5rem;
+  --mark-size: 3rem;
+  position: relative;
+  width: 100%;
+  height: calc(var(--step-count) * 100vh);
+}
+
+.circular-steps__stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  padding: 4.5rem 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.circular-steps__header {
+  flex: 0 0 auto;
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Hidden on mobile to reclaim vertical space; shown in the desktop column. */
+.circular-steps__intro {
+  display: none;
+  color: rgba(0, 12, 16, 0.6);
+}
+
+.circular-steps__phase {
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(0, 12, 16, 0.45);
+}
+
+.circular-steps__title {
+  color: var(--ink);
+}
+
+.circular-steps__description {
+  color: rgba(0, 12, 16, 0.6);
+}
+
+/* The legacy stacked list is no longer rendered as the primary view. */
+.circular-steps__list {
+  display: none;
+}
+
+/* ---------- Scene + dome ---------- */
+.circular-steps__scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.75rem;
+  flex: 1 1 auto;
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  margin-top: 2.5rem;
+}
+
+/* Holds the rotating ring + the center spine. On mobile it is a fixed-height
+   window that crops the circle to just its top half (the dome). */
+.circular-steps__dome {
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
+  height: calc(var(--ring-radius) + var(--node-size));
+  overflow: hidden;
+}
+
+/* Rotating ring carrying the numbered nodes. On mobile its center is placed so
+   the apex node sits at the very top and the two side nodes land on the dome's
+   bottom edge, while the fourth (bottom) node is cropped away. */
+.circular-steps__ring {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--node-size) / 2);
+  width: calc(var(--ring-radius) * 2);
+  height: calc(var(--ring-radius) * 2);
+  margin-left: calc(var(--ring-radius) * -1);
+  transition: transform 0.75s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
+}
+
+.circular-steps__ring-line {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+}
+
+.circular-steps__node {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--node-size);
+  height: var(--node-size);
+  margin-left: calc(var(--node-size) / -2);
+  margin-top: calc(var(--node-size) / -2);
+  border-radius: 999px;
+  border: 1px solid rgba(0, 12, 16, 0.22);
+  background-color: #ffffff;
+  color: var(--ink);
+  cursor: pointer;
+  transform-origin: center;
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    transform 0.75s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.circular-steps__node.is--active {
+  background-color: var(--accent);
+  border-color: transparent;
+}
+
+.circular-steps__node-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  font-weight: 400;
+  transition: transform 0.75s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Center spine: starts at the active node (apex) and flows downward —
+   connector -> Flowlined mark. */
+.circular-steps__center {
+  position: absolute;
+  top: calc(var(--node-size) / 2);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.circular-steps__connector {
+  margin-top: calc(var(--node-size) / 2);
+  width: 2px;
+  height: var(--connector-h);
+  border-radius: 1px;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 12, 16, 0.28),
+    rgba(0, 12, 16, 0.06)
+  );
+  transform-origin: top center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* Only visible once a number has docked at the apex. */
+.circular-steps__connector.is--connected {
+  opacity: 1;
+}
+
+.circular-steps__mark {
+  width: var(--mark-size);
+  height: var(--mark-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eef4f9;
+  border-radius: 0.625rem;
+}
+
+.circular-steps__logo {
+  width: auto;
+  height: 52%;
+}
+
+.circular-steps__content {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+  max-width: 32rem;
+  padding: 0 1.5rem;
+  text-align: center;
+  animation: circular-steps-fade 0.5s ease;
+}
+
+.circular-steps__content .circular-steps__description {
+  max-width: 28rem;
+}
+
+/* ---------- Desktop: two-column layout, content nested in the dome ---------- */
+@media (min-width: 768px) {
+  .circular-steps {
+    /* Radius fills the right column's width (~31vw), capped by height so the
+       dome's apex + content always stay on screen. */
+    --ring-radius: max(17rem, min(31vw, 86vh));
+    --connector-h: clamp(5rem, 14vh, 11rem);
+    /* The circle center is lifted slightly above the bottom edge so the side
+       nodes (which sit at the diameter) stay fully visible. */
+    --dome-lift: 2.5rem;
+    --node-size: 2.75rem;
+    --mark-size: 3.5rem;
+  }
+
+  .circular-steps__stage {
+    padding: 0;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  /* Title sits in a left column, vertically centered, at full section size. */
+  .circular-steps__header {
+    position: relative;
+    z-index: 2;
+    flex: 0 0 36%;
+    max-width: 34rem;
+    align-self: center;
+    margin: 0;
+    padding: 0 2rem 0 4rem;
+    text-align: left;
+  }
+
+  .circular-steps__header .type-section-title {
+    text-align: left;
+  }
+
+  .circular-steps__intro {
+    display: block;
+    margin-top: 1.25rem;
+    max-width: 26rem;
+    font-size: 1rem;
+  }
+
+  /* The scene fills the entire right side and anchors the content. */
+  .circular-steps__scene {
+    display: block;
+    flex: 1 1 auto;
+    align-self: stretch;
+    min-width: 0;
+    gap: 0;
+    margin-top: 0;
+  }
+
+  /* The dome now fills the scene; the bottom half of the circle is cropped by
+     anchoring the ring center to the scene's bottom edge. */
+  .circular-steps__dome {
+    position: absolute;
+    inset: 0;
+    height: auto;
+    overflow: hidden;
+  }
+
+  .circular-steps__ring {
+    top: auto;
+    bottom: 0;
+    margin-bottom: calc(var(--dome-lift) - var(--ring-radius));
+  }
+
+  .circular-steps__center {
+    top: calc(100% - var(--dome-lift) - var(--ring-radius));
+    width: 26rem;
+  }
+
+  /* Content is positioned just below the mark, inside the dome. Centered via
+     margin (not translateX) so the fade keyframe's transform stays free. */
+  .circular-steps__content {
+    position: absolute;
+    left: 50%;
+    top: calc(
+      100% - var(--dome-lift) - var(--ring-radius) + var(--node-size) / 2 +
+        var(--connector-h) + var(--mark-size) + 1.75rem
+    );
+    width: 26rem;
+    margin-left: -13rem;
+    max-width: none;
+    padding: 0;
+  }
+
+  .circular-steps__content .circular-steps__description {
+    max-width: 23rem;
+  }
+}
+
+/* Short desktop viewports: reclaim vertical space so the stepper stays fully
+   visible alongside the full-size title. */
+@media (min-width: 768px) and (max-height: 760px) {
+  .circular-steps {
+    --connector-h: clamp(2.5rem, 7vh, 5rem);
+  }
+
+  .circular-steps__intro {
+    display: none;
+  }
+}
+
+@keyframes circular-steps-fade {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circular-steps__ring,
+  .circular-steps__node,
+  .circular-steps__node-inner {
+    transition: none;
+  }
+
+  .circular-steps__content {
+    animation: none;
+  }
+
+  /* The ring snaps instantly, so keep the connector permanently visible. */
+  .circular-steps__connector {
+    opacity: 1;
+    transition: none;
+  }
+}
