@@ -1,7 +1,13 @@
 "use client";
 
 import gsap from "gsap";
-import { useEffect, useMemo, useRef } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  type KeyboardEvent,
+  type MouseEvent,
+} from "react";
 
 import "./looping-words.css";
 
@@ -14,21 +20,17 @@ type LoopingWordsProps = {
 };
 
 /**
- * Faithful port of Osmo's "Looping Words with Selector" snippet.
+ * Faithful port of Osmo's "Looping Words with Selector" snippet, with two
+ * local additions:
+ *  1. The slide easing is `power3.out` (Osmo uses `elastic.out`) so the framed
+ *     word settles without wiggling inside the selector.
+ *  2. The three on-screen words are selectable. Clicking the word above or
+ *     below the centre jumps the loop one step in that direction (the only
+ *     reachable targets), updates the active index, and restarts the dwell —
+ *     so visitors can pick a word instead of waiting for the rotation.
  *
- * Differences from the original:
- *  1. The initial DOM order is rotated so the consumer's words[0] lands in
- *     the visual centre (the snippet's center is at DOM index 1 by design).
- *  2. An `indices` array tracks the DOM-to-original mapping through every
- *     recycle so onChange always reports the ORIGINAL word index.
- *  3. The recycled item fades in on appearance — without this, with short
- *     word lists (3 items) the recycle happens on every cycle and the
- *     previously-top word visibly "pops" into the bottom row.
- *
- * Everything else (gradient, bracket easing, dwell time) matches the Osmo
- * reference. The slide easing is the one intentional departure: Osmo's
- * `elastic.out` is swapped for `power3.out` so the framed word settles
- * cleanly without wiggling inside the selector.
+ * Everything else (gradient, bracket easing, recycle, dwell time) matches the
+ * Osmo reference.
  */
 export default function LoopingWords({
   words,
@@ -40,6 +42,8 @@ export default function LoopingWords({
   const listRef = useRef<HTMLUListElement>(null);
   const selectorRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
+  // Set by the effect so the rendered items can request a jump on click.
+  const selectItemRef = useRef<((item: HTMLElement) => void) | null>(null);
 
   useEffect(() => {
     onChangeRef.current = onChange;
@@ -72,10 +76,14 @@ export default function LoopingWords({
     const wordHeight = 100 / totalWords;
     let currentIndex = 0;
     const indices = [...initialIndices];
+    let busy = false;
+    let autoTl: gsap.core.Timeline | null = null;
+
+    const centerDomIndex = () =>
+      (((currentIndex + 1) % totalWords) + totalWords) % totalWords;
 
     function updateEdgeWidth() {
-      const centerIndex = (currentIndex + 1) % totalWords;
-      const centerWord = wordList?.children[centerIndex] as
+      const centerWord = wordList?.children[centerDomIndex()] as
         | HTMLElement
         | undefined;
       if (!wordList || !edgeElement || !centerWord) return;
@@ -83,8 +91,6 @@ export default function LoopingWords({
       const listWidth = wordList.getBoundingClientRect().width;
       if (listWidth === 0) return;
       const percentageWidth = (centerWordWidth / listWidth) * 100;
-      // Frame the word with a bit of breathing room instead of hugging it.
-      // Clamped at 94% so very long words still keep some side margin.
       const framedWidth = Math.min(94, percentageWidth + 10);
       gsap.to(edgeElement, {
         width: `${framedWidth}%`,
@@ -94,62 +100,99 @@ export default function LoopingWords({
     }
 
     function notifyActive() {
-      const centerIndex = (currentIndex + 1) % totalWords;
-      const originalIdx = indices[centerIndex];
-      onChangeRef.current?.(originalIdx);
+      onChangeRef.current?.(indices[centerDomIndex()]);
     }
 
-    function moveWords() {
+    function recycleForward() {
       if (!wordList) return;
-      currentIndex += 1;
+      if (currentIndex >= totalWords - 3) {
+        const movedItem = wordList.children[0] as HTMLElement | undefined;
+        wordList.appendChild(wordList.children[0]);
+        currentIndex -= 1;
+        gsap.set(wordList, { yPercent: -wordHeight * currentIndex });
+        const shifted = indices.shift();
+        if (shifted !== undefined) indices.push(shifted);
+        if (movedItem) {
+          gsap.fromTo(
+            movedItem,
+            { opacity: 0 },
+            { opacity: 1, duration: 0.45, ease: "power2.out" },
+          );
+        }
+      }
+    }
 
+    function recycleBackward() {
+      if (!wordList) return;
+      if (currentIndex <= 0) {
+        const lastChild = wordList.children[
+          wordList.children.length - 1
+        ] as HTMLElement | undefined;
+        if (lastChild) wordList.insertBefore(lastChild, wordList.children[0]);
+        currentIndex += 1;
+        gsap.set(wordList, { yPercent: -wordHeight * currentIndex });
+        const popped = indices.pop();
+        if (popped !== undefined) indices.unshift(popped);
+        if (lastChild) {
+          gsap.fromTo(
+            lastChild,
+            { opacity: 0 },
+            { opacity: 1, duration: 0.45, ease: "power2.out" },
+          );
+        }
+      }
+    }
+
+    function moveStep(direction: number, duration: number) {
+      if (!wordList) return;
+      busy = true;
+      currentIndex += direction;
       gsap.to(wordList, {
         yPercent: -wordHeight * currentIndex,
-        duration: durationSeconds,
-        // Smooth settle (no overshoot). The Osmo reference uses
-        // `elastic.out(1, 0.85)`, but its bounce makes the framed word visibly
-        // wiggle inside the static selector after the slide finishes.
+        duration,
         ease: "power3.out",
         onStart: () => {
           updateEdgeWidth();
           notifyActive();
         },
         onComplete: () => {
-          if (!wordList) return;
-          if (currentIndex >= totalWords - 3) {
-            // Capture the item being moved to the end BEFORE appendChild so
-            // we can fade it in once it appears in the bottom row.
-            const movedItem = wordList.children[0] as HTMLElement | undefined;
-            wordList.appendChild(wordList.children[0]);
-            currentIndex -= 1;
-            gsap.set(wordList, { yPercent: -wordHeight * currentIndex });
-            const shifted = indices.shift();
-            if (shifted !== undefined) indices.push(shifted);
-
-            // Smooth the recycle: fade the newly-appeared bottom word in
-            // instead of letting it pop into existence behind the gradient.
-            if (movedItem) {
-              gsap.fromTo(
-                movedItem,
-                { opacity: 0 },
-                { opacity: 1, duration: 0.45, ease: "power2.out" },
-              );
-            }
-          }
+          if (direction > 0) recycleForward();
+          else recycleBackward();
+          busy = false;
         },
       });
     }
 
+    function startAutoplay() {
+      autoTl?.kill();
+      autoTl = gsap
+        .timeline({ repeat: -1 })
+        .to({}, { duration: intervalSeconds })
+        .call(() => {
+          if (!busy) moveStep(1, durationSeconds);
+        });
+    }
+
+    // Jump to a clicked word. Only the prev / center / next words are visible,
+    // so a valid target is always exactly one step away in either direction.
+    selectItemRef.current = (item: HTMLElement) => {
+      if (!wordList || busy) return;
+      const domPos = Array.from(wordList.children).indexOf(item);
+      if (domPos < 0) return;
+      const delta = domPos - (currentIndex + 1);
+      if (delta !== 1 && delta !== -1) return;
+      autoTl?.kill();
+      moveStep(delta, Math.min(durationSeconds, 0.7));
+      startAutoplay();
+    };
+
     updateEdgeWidth();
     notifyActive();
-
-    const tl = gsap
-      .timeline({ repeat: -1, delay: 1 })
-      .call(moveWords)
-      .to({}, { duration: intervalSeconds });
+    startAutoplay();
 
     return () => {
-      tl.kill();
+      selectItemRef.current = null;
+      autoTl?.kill();
       gsap.killTweensOf(wordList);
       gsap.killTweensOf(edgeElement);
       Array.from(wordList.children).forEach((child) => {
@@ -157,6 +200,17 @@ export default function LoopingWords({
       });
     };
   }, [arrangedWords, initialIndices, intervalSeconds, durationSeconds]);
+
+  const handleSelect = (event: MouseEvent<HTMLLIElement>) => {
+    selectItemRef.current?.(event.currentTarget);
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLLIElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      selectItemRef.current?.(event.currentTarget);
+    }
+  };
 
   return (
     <div className={["looping-words", className].filter(Boolean).join(" ")}>
@@ -167,7 +221,15 @@ export default function LoopingWords({
           className="looping-words__list"
         >
           {arrangedWords.map((word, i) => (
-            <li key={`${word}-${i}`} className="looping-words__item">
+            <li
+              key={`${word}-${i}`}
+              className="looping-words__item"
+              role="button"
+              tabIndex={0}
+              aria-label={`Selecteer ${word}`}
+              onClick={handleSelect}
+              onKeyDown={handleKeyDown}
+            >
               <p className="looping-words__p">{word}</p>
             </li>
           ))}

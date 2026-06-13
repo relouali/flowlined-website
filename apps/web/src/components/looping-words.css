@@ -61,6 +61,13 @@
   align-items: center;
   justify-content: center;
   height: 1.6em;
+  cursor: pointer;
+}
+
+.looping-words__item:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 .looping-words__p {
