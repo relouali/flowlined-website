@@ -25,6 +25,40 @@ export default function CaseStepVideo({ src, isActive }: CaseStepVideoProps) {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    if (typeof window === "undefined") return;
+
+    // On mobile the slider is disabled and the steps are stacked vertically, so
+    // there's no single "active" slide. Drive playback from visibility instead:
+    // each video starts when it scrolls into view (otherwise it stays on a
+    // blank first frame and looks like it never loaded) and pauses when it
+    // leaves.
+    if (window.matchMedia("(max-width: 639px)").matches) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) startCaseStepVideo(video);
+            else video.pause();
+          }
+        },
+        { threshold: 0.25 },
+      );
+      observer.observe(video);
+
+      const onMobileInteraction = () => {
+        if (!video.paused) return;
+        const rect = video.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (inView) startCaseStepVideo(video);
+      };
+      window.addEventListener("touchstart", onMobileInteraction, {
+        passive: true,
+      });
+
+      return () => {
+        observer.disconnect();
+        window.removeEventListener("touchstart", onMobileInteraction);
+      };
+    }
 
     if (!isActive) {
       video.pause();
