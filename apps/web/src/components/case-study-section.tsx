@@ -479,7 +479,7 @@ export default function CaseStudySection() {
           </GsapSlider>
 
           <div className="case-study-section__cta mt-auto shrink-0 pt-10 lg:pt-8">
-            <Cta href="#contact" variant="secondary">
+            <Cta href="/cases/ado-pro" variant="secondary">
               Plan een gesprek
             </Cta>
           </div>
