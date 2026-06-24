@@ -75,29 +75,84 @@ export default function ProgressNav() {
     }
   }
 
-  // Reveal the dark surface once the page is scrolled away from the very top
-  // (mirrors the hover state). Runs on every page.
+  // Two scroll behaviours, both driven off the same handler:
+  //   1. Reveal the dark surface once scrolled away from the very top
+  //      (mirrors the hover state).
+  //   2. Past the hero / first section, hide the nav while scrolling down and
+  //      bring it back while scrolling up. Within the first section the nav is
+  //      always shown. The hide state lives on <body> so both the desktop bar
+  //      and the mobile pill can react to it via CSS.
   useEffect(() => {
     const navEl = navRef.current;
     if (!navEl) return;
 
+    const lenis = locomotiveScroll?.lenisInstance;
+    const getScroll = () => (lenis ? lenis.scroll ?? 0 : window.scrollY);
+
     const setScrolled = (scrolled: boolean) =>
       navEl.classList.toggle("is--scrolled", scrolled);
+    const setHidden = (hidden: boolean) =>
+      document.body.classList.toggle("nav--hidden", hidden);
 
-    const lenis = locomotiveScroll?.lenisInstance;
+    // Absolute document position of the first section's bottom edge.
+    let heroBottom = window.innerHeight;
+    const computeHeroBottom = () => {
+      const first = document.querySelector("main")?.firstElementChild;
+      heroBottom = first
+        ? first.getBoundingClientRect().bottom + getScroll()
+        : window.innerHeight;
+    };
+
+    // Direction is accumulated: lastScroll only advances once the move is
+    // larger than the dead-zone, so smooth-scroll jitter doesn't flip the bar.
+    const DEAD_ZONE = 6;
+    let lastScroll = getScroll();
+
+    const onScroll = () => {
+      const y = getScroll();
+      setScrolled(y > 8);
+
+      if (y <= heroBottom + 1) {
+        setHidden(false);
+        lastScroll = y;
+        return;
+      }
+
+      const delta = y - lastScroll;
+      if (Math.abs(delta) < DEAD_ZONE) return;
+      setHidden(delta > 0);
+      lastScroll = y;
+    };
+
+    setScrolled(lastScroll > 8);
+    setHidden(false);
+    computeHeroBottom();
+    // Recompute once layout has settled (images/fonts can change section height).
+    const raf = requestAnimationFrame(computeHeroBottom);
+
+    window.addEventListener("resize", computeHeroBottom);
+    ScrollTrigger.addEventListener("refresh", computeHeroBottom);
 
     if (lenis) {
-      const onScroll = () => setScrolled((lenis.scroll ?? 0) > 8);
-      onScroll();
       lenis.on("scroll", onScroll);
-      return () => lenis.off("scroll", onScroll);
+    } else {
+      window.addEventListener("scroll", onScroll, { passive: true });
     }
 
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [locomotiveScroll]);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", computeHeroBottom);
+      ScrollTrigger.removeEventListener("refresh", computeHeroBottom);
+      if (lenis) {
+        lenis.off("scroll", onScroll);
+      } else {
+        window.removeEventListener("scroll", onScroll);
+      }
+      setHidden(false);
+    };
+    // `pathname` re-binds the handler per route so heroBottom tracks the new
+    // page's first section (the nav itself never remounts).
+  }, [locomotiveScroll, pathname]);
 
   useEffect(() => {
     if (!locomotiveScroll || !isHome) return;

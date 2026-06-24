@@ -6,7 +6,13 @@
   z-index: 50;
   color: rgba(255, 255, 255, 0.8);
   pointer-events: none;
-  transition: color 0.4s ease;
+  transition: color 0.4s ease, transform 0.4s ease;
+}
+
+/* Past the first section, the bar slides out of view while scrolling down and
+   returns while scrolling up (state toggled on <body> in progress-nav.tsx). */
+body.nav--hidden .progress-nav {
+  transform: translateY(-100%);
 }
 
 /* Full-width nav bar pinned to the top of the viewport, holding the logo

@@ -48,6 +48,18 @@
   top: 1em;
   left: 1em;
   right: 1em;
+  transition: transform 0.4s ease;
+}
+
+/* Past the first section, the pill slides up out of view while scrolling down
+   and returns while scrolling up (state toggled on <body> in progress-nav.tsx).
+   An open menu always stays visible. */
+body.nav--hidden .centered-nav {
+  transform: translateY(calc(-100% - 1.5em));
+}
+
+.navigation[data-navigation-status="active"] .centered-nav {
+  transform: none;
 }
 
 /* Same frosted-glass surface as the CTA button (.btn-icon-content). */
