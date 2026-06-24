@@ -493,6 +493,7 @@ export default function CaseStudySection() {
           src="/images/ADOPRO-cover2.png"
           alt="Werksessie tijdens het ADO Pro project, domeinexperts werken samen aan dossier- en procesontwerp"
           fill
+          loading="lazy"
           sizes="(min-width: 1024px) 50vw, 100vw"
           className="case-study-visual__img"
         />

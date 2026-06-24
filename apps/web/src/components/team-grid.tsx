@@ -27,6 +27,7 @@ export default function TeamGrid({ members }: TeamGridProps) {
                     alt={member.name}
                     className="team-card__image"
                     fill
+                    loading="lazy"
                     sizes="(min-width: 1024px) 22vw, (min-width: 768px) 45vw, 50vw"
                     src={member.image}
                   />

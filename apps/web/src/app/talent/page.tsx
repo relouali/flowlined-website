@@ -162,6 +162,7 @@ export default function TalentPage() {
                   alt="Medewerker van Flowlined"
                   className="object-cover"
                   fill
+                  loading="lazy"
                   sizes="(min-width: 1024px) 640px, (min-width: 768px) calc(100vw - 8rem), calc(100vw - 3rem)"
                   src="/images/talent-portrait.jpg"
                   style={{ objectPosition: "20% center" }}

@@ -48,6 +48,7 @@ function SectionImage({
         alt={alt}
         className="object-cover"
         fill
+        loading={priority ? undefined : "lazy"}
         priority={priority}
         sizes={sizes}
         src={src}

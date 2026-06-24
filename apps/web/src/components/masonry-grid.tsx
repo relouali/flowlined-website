@@ -34,6 +34,7 @@ export default function MasonryGrid({
                   alt={item.alt}
                   className="masonry-item__visual-img"
                   fill
+                  loading="lazy"
                   sizes={sizes}
                   src={item.src}
                 />

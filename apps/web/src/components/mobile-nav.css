@@ -207,7 +207,7 @@
 
 .hamburger-nav__p {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 300;
   line-height: 1.2;
   transition: transform 0.6s cubic-bezier(0.65, 0, 0, 1);
