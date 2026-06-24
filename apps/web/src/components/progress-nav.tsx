@@ -9,6 +9,7 @@ import { useEffect, useRef } from "react";
 import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
 import { transitionNavigate } from "@/components/page-transition-controller";
 import Cta from "@/components/cta";
+import MobileNav from "@/components/mobile-nav";
 import TransitionLink from "@/components/transition-link";
 
 import "./progress-nav.css";
@@ -191,6 +192,7 @@ export default function ProgressNav() {
   }, [isHome, locomotiveScroll, pathname]);
 
   return (
+    <>
     <nav ref={navRef} className="progress-nav" aria-label="Pagina navigatie">
       <div className="progress-nav__inner">
         <a className="progress-nav__logo" href="/" onClick={handleLogoClick}>
@@ -210,5 +212,7 @@ export default function ProgressNav() {
         </Cta>
       </div>
     </nav>
+    <MobileNav />
+    </>
   );
 }

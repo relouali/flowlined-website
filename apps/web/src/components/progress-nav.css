@@ -136,8 +136,10 @@
   filter: invert(100%);
 }
 
-@media (max-width: 768px) {
-  .progress-nav__wrapper {
+/* Below 768px the desktop bar is replaced wholesale by the mobile nav
+   (see mobile-nav.tsx / .navigation). */
+@media (max-width: 767.98px) {
+  .progress-nav {
     display: none;
   }
 }
