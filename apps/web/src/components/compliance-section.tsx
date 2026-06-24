@@ -45,7 +45,7 @@ export default function ComplianceSection() {
     <section
       id="compliance"
       data-progress-nav-anchor
-      className="compliance-section relative overflow-hidden bg-[#0a1418] px-8 py-20 sm:px-16 lg:py-28"
+      className="compliance-section relative overflow-hidden bg-[#0a1418] px-8 py-24 sm:px-16 md:py-32 lg:py-40"
     >
       <div className="mx-auto flex w-full max-w-[1320px] flex-col">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center">
@@ -64,12 +64,10 @@ export default function ComplianceSection() {
           {CERTIFICATES.map((cert) => (
             <article key={cert.id} className="compliance-card">
               <div className="flex flex-col gap-2.5">
-                <h3 className="text-[0.9375rem] font-medium tracking-tight text-white">
+                <h3 className="type-body-strong text-white">
                   {cert.title}
                 </h3>
-                <p className="text-[0.8125rem] leading-relaxed text-white/50">
-                  {cert.description}
-                </p>
+                <p className="type-body text-white/70">{cert.description}</p>
               </div>
               <img
                 src={cert.icon}

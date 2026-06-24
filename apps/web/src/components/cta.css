@@ -32,7 +32,7 @@ button.btn-icon-link {
 }
 
 .btn-icon-content__text {
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 500;
   --text-duplicate-distance: 1.5em;
   text-shadow: 0 var(--text-duplicate-distance) currentColor;

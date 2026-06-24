@@ -1,0 +1,109 @@
+/* Team card grid. Mirrors the masonry grid's columns/gap/aspect-ratio so the
+   two grids on the talent page read as siblings (flat, sharp corners). */
+
+.team-grid {
+  width: 100%;
+}
+
+.team-grid__list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .team-grid__list {
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .team-grid__list {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.team-grid__item {
+  position: relative;
+  min-width: 0;
+}
+
+.team-card__wrap {
+  position: relative;
+  width: 100%;
+}
+
+.team-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.team-card__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Tame bright (studio-white) photo backgrounds so they sit on the dark band. */
+  filter: brightness(0.92);
+}
+
+.team-card__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #16262e 0%, #0c161b 100%);
+  color: rgba(205, 223, 237, 0.22);
+}
+
+.team-card__placeholder svg {
+  width: 30%;
+  height: auto;
+}
+
+/* Subtle blur at the bottom of the photo, faded upward via a mask, so the
+   name/role read clearly. Sits below the scrim so it only blurs the image.
+   NOTE: the backdrop-filter itself is set inline in team-grid.tsx because
+   Lightning CSS (Tailwind v4) strips backdrop-filter from authored CSS. */
+.team-card__blur {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 45%;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to top, #000 28%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 28%, transparent 100%);
+}
+
+/* Bottom scrim so the name/role stay legible over any photo, plus a faint
+   overall navy tint so bright photo backgrounds blend into the dark band. */
+.team-card__scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 48%),
+    linear-gradient(rgba(10, 20, 24, 0.2), rgba(10, 20, 24, 0.2));
+}
+
+.team-card__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  padding: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .team-card__content {
+    padding: 1.5rem;
+  }
+}

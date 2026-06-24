@@ -433,7 +433,7 @@ export default function CaseStudySection() {
 
         <div className="case-study-section__stats-wrap flex w-full flex-1 flex-col pt-12 lg:min-h-0 lg:pt-6">
           <GsapSlider
-            className="case-study-section__stats"
+            className="case-study-section__stats my-auto"
             collectionClassName="case-study-section__stats-collection"
             trackClassName="case-study-section__stats-track"
             trackAs="ul"
@@ -478,7 +478,7 @@ export default function CaseStudySection() {
             })}
           </GsapSlider>
 
-          <div className="case-study-section__cta mt-auto shrink-0 pt-10 lg:pt-8">
+          <div className="case-study-section__cta shrink-0 pt-10 lg:pt-8">
             <Cta href="/cases/ado-pro" variant="secondary">
               Plan een gesprek
             </Cta>

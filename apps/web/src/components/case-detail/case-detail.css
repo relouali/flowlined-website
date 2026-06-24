@@ -34,11 +34,13 @@
   text-align: left;
 }
 
-/* Consistent 246px of breathing room between the page's top-level sections. */
+/* Breathing room between the page's top-level sections. Uses the shared
+   --section-gap token (see styles/layout.css) so the rhythm stays consistent
+   with the other content pages. */
 .case-detail main {
   display: flex;
   flex-direction: column;
-  gap: 246px;
+  gap: var(--section-gap);
 }
 
 /* ------------------------------------------------------------------ Hero */
@@ -487,7 +489,7 @@
 
 .case-compare__cell--feature {
   color: #000c10;
-  font-weight: 500;
+  font-weight: 300;
   padding-left: 1rem;
 }
 

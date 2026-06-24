@@ -44,7 +44,7 @@ export default function ProblemSection() {
     <section
       id="probleem"
       data-progress-nav-anchor
-      className="problem-section flex min-h-[100dvh] items-center bg-[#0a1418] px-8 py-24 sm:px-16 lg:py-32"
+      className="problem-section flex min-h-[100dvh] items-center bg-[#0a1418] px-8 py-24 sm:px-16 md:py-32 lg:py-40"
     >
       <div className="mx-auto flex w-full max-w-[1320px] flex-col">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center">
@@ -116,7 +116,7 @@ function ProblemItem({ item }: { item: (typeof ITEMS)[number] }) {
         play={hovered || isActiveSlide}
       />
       <div className="flex flex-col gap-3 text-white">
-        <h3 className="type-card-title text-white">{item.title}</h3>
+        <h3 className="type-body-strong text-white">{item.title}</h3>
         <p className="type-body text-white/70">{item.description}</p>
       </div>
     </div>

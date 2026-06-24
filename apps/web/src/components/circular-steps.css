@@ -48,7 +48,6 @@
 /* Hidden on mobile to reclaim vertical space; shown in the desktop column. */
 .circular-steps__intro {
   display: none;
-  color: rgba(0, 12, 16, 0.6);
 }
 
 .circular-steps__phase {
@@ -60,10 +59,6 @@
 
 .circular-steps__title {
   color: var(--ink);
-}
-
-.circular-steps__description {
-  color: rgba(0, 12, 16, 0.6);
 }
 
 /* The legacy stacked list is no longer rendered as the primary view. */
@@ -266,7 +261,6 @@
     display: block;
     margin-top: 1.25rem;
     max-width: 26rem;
-    font-size: 1rem;
   }
 
   /* The scene fills the entire right side and anchors the content. */

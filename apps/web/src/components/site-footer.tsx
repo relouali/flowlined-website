@@ -5,14 +5,17 @@ import { toast } from "sonner";
 
 import { CtaButton } from "@/components/cta";
 import GiantWordmark from "@/components/giant-wordmark";
+import TransitionLink from "@/components/transition-link";
 
 import "./site-footer.css";
 
+// `ready: false` links point to pages that don't exist yet, so they render as
+// plain anchors (no page transition) until the route is built.
 const FOOTER_NAV_LINKS = [
-  { href: "/cases", label: "Cases" },
-  { href: "/inzichten", label: "Inzichten" },
-  { href: "/talent", label: "Talent" },
-  { href: "/verhaal", label: "Ons verhaal" },
+  { href: "/cases/ado-pro", label: "Cases", ready: true },
+  { href: "/inzichten", label: "Inzichten", ready: false },
+  { href: "/talent", label: "Talent", ready: true },
+  { href: "/over-ons", label: "Ons verhaal", ready: true },
 ] as const;
 
 const LEGAL_LINKS = [
@@ -41,18 +44,18 @@ export default function SiteFooter() {
       <div className="mx-auto flex w-full max-w-[1320px] flex-col gap-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[572px_188px_minmax(0,1fr)] lg:gap-x-16 lg:gap-y-0">
           <div className="flex flex-col gap-8">
-            <a
+            <TransitionLink
               aria-label="Flowlined home"
-              className="relative block h-8 w-[182px]"
+              className="relative block h-8 w-[238px]"
               href="/"
             >
               <Image
                 alt="Flowlined"
                 className="object-contain object-left"
                 fill
-                src="/logo/lettermark.svg"
+                src="/logo/full-Logo.svg"
               />
-            </a>
+            </TransitionLink>
 
             <div className="type-ui flex flex-col gap-6">
               <div className="flex flex-col gap-1">
@@ -107,16 +110,23 @@ export default function SiteFooter() {
           <nav aria-label="Voettekst navigatie">
             <p className="type-ui py-2 font-semibold">Menu</p>
             <ul className="flex flex-col">
-              {FOOTER_NAV_LINKS.map(({ href, label }) => (
-                <li key={href}>
-                  <a
-                    className="type-ui block py-2 font-light text-[#999999] transition-colors hover:text-white"
-                    href={href}
-                  >
-                    {label}
-                  </a>
-                </li>
-              ))}
+              {FOOTER_NAV_LINKS.map(({ href, label, ready }) => {
+                const className =
+                  "type-ui block py-2 font-light text-[#999999] transition-colors hover:text-white";
+                return (
+                  <li key={href}>
+                    {ready ? (
+                      <TransitionLink className={className} href={href}>
+                        {label}
+                      </TransitionLink>
+                    ) : (
+                      <a className={className} href={href}>
+                        {label}
+                      </a>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 

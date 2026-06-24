@@ -1,5 +1,45 @@
 /* Responsive type scale: mobile → iPad (768px) → desktop (1024px) */
 
+/* ---------------------------------------------------------------- Layout */
+/* Single source of truth for the vertical rhythm between top-level page
+   sections. Used by content pages (About, case detail) via the .section-stack
+   utility (and the --section-gap token) so spacing stays consistent site-wide.
+   The homepage intentionally opts out: its sections are full-viewport panels
+   whose spacing comes from internal padding. */
+:root {
+  --section-gap: 6rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --section-gap: 8rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --section-gap: 10rem;
+  }
+}
+
+/* Stacks direct children in a column separated by the standard section gap. */
+.section-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+}
+
+/* ------------------------------------------------- Canonical type roles
+   The site uses exactly four reading styles. Use these everywhere and do
+   NOT introduce ad-hoc sizes (text-[..]) for these roles:
+     1. Hero title    → .type-hero         (page hero headline)
+     2. Section title → .type-section-title (section headings)
+     3. Description    → .type-section-lead  (intro/lead under a heading)
+     4. Body           → .type-body / .type-body-light (paragraph copy)
+   Sub-headings / card titles are NOT a separate size: use
+   `.type-body-strong` (body size, heavier weight).
+   .type-stat / .type-ui / .type-caption are non-prose utilities
+   (stat numbers, nav/footer UI, eyebrow captions). */
 .type-hero {
   font-size: 3rem;
   line-height: 1.08;
@@ -24,17 +64,6 @@
   }
 }
 
-.type-hero-lead {
-  font-size: 1rem;
-  line-height: 1.625;
-}
-
-@media (min-width: 768px) {
-  .type-hero-lead {
-    font-size: 1.125rem;
-  }
-}
-
 .type-section-title {
   font-size: 2.25rem;
   font-weight: 300;
@@ -50,25 +79,6 @@
 @media (min-width: 1024px) {
   .type-section-title {
     font-size: 3.25rem;
-    line-height: 1.1;
-  }
-}
-
-.type-section-title-lg {
-  font-size: 2.25rem;
-  font-weight: 300;
-  line-height: 1.15;
-}
-
-@media (min-width: 768px) {
-  .type-section-title-lg {
-    font-size: 2.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .type-section-title-lg {
-    font-size: 3.5rem;
     line-height: 1.1;
   }
 }
@@ -91,41 +101,27 @@
   }
 }
 
-.type-card-title {
-  font-size: 1.125rem;
-  font-weight: 500;
-  line-height: 1.375;
-}
-
-@media (min-width: 768px) {
-  .type-card-title {
-    font-size: 1.25rem;
-  }
-}
-
-.type-card-title-lg {
-  font-size: 1.375rem;
-  font-weight: 300;
-  line-height: 1.15;
-  letter-spacing: -0.005em;
-}
-
-@media (min-width: 768px) {
-  .type-card-title-lg {
-    font-size: 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .type-card-title-lg {
-    font-size: 1.625rem;
-  }
-}
-
 .type-body {
   font-size: 1rem;
   font-weight: 300;
   line-height: 1.625;
+}
+
+/* Primary body copy on white/light sections — matches the process-section intro. */
+.type-body-light {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.625;
+  color: rgba(0, 12, 16, 0.6);
+}
+
+/* Sub-headings / card titles: same size as body, only heavier. Defined as its
+   own class (not `.type-body` + Tailwind `font-medium`) because the type-*
+   classes are unlayered and would otherwise override the layered utility. */
+.type-body-strong {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
 .type-stat {

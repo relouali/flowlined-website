@@ -1,0 +1,56 @@
+/* Column-wipe page transition (Osmo-style).
+   Five vertical panels sweep down to cover the screen, then continue down to
+   reveal the incoming page. Driven by GSAP in page-transition-provider.tsx.
+
+   The wrapper is hidden (autoAlpha 0) at rest so the faint divider lines never
+   show over page content; GSAP toggles it visible only during a transition. */
+.transition {
+  z-index: 100;
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  overflow: clip;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.transition__panels {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.transition__panel {
+  background-color: #0a1418;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* Parked one panel-height above the viewport; GSAP drives yPercent
+     0 -> 100 (cover) -> 200 (reveal). */
+  top: -100%;
+}
+
+.transition__lines {
+  opacity: 0.1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: absolute;
+  /* Parked above the viewport and driven by GSAP in lock-step with the panels
+     (0 -> 100 -> 200) so the grid never lingers over the revealed page. */
+  top: -100%;
+  left: 0;
+}
+
+.transition__line {
+  border-right: 1px solid #fff;
+  width: 100%;
+  height: 100%;
+}
+
+.transition__line.is--last {
+  border-right-style: none;
+}

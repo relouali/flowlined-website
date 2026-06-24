@@ -7,47 +7,47 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
+import { transitionNavigate } from "@/components/page-transition-controller";
 import Cta from "@/components/cta";
+import TransitionLink from "@/components/transition-link";
 
 import "./progress-nav.css";
 
 export const PROGRESS_NAV_ITEMS = [
-  { id: "top", label: "Intro" },
-  { id: "probleem", label: "Probleem" },
-  { id: "proces", label: "Proces" },
-  { id: "sectoren", label: "Sectoren" },
-  { id: "ado-pro", label: "ADO Pro" },
+  { href: "/over-ons", label: "Ons verhaal" },
+  { href: "/talent", label: "Talent" },
+  { href: "/cases/ado-pro", label: "ADO Pro" },
+
+
 ] as const;
 
-function NavButton({
-  href,
-  label,
-  onNavigate,
-}: {
-  href: string;
-  label: string;
-  onNavigate: (event: React.MouseEvent<HTMLAnchorElement>, href: string) => void;
-}) {
+function NavButton({ href, label }: { href: string; label: string }) {
   return (
-    <a
-      className="progress-nav__btn"
-      data-progress-nav-target={href}
-      href={href}
-      onClick={(event) => onNavigate(event, href)}
-    >
+    <TransitionLink className="progress-nav__btn" href={href}>
       <span className="progress-nav__btn-text">{label}</span>
-      <span className="progress-nav__btn-text is--duplicate">{label}</span>
-    </a>
+    </TransitionLink>
   );
 }
 
 export default function ProgressNav() {
   const navRef = useRef<HTMLElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
-  const indicatorRef = useRef<HTMLDivElement>(null);
   const { locomotiveScroll } = useLocomotiveScroll();
   const pathname = usePathname();
   const isHome = pathname === "/";
+
+  function handleLogoClick(event: React.MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
+    if (isHome) {
+      // Already home: smooth-scroll back to the top.
+      if (locomotiveScroll) {
+        locomotiveScroll.scrollTo(0, { duration: 1.2 });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      return;
+    }
+    transitionNavigate("/");
+  }
 
   function handleNavigate(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
     // Smooth-scroll when the target section exists on the current page
@@ -74,60 +74,34 @@ export default function ProgressNav() {
     }
   }
 
+  // Reveal the dark surface once the page is scrolled away from the very top
+  // (mirrors the hover state). Runs on every page.
+  useEffect(() => {
+    const navEl = navRef.current;
+    if (!navEl) return;
+
+    const setScrolled = (scrolled: boolean) =>
+      navEl.classList.toggle("is--scrolled", scrolled);
+
+    const lenis = locomotiveScroll?.lenisInstance;
+
+    if (lenis) {
+      const onScroll = () => setScrolled((lenis.scroll ?? 0) > 8);
+      onScroll();
+      lenis.on("scroll", onScroll);
+      return () => lenis.off("scroll", onScroll);
+    }
+
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [locomotiveScroll]);
+
   useEffect(() => {
     if (!locomotiveScroll || !isHome) return;
 
-    const navList = listRef.current;
-    const indicator = indicatorRef.current;
-    if (!navList || !indicator) return;
-
-    const nav = navList;
-    const indicatorEl = indicator;
-
-    function updateIndicator(activeLink: Element) {
-      const parentWidth = nav.offsetWidth;
-      const parentHeight = nav.offsetHeight;
-      const parentRect = nav.getBoundingClientRect();
-      const linkRect = activeLink.getBoundingClientRect();
-
-      const linkPos = {
-        left: linkRect.left - parentRect.left,
-        top: linkRect.top - parentRect.top,
-      };
-
-      indicatorEl.style.left = `${(linkPos.left / parentWidth) * 100}%`;
-      indicatorEl.style.top = `${(linkPos.top / parentHeight) * 100}%`;
-      indicatorEl.style.width = `${(activeLink.clientWidth / parentWidth) * 100}%`;
-      indicatorEl.style.height = `${(activeLink.clientHeight / parentHeight) * 100}%`;
-    }
-
-    function setActiveLink(anchorID: string) {
-      const activeLink = nav.querySelector(`[data-progress-nav-target="#${anchorID}"]`);
-      if (!activeLink) return;
-
-      nav.querySelectorAll("[data-progress-nav-target]").forEach((link) => {
-        link.classList.remove("is--active");
-      });
-
-      activeLink.classList.add("is--active");
-      updateIndicator(activeLink);
-    }
-
     const anchors = gsap.utils.toArray<HTMLElement>("[data-progress-nav-anchor]");
-
-    const anchorTriggers = anchors.map((anchor) => {
-      const anchorID = anchor.id;
-
-      return ScrollTrigger.create({
-        trigger: anchor,
-        scroller: document.body,
-        start: "0% 50%",
-        end: "100% 50%",
-        onEnter: () => setActiveLink(anchorID),
-        onEnterBack: () => setActiveLink(anchorID),
-      });
-    });
-
     const navEl = navRef.current;
 
     function setNavLight(isLight: boolean) {
@@ -157,21 +131,14 @@ export default function ProgressNav() {
     });
     setNavLight(initialLight);
 
-    const onResize = () => {
-      const activeLink = nav.querySelector("[data-progress-nav-target].is--active");
-      if (activeLink) updateIndicator(activeLink);
-    };
-
-    window.addEventListener("resize", onResize);
     ScrollTrigger.refresh();
-    setActiveLink("top");
 
     return () => {
-      anchorTriggers.forEach((trigger) => trigger.kill());
       themeTriggers.forEach((trigger) => trigger.kill());
-      window.removeEventListener("resize", onResize);
     };
-  }, [locomotiveScroll, isHome]);
+    // `pathname` rebuilds the triggers on every client-side navigation so they
+    // bind to the new page's sections (the nav itself never remounts).
+  }, [locomotiveScroll, isHome, pathname]);
 
   // Sub-pages (e.g. case detail) render on a white background, so the nav
   // defaults to its light (dark-text) theme. Sections marked
@@ -219,23 +186,22 @@ export default function ProgressNav() {
     return () => {
       triggers.forEach((trigger) => trigger.kill());
     };
-  }, [isHome, locomotiveScroll]);
+    // `pathname` rebuilds the triggers on every client-side navigation so they
+    // bind to the new page's data-nav-theme sections.
+  }, [isHome, locomotiveScroll, pathname]);
 
   return (
     <nav ref={navRef} className="progress-nav" aria-label="Pagina navigatie">
       <div className="progress-nav__inner">
-        <a className="progress-nav__logo" href="#top" onClick={(event) => handleNavigate(event, "#top")}>
-          <Image alt="Flowlined" fill priority src="/images/flowlined-logo.svg" />
+        <a className="progress-nav__logo" href="/" onClick={handleLogoClick}>
+          <Image alt="Flowlined" fill priority src="/logo/full-Logo.svg" />
         </a>
 
         <div className="progress-nav__wrapper">
-          <div ref={listRef} data-progress-nav-list className="progress-nav__list">
-            <div ref={indicatorRef} className="progress-nav__indicator" />
-            <div data-progress-nav-target="#top" className="progress-nav__btn is--before" />
-            {PROGRESS_NAV_ITEMS.map(({ id, label }) => (
-              <NavButton key={id} href={`#${id}`} label={label} onNavigate={handleNavigate} />
+          <div className="progress-nav__list">
+            {PROGRESS_NAV_ITEMS.map(({ href, label }) => (
+              <NavButton key={href} href={href} label={label} />
             ))}
-            <div data-progress-nav-target="#contact" className="progress-nav__btn is--after" />
           </div>
         </div>
 

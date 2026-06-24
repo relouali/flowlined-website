@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode, type Ref } from "react";
 
 import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
 import { initHighlightText } from "@/lib/init-highlight-text";
 
 type HighlightTextProps = {
-  as?: "h1" | "h2" | "h3";
+  as?: "h1" | "h2" | "h3" | "p" | "span";
   children: ReactNode;
   className?: string;
   fade?: number;
@@ -24,7 +24,7 @@ export default function HighlightText({
   scrollStart,
   stagger,
 }: HighlightTextProps) {
-  const headingRef = useRef<HTMLHeadingElement>(null);
+  const headingRef = useRef<HTMLElement>(null);
   const { locomotiveScroll } = useLocomotiveScroll();
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function HighlightText({
 
   return (
     <Tag
-      ref={headingRef}
+      ref={headingRef as Ref<HTMLHeadingElement>}
       className={className}
       {...(fade !== undefined ? { "data-highlight-fade": fade } : {})}
       {...(scrollEnd !== undefined ? { "data-highlight-scroll-end": scrollEnd } : {})}

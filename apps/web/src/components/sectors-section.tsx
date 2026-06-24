@@ -65,7 +65,7 @@ export default function SectorsSection() {
     <section
       id="sectoren"
       data-progress-nav-anchor
-      className="sectors-section relative flex min-h-[100dvh] flex-col overflow-hidden bg-[#0a1418] px-8 py-20 sm:px-16 lg:px-16 lg:pt-28 lg:pb-10"
+      className="sectors-section relative flex min-h-[100dvh] flex-col overflow-hidden bg-[#0a1418] px-8 py-24 sm:px-16 md:py-32 lg:px-16 lg:pt-40 lg:pb-10"
     >
       <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col items-center">
         {/* Top: header + picker. Anchored to the top of the available
@@ -104,7 +104,7 @@ export default function SectorsSection() {
                       <MaskTextReveal
                         as="h3"
                         active={isActive}
-                        className="type-card-title-lg hidden text-white lg:block"
+                        className="type-body-strong hidden text-white lg:block"
                       >
                         {sector.title}
                       </MaskTextReveal>

@@ -89,14 +89,14 @@ export default function Hero() {
 
       <div className="relative z-10 flex flex-1 flex-col items-start justify-end px-8 pb-16 text-left sm:px-16 md:items-center md:justify-center md:text-center">
         <div className="flex w-full flex-col items-start gap-4 md:items-center md:gap-8">
-          <h1 className="type-hero bg-gradient-to-b from-white/55 via-white/90 to-white bg-clip-text font-semibold capitalize tracking-tight text-transparent">
+          <h1 className="type-hero bg-gradient-to-b from-white/55 via-white/90 to-white bg-clip-text font-semibold tracking-tight text-transparent">
             Jouw vakkennis.
             <br />
             Ons systeem.
             <br />
             Eén product.
           </h1>
-          <p className="type-hero-lead font-medium text-white/70">
+          <p className="type-section-lead text-white/70">
           Wij bouwen werksystemen samen met de experts die ze het hardst nodig hebben.
           </p>
         </div>

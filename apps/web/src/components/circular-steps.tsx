@@ -183,7 +183,7 @@ export default function CircularSteps({
           >
             {title} <span className="text-[#000c10]/45">{titleMuted}</span>
           </HighlightText>
-          <p className="circular-steps__intro type-section-lead">{description}</p>
+          <p className="circular-steps__intro type-body-light">{description}</p>
         </header>
 
         {/* Scroll-driven circular stepper (all viewports). On desktop the
@@ -240,10 +240,10 @@ export default function CircularSteps({
 
           <div key={activeIndex} className="circular-steps__content">
             <span className="circular-steps__phase">{active.phase}</span>
-            <h3 className="circular-steps__title type-card-title-lg">
+            <h3 className="circular-steps__title type-body-strong">
               {active.title}
             </h3>
-            <p className="circular-steps__description type-body">
+            <p className="circular-steps__description type-body-light">
               {active.description}
             </p>
           </div>

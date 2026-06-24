@@ -107,10 +107,10 @@ export default function AdoProCasePage() {
                 src="/cases/ado-pro/ado-pro-logo.svg"
               />
             </div>
-            <h1 className="case-hero__title type-hero font-semibold capitalize tracking-tight text-[#000c10]">
+            <h1 className="case-hero__title type-hero font-semibold tracking-tight text-[#000c10]">
               Intelligente assistent voor arbeidsdeskundig onderzoek
             </h1>
-            <p className="case-hero__lead type-section-lead text-[#000c10]/60">
+            <p className="case-hero__lead type-section-lead text-black/60">
               Het werksysteem voor arbeidsdeskundigen. Van dossierbereiding tot
               rapportgeneratie, volledig conform RIV-richtlijnen.
             </p>
@@ -179,7 +179,7 @@ export default function AdoProCasePage() {
                   Rommelige workflows.{" "}
                   <span className="text-black/45">Voor elk rapport.</span>
                 </h2>
-                <p className="type-section-lead text-black/60">
+                <p className="type-body-light">
                   Een arbeidsdeskundige beoordeelt arbeidsmogelijkheden van
                   mensen met een beperking. In de praktijk betekent dat: medische
                   dossiers doorwerken, belastbaarheid afwegen, en alles vertalen
@@ -217,7 +217,7 @@ export default function AdoProCasePage() {
                 Orde in het voorwerk.{" "}
                 <span className="text-black/45">Regie bij de expert.</span>
               </h2>
-              <p className="type-section-lead text-black/60">
+              <p className="type-body-light">
                 Waar dossierwerk nu verspreid ligt over mappen, mails en
                 spreadsheets, brengt ADO Pro alles samen in één gestructureerd
                 proces. Het systeem neemt het voorbereidende werk over. De
@@ -238,7 +238,7 @@ export default function AdoProCasePage() {
               {" "}
                 <span className="text-black/45">In één overzicht.</span>
               </h2>
-              <p className="type-section-lead text-black/60">
+              <p className="type-body-light">
                 Het voorbereidende werk dat voorheen uren kostte, neemt ADO Pro
                 grotendeels over. Dezelfde stappen, maar geautomatiseerd, zodat
                 de arbeidsdeskundige tijd overhoudt voor het oordeel dat er

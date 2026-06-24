@@ -1,21 +1,53 @@
 .progress-nav {
   width: 100%;
-  padding: 2em 4rem;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 50;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.8);
   pointer-events: none;
   transition: color 0.4s ease;
 }
 
+/* Full-width nav bar pinned to the top of the viewport, holding the logo
+   (left), the centered chip list and the CTA (right). Transparent at rest;
+   on hover the dark site surface (#0a1418) fades in. */
 .progress-nav__inner {
   justify-content: space-between;
   align-items: center;
   display: flex;
   position: relative;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background-color: transparent;
+
   pointer-events: auto;
+  transition: background-color 0.3s ease, border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .progress-nav__inner {
+    padding: 1rem 4rem;
+  }
+}
+
+/* Dark surface fades in once the page is scrolled away from the top, or while
+   the bar is hovered. */
+.progress-nav__inner:hover,
+.progress-nav.is--scrolled .progress-nav__inner {
+  background-color: #0a1418;
+  border-bottom-color: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Over light sections the active surface is white with dark text instead.
+   Higher specificity (two classes on .progress-nav) wins over the dark rule. */
+.progress-nav.is--light .progress-nav__inner:hover,
+.progress-nav.is--light.is--scrolled .progress-nav__inner {
+  background-color: #ffffff;
+  border-bottom-color: rgba(0, 12, 16, 0.05);
+  color: #000c10;
 }
 
 .progress-nav__logo {
@@ -23,47 +55,24 @@
   text-decoration: none;
   display: block;
   position: relative;
-  width: 30px;
-  height: 34px;
+  width: 149px;
+  height: 20px;
   flex-shrink: 0;
   transition: filter 0.4s ease;
 }
 
-/* Absolutely centered in the nav so the chip pill always sits on the
-   viewport mid-line, independent of the logo (left) and CTA (right)
-   widths. Without this, `justify-content: space-between` on the
-   parent only "centers" the wrapper when both sides happen to be the
-   same width — which isn't true once the chip list grows. */
+/* Pushed to the right so the chip list sits next to the CTA, with the logo
+   alone on the left. */
 .progress-nav__wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, 0.12);
-  border-radius: 50em;
-  padding: 0.5em;
-  backdrop-filter: blur(12px);
-  transition: background-color 0.4s ease;
+  margin-left: auto;
+  margin-right: 1.5rem;
 }
 
 .progress-nav__list {
-  border-radius: 50em;
   justify-content: flex-start;
   align-items: center;
   display: flex;
   position: relative;
-  overflow: hidden;
-}
-
-.progress-nav__indicator {
-  z-index: 2;
-  background-color: #001a23;
-  border-radius: 50em;
-  width: 2.5em;
-  height: 2.5em;
-  position: absolute;
-  left: -2.5em;
-  transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .progress-nav__btn {
@@ -84,30 +93,6 @@
   font: inherit;
 }
 
-.progress-nav__btn.is--before {
-  z-index: 1;
-  width: 2.5em;
-  height: 2.5em;
-  padding-left: 0;
-  padding-right: 0;
-  position: absolute;
-  right: 100%;
-}
-
-.progress-nav__btn.is--after {
-  z-index: 1;
-  width: 2.5em;
-  height: 2.5em;
-  padding-left: 0;
-  padding-right: 0;
-  position: absolute;
-  left: 100%;
-}
-
-.progress-nav__btn.is--active {
-  color: #ffffff;
-}
-
 .progress-nav__btn-text {
   white-space: nowrap;
   justify-content: center;
@@ -116,17 +101,17 @@
   font-size: 1rem;
   font-weight: 500;
   display: flex;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: translateY(0%) rotate(0.001deg);
+  transition: color 0.3s ease;
 }
 
-.progress-nav__btn-text.is--duplicate {
-  position: absolute;
-  top: 100%;
-}
-
+/* Subtle hover: the item smoothly lights up to full white. */
 .progress-nav__btn:hover .progress-nav__btn-text {
-  transform: translateY(-100%) rotate(0.001deg);
+  color: #ffffff;
+}
+
+/* On light sections the hovered item darkens to full ink instead. */
+.progress-nav.is--light .progress-nav__btn:hover .progress-nav__btn-text {
+  color: #000c10;
 }
 
 
@@ -134,23 +119,24 @@
   color: #000c10;
 }
 
-.progress-nav.is--light .progress-nav__wrapper {
-  background-color: rgba(10, 20, 24, 0.06);
-}
-
 .progress-nav.is--light .progress-nav__logo {
   filter: invert(100%);
 }
 
-.progress-nav.is--light .progress-nav__btn.is--active {
-  color: #ffffff;
+/* The dark surface (scrolled or hovered) keeps the logo white, even over
+   light sections — placed after the is--light rule so it wins. */
+.progress-nav.is--scrolled .progress-nav__logo,
+.progress-nav__inner:hover .progress-nav__logo {
+  filter: none;
+}
+
+/* …but the white surface over light sections keeps the logo dark. */
+.progress-nav.is--light.is--scrolled .progress-nav__logo,
+.progress-nav.is--light .progress-nav__inner:hover .progress-nav__logo {
+  filter: invert(100%);
 }
 
 @media (max-width: 768px) {
-  .progress-nav {
-    padding: 1.25em 1.5rem;
-  }
-
   .progress-nav__wrapper {
     display: none;
   }

@@ -31,7 +31,7 @@ export default function ManifestSection({
       data-parallax="trigger"
       data-parallax-start="15"
       data-parallax-end="-15"
-      className="manifest-section relative flex min-h-[100dvh] items-center justify-center overflow-hidden rounded-b-[1.75rem] px-8 py-24 sm:rounded-b-[2rem] sm:px-16 lg:rounded-b-[3rem]"
+      className="manifest-section relative flex min-h-[100dvh] items-center justify-center overflow-hidden rounded-b-[1.75rem] px-8 py-24 sm:rounded-b-[2rem] sm:px-16 md:py-32 lg:rounded-b-[3rem] lg:py-40"
     >
       {/* Figma stack: Full Black → photo → blue-teal color wash → tint */}
       <div
@@ -46,10 +46,7 @@ export default function ManifestSection({
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1080px] flex-col items-center gap-8 text-center">
-        <HighlightText
-          as="h2"
-          className="type-section-title-lg text-white"
-        >
+        <HighlightText as="h2" className="type-section-title text-white">
           {title}
         </HighlightText>
 

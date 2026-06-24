@@ -193,13 +193,13 @@ export default function CaseStepSlider() {
                   </div>
 
                   <div className="case-step-slider__copy">
-                    <h3 className="text-[1.25rem] font-medium text-black">
+                    <h3 className="type-body-strong text-black">
                       {step.title}
                     </h3>
                     {step.paragraphs.map((paragraph) => (
                       <p
                         key={paragraph}
-                        className="text-base font-light text-[#000c10b3]"
+                        className="type-body-light"
                       >
                         {paragraph}
                       </p>

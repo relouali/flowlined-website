@@ -30,15 +30,26 @@ export default function LottieIcon({ size, src, play = false }: LottieIconProps)
 
   // Drive playback from the `play` prop. Re-run when the data finishes
   // loading so a hover that happened before load is honored once ready.
+  // On hover-out, let the current loop finish before stopping so the
+  // animation doesn't cut off mid-cycle.
   useEffect(() => {
     const instance = lottieRef.current;
     if (!instance) return;
 
     if (play) {
       instance.play();
-    } else {
-      instance.stop();
+      return;
     }
+
+    const anim = instance.animationItem;
+    if (!anim) {
+      instance.stop();
+      return;
+    }
+
+    const onLoopComplete = () => instance.stop();
+    anim.addEventListener("loopComplete", onLoopComplete);
+    return () => anim.removeEventListener("loopComplete", onLoopComplete);
   }, [play, animationData]);
 
   if (!animationData) {

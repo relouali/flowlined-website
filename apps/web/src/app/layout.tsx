@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../index.css";
 import GlobalParallax from "@/components/global-parallax";
 import LocomotiveScrollProvider from "@/components/locomotive-scroll-provider";
+import PageTransitionProvider from "@/components/page-transition-provider";
 import ProgressNav from "@/components/progress-nav";
 import Providers from "@/components/providers";
 
@@ -40,14 +41,19 @@ export default function RootLayout({
       >
         <Providers>
           <LocomotiveScrollProvider>
-            <ProgressNav />
-            {/* Hooks GSAP scroll-driven parallax to every element marked
-                with data-parallax="trigger" (see init-global-parallax.ts).
-                Must live inside <LocomotiveScrollProvider> so it can wait
-                for Locomotive's scrollerProxy to be initialised before
-                wiring ScrollTrigger animations. */}
-            <GlobalParallax />
-            {children}
+            {/* Owns the column-wipe page transition and exposes navigate()
+                via context. Wraps the nav + page content so both (and the
+                footer rendered inside pages) can trigger transitions. */}
+            <PageTransitionProvider>
+              <ProgressNav />
+              {/* Hooks GSAP scroll-driven parallax to every element marked
+                  with data-parallax="trigger" (see init-global-parallax.ts).
+                  Must live inside <LocomotiveScrollProvider> so it can wait
+                  for Locomotive's scrollerProxy to be initialised before
+                  wiring ScrollTrigger animations. */}
+              <GlobalParallax />
+              {children}
+            </PageTransitionProvider>
           </LocomotiveScrollProvider>
         </Providers>
       </body>
