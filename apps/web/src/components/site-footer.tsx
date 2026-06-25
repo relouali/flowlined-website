@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { CtaButton } from "@/components/cta";
@@ -24,16 +25,46 @@ const LEGAL_LINKS = [
 ] as const;
 
 export default function SiteFooter() {
-  function handleNewsletterSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const email = String(formData.get("email") ?? "").trim();
-    if (!email) return;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    toast.success("Bedankt voor je aanmelding", {
-      description: `We sturen updates naar ${email}.`,
-    });
-    event.currentTarget.reset();
+  async function handleNewsletterSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const email = String(formData.get("email") ?? "").trim();
+    if (!email || isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as
+          | { error?: string }
+          | null;
+        throw new Error(data?.error ?? "Aanmelding mislukt.");
+      }
+
+      toast.success("Bedankt voor je aanmelding", {
+        description: `We sturen updates naar ${email}.`,
+      });
+      form.reset();
+    } catch (error) {
+      toast.error("Er ging iets mis", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "Probeer het later opnieuw.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -157,9 +188,10 @@ export default function SiteFooter() {
                 />
                 <CtaButton
                   className="footer-newsletter-submit w-full shrink-0 sm:w-auto"
+                  disabled={isSubmitting}
                   type="submit"
                 >
-                  Aanmelden
+                  {isSubmitting ? "Bezig…" : "Aanmelden"}
                 </CtaButton>
               </div>
               <p className="type-caption font-light text-white/80">
