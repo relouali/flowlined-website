@@ -88,6 +88,7 @@ type CtaButtonProps = {
   className?: string;
   variant?: CtaVariant;
   type?: "button" | "submit";
+  disabled?: boolean;
 };
 
 export function CtaButton({
@@ -95,12 +96,14 @@ export function CtaButton({
   className,
   variant = "primary",
   type = "button",
+  disabled = false,
 }: CtaButtonProps) {
   return (
     <button
       className={["btn-icon-link", ctaVariantClass(variant), className]
         .filter(Boolean)
         .join(" ")}
+      disabled={disabled}
       type={type}
     >
       <CtaContent showIcon={false}>{children}</CtaContent>
