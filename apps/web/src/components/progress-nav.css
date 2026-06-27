@@ -1,4 +1,6 @@
 .progress-nav {
+  --nav-item-hover-bg: rgba(255, 255, 255, 0.12);
+
   width: 100%;
   position: fixed;
   top: 0;
@@ -12,48 +14,84 @@
 /* Past the first section, the bar slides out of view while scrolling down and
    returns while scrolling up (state toggled on <body> in progress-nav.tsx). */
 body.nav--hidden .progress-nav {
-  transform: translateY(-100%);
+  transform: translateY(calc(-100% - 0.875rem));
 }
 
-/* Full-width nav bar pinned to the top of the viewport, holding the logo
-   (left), the centered chip list and the CTA (right). Transparent at rest;
-   on hover the dark site surface (#0a1418) fades in. */
-.progress-nav__inner {
+.progress-nav__track {
+  padding: 0;
+  transition: padding 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.progress-nav.is--scrolled .progress-nav__track {
+  padding: 0.875rem 1rem 0;
+}
+
+/* Layout morphs are driven by GSAP Flip (see progress-nav.tsx). */
+.progress-nav__pill {
   justify-content: space-between;
   align-items: center;
   display: flex;
   position: relative;
   width: 100%;
   padding: 1rem 1.5rem;
-  background-color: transparent;
+  border-radius: 0;
+  isolation: isolate;
 
   pointer-events: auto;
-  transition: background-color 0.3s ease, border-color 0.3s ease,
-    color 0.3s ease;
+  gap: 0;
+  margin-inline: 0;
+}
+
+.progress-nav__surface {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
 }
 
 @media (min-width: 768px) {
-  .progress-nav__inner {
+  .progress-nav__pill {
     padding: 1rem 4rem;
   }
 }
 
-/* Dark surface fades in once the page is scrolled away from the top, or while
-   the bar is hovered. */
-.progress-nav__inner:hover,
-.progress-nav.is--scrolled .progress-nav__inner {
-  background-color: #0a1418;
-  border-bottom-color: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.8);
+.progress-nav.is--scrolled .progress-nav__pill {
+  justify-content: flex-start;
+  width: fit-content;
+  max-width: calc(100% - 2rem);
+  margin-inline: auto;
+  gap: 1rem;
+  padding: 0.4375rem 0.625rem 0.4375rem 1rem;
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.85);
 }
 
-/* Over light sections the active surface is white with dark text instead.
-   Higher specificity (two classes on .progress-nav) wins over the dark rule. */
-.progress-nav.is--light .progress-nav__inner:hover,
-.progress-nav.is--light.is--scrolled .progress-nav__inner {
-  background-color: #ffffff;
-  border-bottom-color: rgba(0, 12, 16, 0.05);
-  color: #000c10;
+.progress-nav.is--scrolled .progress-nav__surface {
+  opacity: 1;
+}
+
+.progress-nav.is--scrolled,
+.progress-nav.is--light.is--scrolled {
+  --nav-item-hover-bg: rgba(255, 255, 255, 0.12);
+}
+
+@media (min-width: 768px) {
+  .progress-nav.is--scrolled .progress-nav__pill {
+    padding: 0.5rem 0.75rem 0.5rem 1.125rem;
+  }
+}
+
+.progress-nav.is--light.is--scrolled .progress-nav__surface {
+  background-color: rgba(0, 0, 0, 0.28);
+}
+
+.progress-nav.is--light.is--scrolled .progress-nav__pill {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .progress-nav__logo {
@@ -67,11 +105,45 @@ body.nav--hidden .progress-nav {
   transition: filter 0.4s ease;
 }
 
-/* Pushed to the right so the chip list sits next to the CTA, with the logo
-   alone on the left. */
+.progress-nav__logo-full,
+.progress-nav__logo-emblem {
+  display: block;
+  position: absolute;
+}
+
+.progress-nav__logo-full {
+  inset: 0;
+}
+
+.progress-nav__logo-emblem {
+  width: 24px;
+  height: 27px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  opacity: 0;
+}
+
+.progress-nav.is--scrolled .progress-nav__logo {
+  width: 24px;
+  height: 27px;
+}
+
+.progress-nav.is--scrolled .progress-nav__logo-full {
+  opacity: 0;
+}
+
+.progress-nav.is--scrolled .progress-nav__logo-emblem {
+  opacity: 1;
+}
+
 .progress-nav__wrapper {
   margin-left: auto;
-  margin-right: 1.5rem;
+}
+
+.progress-nav.is--scrolled .progress-nav__wrapper {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .progress-nav__list {
@@ -82,21 +154,38 @@ body.nav--hidden .progress-nav {
 }
 
 .progress-nav__btn {
-  z-index: 3;
+  z-index: 1;
   cursor: pointer;
   color: inherit;
   justify-content: center;
   align-items: center;
-  height: 2.5em;
-  padding-left: 1em;
-  padding-right: 1em;
+  height: 2.125em;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
   text-decoration: none;
   display: flex;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   border: none;
+  border-radius: 9999px;
   background: transparent;
   font: inherit;
+  isolation: isolate;
+}
+
+.progress-nav__btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--nav-item-hover-bg);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.progress-nav__btn:hover::before {
+  opacity: 1;
 }
 
 .progress-nav__btn-text {
@@ -107,45 +196,56 @@ body.nav--hidden .progress-nav {
   font-size: 1rem;
   font-weight: 500;
   display: flex;
-  transition: color 0.3s ease;
 }
 
-/* Subtle hover: the item smoothly lights up to full white. */
-.progress-nav__btn:hover .progress-nav__btn-text {
-  color: #ffffff;
+.progress-nav__btn--contact {
+  overflow: visible;
 }
 
-/* On light sections the hovered item darkens to full ink instead. */
-.progress-nav.is--light .progress-nav__btn:hover .progress-nav__btn-text {
-  color: #000c10;
+.progress-nav__btn-icon {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  max-width: 0;
+  margin-left: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateX(-0.2em);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    max-width 0.25s ease,
+    margin-left 0.25s ease;
 }
 
+.progress-nav__btn--contact:hover .progress-nav__btn-icon {
+  max-width: 1em;
+  margin-left: 0.35em;
+  opacity: 1;
+  transform: translateX(0);
+}
 
 .progress-nav.is--light {
   color: #000c10;
+  --nav-item-hover-bg: rgba(0, 12, 16, 0.08);
 }
 
 .progress-nav.is--light .progress-nav__logo {
   filter: invert(100%);
 }
 
-/* The dark surface (scrolled or hovered) keeps the logo white, even over
-   light sections — placed after the is--light rule so it wins. */
-.progress-nav.is--scrolled .progress-nav__logo,
-.progress-nav__inner:hover .progress-nav__logo {
+.progress-nav.is--scrolled .progress-nav__logo {
   filter: none;
 }
 
-/* …but the white surface over light sections keeps the logo dark. */
-.progress-nav.is--light.is--scrolled .progress-nav__logo,
-.progress-nav.is--light .progress-nav__inner:hover .progress-nav__logo {
-  filter: invert(100%);
-}
-
-/* Below 768px the desktop bar is replaced wholesale by the mobile nav
-   (see mobile-nav.tsx / .navigation). */
 @media (max-width: 767.98px) {
   .progress-nav {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-nav__track {
+    transition: padding 0.3s ease;
   }
 }

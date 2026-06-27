@@ -11,3 +11,29 @@
   -webkit-appearance: none;
   display: none !important;
 }
+
+.hero__content {
+  padding: 0 2rem 3rem;
+}
+
+@media (min-width: 768px) {
+  .hero__content {
+    padding: 0 4rem 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero__content {
+    padding: 0 5rem 5rem;
+  }
+}
+
+.hero__copy {
+  max-width: min(100%, 56rem);
+}
+
+.hero__title {
+  font-size: clamp(2.75rem, 6.5vw, 5.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}

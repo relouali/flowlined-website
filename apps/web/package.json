@@ -10,6 +10,7 @@
   "dependencies": {
     "@flowlined-web/env": "*",
     "@flowlined-web/ui": "*",
+    "@phosphor-icons/react": "^2.1.10",
     "babel-plugin-react-compiler": "^1.0.0",
     "dotenv": "^17.2.2",
     "geist": "^1.7.1",
