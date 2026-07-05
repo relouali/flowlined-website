@@ -139,12 +139,13 @@
 
 .compliance-card {
   background-color: transparent;
+  padding: 2.25rem 1.75rem 2rem;
+}
+
+.compliance-card__body {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 3rem;
-  min-height: 13.5rem;
-  padding: 2.25rem 1.75rem 2rem;
+  gap: 1rem;
 }
 
 .compliance-card__icon {

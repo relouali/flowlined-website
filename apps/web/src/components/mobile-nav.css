@@ -79,7 +79,7 @@ body.nav--hidden .centered-nav {
   justify-content: space-between;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.4375rem 0.625rem 0.4375rem 1rem;
+  padding: 0.625rem 0.75rem 0.625rem 1.125rem;
   display: flex;
   position: relative;
 }
@@ -90,8 +90,8 @@ body.nav--hidden .centered-nav {
   align-items: center;
   display: flex;
   position: relative;
-  width: 6.5rem;
-  height: 1.25rem;
+  width: 7.5rem;
+  height: 1.4375rem;
 }
 
 .centered-nav__toggle {
@@ -100,8 +100,8 @@ body.nav--hidden .centered-nav {
   background-color: #0000;
   justify-content: center;
   align-items: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.25rem;
+  height: 2.25rem;
   padding: 0;
   border: none;
   display: flex;
@@ -111,15 +111,15 @@ body.nav--hidden .centered-nav {
 
 .centered-nav__toggle .centered-nav__toggle-bar {
   background-color: #f8fafd;
-  width: 1.25rem;
+  width: 1.4375rem;
   height: 0.125em;
   position: absolute;
   transition: transform 0.6s cubic-bezier(0.65, 0, 0, 1);
-  transform: translateY(-0.2em) rotate(0.001deg);
+  transform: translateY(-0.22em) rotate(0.001deg);
 }
 
 .centered-nav__toggle .centered-nav__toggle-bar:nth-child(2) {
-  transform: translateY(0.12em) rotate(0.001deg);
+  transform: translateY(0.13em) rotate(0.001deg);
 }
 
 [data-navigation-status="active"] .centered-nav__toggle .centered-nav__toggle-bar {
