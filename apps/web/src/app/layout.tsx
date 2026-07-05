@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="nl" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${GeistPixelLine.variable} ${geistSans.className} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${GeistPixelLine.variable} ${geistSans.className} bg-white antialiased`}
       >
         <Providers>
           <LocomotiveScrollProvider>

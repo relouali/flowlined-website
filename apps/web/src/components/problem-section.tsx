@@ -2,9 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import HighlightText from "@/components/highlight-text";
 import GsapSlider from "@/components/gsap-slider";
 import LottieIcon from "@/components/lottie-icon";
+import ScrollFadeText from "@/components/scroll-fade-text";
+import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
+import SectionFrame from "@/components/section-frame";
+import { initProblemGridLines } from "@/lib/init-problem-grid-lines";
+import { PROBLEM_SECTION_LOTTIE_COLORS } from "@/lib/remap-lottie-colors";
 
 import "./problem-section.css";
 
@@ -40,23 +44,44 @@ const ITEMS = [
 ] as const;
 
 export default function ProblemSection() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { locomotiveScroll } = useLocomotiveScroll();
+
+  useEffect(() => {
+    if (!locomotiveScroll || !sectionRef.current) return;
+
+    const cleanup = initProblemGridLines(sectionRef.current);
+    return cleanup;
+  }, [locomotiveScroll]);
+
   return (
-    <section
+    <SectionFrame
       id="probleem"
       data-progress-nav-anchor
-      className="problem-section flex min-h-[100dvh] items-center bg-[#0a1418] px-8 py-24 sm:px-16 md:py-32 lg:py-40"
+      data-nav-theme="dark"
+      className="problem-section"
+      frameClassName="problem-section__frame flex min-h-[100dvh] items-center py-24 md:py-32 lg:py-40"
     >
-      <div className="mx-auto flex w-full max-w-[1320px] flex-col">
+      <div
+        ref={sectionRef}
+        className="section-inner flex flex-col"
+      >
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center">
-          <HighlightText className="type-section-title text-white">
-          Expertwerk draait op ervaring, niet op systemen.{" "}
-            <span className="text-[#cddfed]">Dat werkt, tot het niet meer schaalt.</span>
-          </HighlightText>
+          <ScrollFadeText className="type-section-title text-white">
+            Expertwerk draait op ervaring, niet op systemen.{" "}
+            <span className="text-[#cddfed]">
+              Dat werkt, tot het niet meer schaalt.
+            </span>
+          </ScrollFadeText>
 
-          <p className="type-section-lead max-w-2xl text-white/80">
+          <ScrollFadeText
+            as="p"
+            className="type-section-lead max-w-2xl text-white"
+            delay={0.12}
+          >
             Beoordelaars, auditors en inspecteurs leveren werk van hoog niveau. Maar de
             systemen waarop dat werk draait zijn dat niet. Dit zijn de gevolgen:
-          </p>
+          </ScrollFadeText>
         </div>
 
         <GsapSlider
@@ -70,7 +95,7 @@ export default function ProblemSection() {
           ))}
         </GsapSlider>
       </div>
-    </section>
+    </SectionFrame>
   );
 }
 
@@ -106,18 +131,50 @@ function ProblemItem({ item }: { item: (typeof ITEMS)[number] }) {
     <div
       ref={itemRef}
       data-gsap-slider-item
+      data-problem-grid-item
       className="problem-item flex flex-col gap-6"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <LottieIcon
-        size={item.iconSize}
-        src={item.lottieSrc}
-        play={hovered || isActiveSlide}
+      <span
+        aria-hidden
+        className="problem-item__line problem-item__line--top"
+        data-problem-grid-line="h"
       />
-      <div className="flex flex-col gap-3 text-white">
-        <h3 className="type-body-strong text-white">{item.title}</h3>
-        <p className="type-body text-white/70">{item.description}</p>
+      <span
+        aria-hidden
+        className="problem-item__line problem-item__line--left"
+        data-problem-grid-line="v"
+      />
+      <span
+        aria-hidden
+        className="problem-item__line problem-item__line--right"
+        data-problem-grid-line="h"
+      />
+      <span
+        aria-hidden
+        className="problem-item__line problem-item__line--bottom"
+        data-problem-grid-line="v"
+      />
+      <div className="problem-item__body">
+        <div
+          className="problem-item__icon"
+          data-problem-grid-content="icon"
+        >
+          <LottieIcon
+            size={item.iconSize}
+            src={item.lottieSrc}
+            play={hovered || isActiveSlide}
+            colors={PROBLEM_SECTION_LOTTIE_COLORS}
+          />
+        </div>
+        <div
+          className="problem-item__copy flex flex-col gap-3 text-white"
+          data-problem-grid-content="copy"
+        >
+          <h3 className="type-body-strong text-white">{item.title}</h3>
+          <p className="type-body text-white">{item.description}</p>
+        </div>
       </div>
     </div>
   );

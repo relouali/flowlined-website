@@ -1,3 +1,4 @@
 @import "@flowlined-web/ui/globals.css";
 @import "./styles/typography.css";
 @import "locomotive-scroll/locomotive-scroll.css";
+@import "./components/section-frame.css";

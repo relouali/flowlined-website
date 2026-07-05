@@ -1,11 +1,9 @@
 "use client";
 
+import { EnvelopeIcon, MapPinIcon, PhoneIcon } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useState } from "react";
-import { toast } from "sonner";
 
-import { CtaButton } from "@/components/cta";
-import GiantWordmark from "@/components/giant-wordmark";
+import SectionFrame from "@/components/section-frame";
 import TransitionLink from "@/components/transition-link";
 
 import "./site-footer.css";
@@ -25,59 +23,21 @@ const LEGAL_LINKS = [
 ] as const;
 
 export default function SiteFooter() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  async function handleNewsletterSubmit(
-    event: React.FormEvent<HTMLFormElement>,
-  ) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    const email = String(formData.get("email") ?? "").trim();
-    if (!email || isSubmitting) return;
-
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!response.ok) {
-        const data = (await response.json().catch(() => null)) as
-          | { error?: string }
-          | null;
-        throw new Error(data?.error ?? "Aanmelding mislukt.");
-      }
-
-      toast.success("Bedankt voor je aanmelding", {
-        description: `We sturen updates naar ${email}.`,
-      });
-      form.reset();
-    } catch (error) {
-      toast.error("Er ging iets mis", {
-        description:
-          error instanceof Error
-            ? error.message
-            : "Probeer het later opnieuw.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
-
   return (
-    <footer
+    <SectionFrame
+      as="footer"
       id="contact"
-      className="site-footer bg-[#0a1418] px-8 pt-16 text-white lg:px-16 lg:pt-[74px]"
+      className="site-footer"
+      frameClassName="section-frame--dark pb-8 pt-16 text-white lg:pt-[74px]"
     >
-      <div className="mx-auto flex w-full max-w-[1320px] flex-col gap-20">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[572px_188px_minmax(0,1fr)] lg:gap-x-16 lg:gap-y-0">
-          <div className="flex flex-col gap-8">
+      <div className="footer-inner flex flex-col gap-20">
+        <div className="grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-16">
+          {/* Left half — logo pinned top, text + contact pushed to bottom */}
+          <div className="flex flex-col lg:h-full">
+            {/* Logo — large */}
             <TransitionLink
               aria-label="Flowlined home"
-              className="relative block h-8 w-[238px]"
+              className="footer-logo relative block"
               href="/"
             >
               <Image
@@ -88,121 +48,112 @@ export default function SiteFooter() {
               />
             </TransitionLink>
 
-            <div className="type-ui flex flex-col gap-6">
-              <div className="flex flex-col gap-1">
-                <p className="font-semibold">Amsterdam</p>
-                <p className="font-light">
-                  Joop Geesinkweg 201, 1114 AB Amsterdam
-                </p>
-              </div>
-              <div className="flex flex-col gap-1">
-                <p className="font-semibold">Eindhoven</p>
-                <p className="font-light">
-                  High Tech Campus 1e, 5656 AE Eindhoven
-                </p>
-              </div>
-              <div className="flex flex-col gap-1">
-                <p className="font-semibold">Contact</p>
-                <a
-                  className="font-light text-[#999999] transition-colors hover:text-white"
-                  href="tel:+31202117832"
-                >
-                  +31 (0)20 211 7832
-                </a>
-                <a
-                  className="font-light text-[#999999] transition-colors hover:text-white"
-                  href="mailto:info@flowlined.nl"
-                >
-                  info@flowlined.nl
-                </a>
+            <div className="mt-12 flex flex-col gap-10 lg:mt-auto lg:pt-24">
+            {/* Intro paragraph */}
+            <p className="footer-about type-body font-light text-white">
+              Flowlined is ontworpen om vast te leggen hoe experts werken en hun
+              workflows om te zetten in heldere, herhaalbare systemen, wat
+              consistente uitvoering en schaalbare resultaten mogelijk maakt voor
+              verschillende toepassingen.
+            </p>
+
+            {/* Company information */}
+            <div className="footer-details flex flex-col gap-8">
+              <div className="footer-section">
+                <h3 className="footer-section-title">Locatie</h3>
+                <div className="type-ui flex flex-col gap-4">
+                  <p className="footer-contact-item font-light">
+                    <MapPinIcon
+                      aria-hidden
+                      className="footer-contact-icon"
+                      weight="regular"
+                    />
+                    <span>Joop Geesinkweg 201, 1114 AB Amsterdam</span>
+                  </p>
+                  <p className="footer-contact-item font-light">
+                    <MapPinIcon
+                      aria-hidden
+                      className="footer-contact-icon"
+                      weight="regular"
+                    />
+                    <span>High Tech Campus 1e, 5656 AE Eindhoven</span>
+                  </p>
+                </div>
               </div>
             </div>
-
-            <div className="flex items-center gap-3">
-              <a
-                aria-label="Flowlined op LinkedIn"
-                className="group inline-flex h-7 w-7 items-center justify-center"
-                href="https://www.linkedin.com/company/flowlined"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <Image
-                  alt=""
-                  aria-hidden
-                  className="h-6 w-6 opacity-60 brightness-0 invert transition-opacity group-hover:opacity-100"
-                  height={24}
-                  src="/icons/linkedin-1.svg"
-                  width={24}
-                />
-              </a>
             </div>
           </div>
 
-          <nav aria-label="Voettekst navigatie">
-            <p className="type-ui py-2 font-semibold">Menu</p>
-            <ul className="flex flex-col">
-              {FOOTER_NAV_LINKS.map(({ href, label, ready }) => {
-                const className =
-                  "type-ui block py-2 font-light text-[#999999] transition-colors hover:text-white";
-                return (
-                  <li key={href}>
-                    {ready ? (
-                      <TransitionLink className={className} href={href}>
-                        {label}
-                      </TransitionLink>
-                    ) : (
-                      <a className={className} href={href}>
-                        {label}
-                      </a>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
+          {/* Right half — navigation + contact */}
+          <div className="footer-right flex flex-col gap-10">
+            <nav aria-label="Voettekst navigatie" className="footer-menu">
+              <h3 className="footer-section-title">Navigatie</h3>
+              {FOOTER_NAV_LINKS.map(({ href, label, ready }) =>
+                ready ? (
+                  <TransitionLink key={href} className="footer-menu__link" href={href}>
+                    <span className="footer-menu__label">{label}</span>
+                  </TransitionLink>
+                ) : (
+                  <a key={href} className="footer-menu__link" href={href}>
+                    <span className="footer-menu__label">{label}</span>
+                  </a>
+                ),
+              )}
+            </nav>
 
-          <div className="flex min-w-0 flex-col gap-6">
-            <div className="flex flex-col gap-4">
-              <p className="type-ui py-2 font-semibold">Blijf op de hoogte</p>
-              <p className="type-body font-light leading-[1.5]">
-              Inzichten over vakkennis, werksystemen en venture building.
-              </p>
+            <div className="footer-section">
+              <h3 className="footer-section-title">Contact</h3>
+              <div className="type-ui flex flex-col gap-4">
+                <a
+                  className="footer-contact-item footer-contact-item--link font-light"
+                  href="tel:+31202117832"
+                >
+                  <PhoneIcon
+                    aria-hidden
+                    className="footer-contact-icon"
+                    weight="regular"
+                  />
+                  <span>+31 (0)20 211 7832</span>
+                </a>
+                <a
+                  className="footer-contact-item footer-contact-item--link font-light"
+                  href="mailto:info@flowlined.nl"
+                >
+                  <EnvelopeIcon
+                    aria-hidden
+                    className="footer-contact-icon"
+                    weight="regular"
+                  />
+                  <span>info@flowlined.nl</span>
+                </a>
+              </div>
             </div>
 
-            <form
-              className="flex w-full flex-col gap-3"
-              onSubmit={handleNewsletterSubmit}
-            >
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-4">
-                <label className="sr-only" htmlFor="newsletter-email">
-                  E-mail
-                </label>
-                <input
-                  autoComplete="email"
-                  className="footer-newsletter-input"
-                  id="newsletter-email"
-                  name="email"
-                  placeholder="E-mail"
-                  required
-                  type="email"
-                />
-                <CtaButton
-                  className="footer-newsletter-submit w-full shrink-0 sm:w-auto"
-                  disabled={isSubmitting}
-                  type="submit"
+            <div className="footer-section">
+              <h3 className="footer-section-title">Socials</h3>
+              <div className="flex items-center gap-3">
+                <a
+                  aria-label="Flowlined op LinkedIn"
+                  className="group inline-flex h-7 w-7 items-center justify-center"
+                  href="https://www.linkedin.com/company/flowlined"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
-                  {isSubmitting ? "Bezig…" : "Aanmelden"}
-                </CtaButton>
+                  <Image
+                    alt=""
+                    aria-hidden
+                    className="h-6 w-6 opacity-60 brightness-0 invert transition-opacity group-hover:opacity-100"
+                    height={24}
+                    src="/icons/linkedin-1.svg"
+                    width={24}
+                  />
+                </a>
               </div>
-              <p className="type-caption font-light text-white/80">
-                Door je aan te melden ga je akkoord met ons privacybeleid
-                en ontvang je periodiek updates van Flowlined.
-              </p>
-            </form>
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-8">
+        <div className="footer-bottom flex flex-col gap-8">
           <div aria-hidden className="h-px w-full bg-white/[0.07]" />
           <div className="type-ui flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="font-light">
@@ -213,7 +164,7 @@ export default function SiteFooter() {
               {LEGAL_LINKS.map(({ href, label }) => (
                 <a
                   key={href}
-                  className="font-light text-[#999999] transition-colors hover:text-white"
+                  className="font-light text-[#666d70] transition-colors hover:text-white"
                   href={href}
                   rel="noopener noreferrer"
                   target="_blank"
@@ -225,10 +176,6 @@ export default function SiteFooter() {
           </div>
         </div>
       </div>
-
-      <div className="mx-auto mt-16 w-full max-w-[1320px] overflow-hidden lg:mt-20">
-   
-      </div>
-    </footer>
+    </SectionFrame>
   );
 }

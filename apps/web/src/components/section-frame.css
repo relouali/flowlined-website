@@ -1,0 +1,54 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Section system
+   ───────────────
+   Sections are full-bleed: the coloured `.section-frame` runs edge-to-edge
+   with no side margin, no rounded corners and no gap between neighbouring
+   sections.
+
+   `.section-inner` is a shared, centred content column with a readability cap.
+   Sections may keep other children (e.g. a full-bleed sticky outro) outside
+   `.section-inner`.
+   ──────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --page-gutter: 0.5rem;
+}
+
+.section-shell {
+  width: 100%;
+}
+
+.section-frame {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Sticky children (e.g. sticky-title-container) need visible overflow on ancestors. */
+.section-frame:has(.sticky-title-wrap),
+.section-frame--has-sticky {
+  overflow: visible;
+}
+
+.section-frame--dark {
+  background-color: #000c10;
+}
+
+.section-frame--light {
+  background-color: #ffffff;
+}
+
+/* ── Content wrapper ──────────────────────────────────────────────────────
+   Shared, centred content column. The cap keeps line length readable on
+   full-bleed sections; sections only need to add the `.section-inner` class. */
+.section-inner {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .section-inner {
+    padding-inline: 2rem;
+  }
+}

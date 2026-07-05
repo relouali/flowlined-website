@@ -2,6 +2,14 @@
   color: #ffffff;
 }
 
+.sectors-section__frame {
+  background: linear-gradient(180deg, #001a23 0%, #000c10 100%);
+}
+
+.sectors-section [data-scroll-fade]:not(.is--inview) {
+  opacity: 0;
+}
+
 /* Left column slides — cross-fade between sector details. */
 .sectors-detail {
   position: relative;

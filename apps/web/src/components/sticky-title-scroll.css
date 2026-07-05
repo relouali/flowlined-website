@@ -19,7 +19,8 @@
   height: 100vh;
   padding-left: 1.5em;
   padding-right: 1.5em;
-  background: transparent;
+  /* Same gradient as other dark sections: near-black on top, blue-teal at bottom. */
+  background: linear-gradient(180deg, #000c10 0%, #001a23 100%);
 }
 
 .sticky-title-inner {
@@ -142,12 +143,20 @@
   font-size: 2.25rem;
   font-weight: 300;
   line-height: 1.15;
-  color: #000c10;
+  color: #ffffff;
   letter-spacing: -0.01em;
 }
 
 .sticky-title-el.is--stacked {
-  visibility: hidden;
+  pointer-events: none;
+}
+
+.sticky-title-el__muted {
+  color: #cddfed;
+}
+
+.sticky-title-el__muted .char {
+  color: #cddfed;
 }
 
 @media (min-width: 768px) {

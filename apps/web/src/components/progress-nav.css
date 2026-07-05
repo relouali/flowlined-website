@@ -23,7 +23,7 @@ body.nav--hidden .progress-nav {
 }
 
 .progress-nav.is--scrolled .progress-nav__track {
-  padding: 0.875rem 1rem 0;
+  padding: 1rem 1rem 0;
 }
 
 /* Layout morphs are driven by GSAP Flip (see progress-nav.tsx). */
@@ -48,6 +48,7 @@ body.nav--hidden .progress-nav {
   z-index: -1;
   border-radius: inherit;
   background-color: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
   opacity: 0;
   pointer-events: none;
@@ -55,8 +56,12 @@ body.nav--hidden .progress-nav {
 }
 
 @media (min-width: 768px) {
+  .progress-nav {
+    top: var(--page-gutter, 0.5rem);
+  }
+
   .progress-nav__pill {
-    padding: 1rem 4rem;
+    padding: 1.25rem 4rem 1rem;
   }
 }
 
@@ -67,7 +72,7 @@ body.nav--hidden .progress-nav {
   margin-inline: auto;
   gap: 1rem;
   padding: 0.4375rem 0.625rem 0.4375rem 1rem;
-  border-radius: 9999px;
+  border-radius: 0.5rem;
   color: rgba(255, 255, 255, 0.85);
 }
 
@@ -167,7 +172,7 @@ body.nav--hidden .progress-nav {
   position: relative;
   overflow: visible;
   border: none;
-  border-radius: 9999px;
+  border-radius: 0.5rem;
   background: transparent;
   font: inherit;
   isolation: isolate;
@@ -193,13 +198,42 @@ body.nav--hidden .progress-nav {
   justify-content: center;
   align-items: center;
   height: 100%;
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 500;
   display: flex;
 }
 
 .progress-nav__btn--contact {
   overflow: visible;
+}
+
+/* Contact button: manifest-style CTA while wide, compact pill once scrolled. */
+.progress-nav__cta {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+
+.progress-nav__cta .btn-icon-content {
+  height: 2.75em;
+  padding: 0 1em;
+}
+
+.progress-nav__cta .btn-icon-content__text {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.progress-nav .progress-nav__btn--contact {
+  display: none;
+}
+
+.progress-nav.is--scrolled .progress-nav__cta {
+  display: none;
+}
+
+.progress-nav.is--scrolled .progress-nav__btn--contact {
+  display: flex;
 }
 
 .progress-nav__btn-icon {

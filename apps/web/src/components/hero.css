@@ -1,3 +1,90 @@
+.hero {
+  width: 100%;
+  /* Transparent so the shared fixed home background reads through the hero,
+     letting it blend seamlessly into the next (transparent) section. */
+  background-color: transparent;
+}
+
+.hero.section-shell:not(.is--intro-ready) {
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding-top: 28vh;
+  padding-bottom: 28vh;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .hero.section-shell:not(.is--intro-ready) {
+    padding-top: 24vh;
+    padding-bottom: 24vh;
+    padding-inline: 16vw;
+  }
+}
+
+.hero.section-shell:not(.is--intro-ready) .hero__frame {
+  min-height: 42svh;
+}
+
+@media (min-width: 768px) {
+  .hero.section-shell:not(.is--intro-ready) .hero__frame {
+    min-height: 38vh;
+  }
+}
+
+/* Inset “TV frame”: rounded media panel inside the page margins. */
+.hero__frame {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 100svh;
+  min-height: 100dvh;
+  flex-direction: column;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+@media (min-width: 768px) {
+  .hero__frame {
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+}
+
+.hero__media {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  transform-origin: center center;
+  will-change: transform;
+  /* Dissolve the hero video into the shared background near the bottom so the
+     transition to the next section is seamless. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
+}
+
+.hero__frame::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  /* Gentle legibility scrim for the bottom-anchored copy that fades back to
+     transparent at the very edge, so it blends into the shared background. */
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgba(0, 12, 16, 0.5) 78%,
+    transparent 100%
+  );
+  z-index: 5;
+  pointer-events: none;
+}
+
 .hero__video {
   pointer-events: none;
 }
@@ -13,18 +100,26 @@
 }
 
 .hero__content {
-  padding: 0 2rem 3rem;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: left;
+  padding: 0 1.5rem 3rem;
 }
 
 @media (min-width: 768px) {
   .hero__content {
-    padding: 0 4rem 4rem;
+    padding: 0 2.5rem 4rem;
   }
 }
 
 @media (min-width: 1024px) {
   .hero__content {
-    padding: 0 5rem 5rem;
+    padding: 0 3rem 5rem;
   }
 }
 
@@ -36,4 +131,21 @@
   font-size: clamp(2.75rem, 6.5vw, 5.25rem);
   line-height: 0.98;
   letter-spacing: -0.03em;
+}
+
+.hero__title-mask,
+.hero__lead-mask {
+  display: block;
+  overflow: hidden;
+}
+
+.hero__title-line,
+.hero__lead-line {
+  display: block;
+  will-change: transform, opacity;
+}
+
+.hero__frame:not(.is--intro-ready) .hero__title-line,
+.hero__frame:not(.is--intro-ready) .hero__lead-line {
+  opacity: 0;
 }

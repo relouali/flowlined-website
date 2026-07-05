@@ -3,7 +3,8 @@
 import type { ReactNode } from "react";
 
 import Cta from "@/components/cta";
-import HighlightText from "@/components/highlight-text";
+import ScrollFadeText from "@/components/scroll-fade-text";
+import SectionFrame from "@/components/section-frame";
 
 import "./manifest-section.css";
 
@@ -11,6 +12,13 @@ type ManifestSectionProps = {
   title?: ReactNode;
   lead?: ReactNode;
 };
+
+const DEFAULT_TITLE = (
+  <>
+    Domeinkennis verdient{" "}
+    <span className="text-[#cddfed]">een eigen product.</span>
+  </>
+);
 
 const DEFAULT_LEAD = (
   <>
@@ -21,41 +29,33 @@ const DEFAULT_LEAD = (
 );
 
 export default function ManifestSection({
-  title = "Domeinkennis verdient een eigen product.",
+  title = DEFAULT_TITLE,
   lead = DEFAULT_LEAD,
 }: ManifestSectionProps = {}) {
   return (
-    <section
+    <SectionFrame
       id="manifest"
       data-progress-nav-anchor
-      data-parallax="trigger"
-      data-parallax-start="15"
-      data-parallax-end="-15"
-      className="manifest-section relative flex min-h-[100dvh] items-center justify-center overflow-hidden rounded-b-[1.75rem] px-8 py-24 sm:rounded-b-[2rem] sm:px-16 md:py-32 lg:rounded-b-[3rem] lg:py-40"
+      className="manifest-section"
+      frameClassName="manifest-section__frame relative flex min-h-[100dvh] items-center justify-center px-8 py-24 sm:px-16 md:py-32 lg:py-40"
     >
-      {/* Figma stack: Full Black → photo → blue-teal color wash → tint */}
-      <div
-        aria-hidden
-        className="manifest-section__bg"
-        data-parallax="target"
-      >
-        <div className="manifest-section__bg-base" />
-        <div className="manifest-section__bg-image" />
-        <div className="manifest-section__bg-overlay" />
-        <div className="manifest-section__bg-tint" />
-      </div>
-
       <div className="relative z-10 mx-auto flex w-full max-w-[1080px] flex-col items-center gap-8 text-center">
-        <HighlightText as="h2" className="type-section-title text-white">
+        <ScrollFadeText as="h2" className="type-section-title text-white">
           {title}
-        </HighlightText>
+        </ScrollFadeText>
 
-        <p className="type-section-lead max-w-2xl text-white/80">{lead}</p>
+        <ScrollFadeText
+          as="p"
+          className="type-section-lead max-w-2xl text-white"
+          delay={0.12}
+        >
+          {lead}
+        </ScrollFadeText>
 
         <div className="mt-4">
           <Cta href="#contact">Plan een gesprek</Cta>
         </div>
       </div>
-    </section>
+    </SectionFrame>
   );
 }

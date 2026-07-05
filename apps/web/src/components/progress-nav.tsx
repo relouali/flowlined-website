@@ -5,9 +5,10 @@ import gsap from "gsap";
 import { Flip } from "gsap/Flip";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
+import Cta from "@/components/cta";
 import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
 import { transitionNavigate } from "@/components/page-transition-controller";
 import MobileNav from "@/components/mobile-nav";
@@ -41,18 +42,25 @@ function NavContactButton({
   onClick: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }) {
   return (
-    <a
-      className="progress-nav__btn progress-nav__btn--contact"
-      href="#contact"
-      onClick={onClick}
-    >
-      <span className="progress-nav__btn-text">Plan een gesprek</span>
-      <ArrowSquareOutIcon
-        aria-hidden
-        className="progress-nav__btn-icon"
-        weight="regular"
-      />
-    </a>
+    <>
+      {/* Wide state: full manifest-style CTA button. */}
+      <Cta className="progress-nav__cta" href="#contact" onClick={onClick}>
+        Plan een gesprek
+      </Cta>
+      {/* Scrolled state: compact pill button. */}
+      <a
+        className="progress-nav__btn progress-nav__btn--contact"
+        href="#contact"
+        onClick={onClick}
+      >
+        <span className="progress-nav__btn-text">Plan een gesprek</span>
+        <ArrowSquareOutIcon
+          aria-hidden
+          className="progress-nav__btn-icon"
+          weight="regular"
+        />
+      </a>
+    </>
   );
 }
 
@@ -63,6 +71,7 @@ export default function ProgressNav() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { locomotiveScroll } = useLocomotiveScroll();
   const pathname = usePathname();
+  const router = useRouter();
   const isHome = pathname === "/";
 
   function handleLogoClick(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -76,7 +85,7 @@ export default function ProgressNav() {
       }
       return;
     }
-    transitionNavigate("/");
+    router.push("/");
   }
 
   function handleNavigate(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
@@ -104,22 +113,13 @@ export default function ProgressNav() {
     }
   }
 
-  // Two scroll behaviours, both driven off the same handler:
-  //   1. Reveal the dark surface once scrolled away from the very top
-  //      (mirrors the hover state).
-  //   2. Past the hero / first section, hide the nav while scrolling down and
-  //      bring it back while scrolling up. Within the first section the nav is
-  //      always shown. The hide state lives on <body> so both the desktop bar
-  //      and the mobile pill can react to it via CSS.
+  // Reveal the compact pill + frosted surface once scrolled away from the top.
   useEffect(() => {
     const navEl = navRef.current;
     if (!navEl) return;
 
     const lenis = locomotiveScroll?.lenisInstance;
     const getScroll = () => (lenis ? lenis.scroll ?? 0 : window.scrollY);
-
-    const setHidden = (hidden: boolean) =>
-      document.body.classList.toggle("nav--hidden", hidden);
 
     const flipTargets = () =>
       [surfaceRef.current, logoRef.current, wrapperRef.current].filter(
@@ -162,20 +162,6 @@ export default function ProgressNav() {
     const SCROLL_EXIT = 4;
     let isScrolled = getScroll() > SCROLL_ENTER;
 
-    // Absolute document position of the first section's bottom edge.
-    let heroBottom = window.innerHeight;
-    const computeHeroBottom = () => {
-      const first = document.querySelector("main")?.firstElementChild;
-      heroBottom = first
-        ? first.getBoundingClientRect().bottom + getScroll()
-        : window.innerHeight;
-    };
-
-    // Direction is accumulated: lastScroll only advances once the move is
-    // larger than the dead-zone, so smooth-scroll jitter doesn't flip the bar.
-    const DEAD_ZONE = 6;
-    let lastScroll = getScroll();
-
     const onScroll = () => {
       const y = getScroll();
 
@@ -186,27 +172,9 @@ export default function ProgressNav() {
         isScrolled = false;
         applyScrolled(false);
       }
-
-      if (y <= heroBottom + 1) {
-        setHidden(false);
-        lastScroll = y;
-        return;
-      }
-
-      const delta = y - lastScroll;
-      if (Math.abs(delta) < DEAD_ZONE) return;
-      setHidden(delta > 0);
-      lastScroll = y;
     };
 
     applyScrolled(isScrolled, false);
-    setHidden(false);
-    computeHeroBottom();
-    // Recompute once layout has settled (images/fonts can change section height).
-    const raf = requestAnimationFrame(computeHeroBottom);
-
-    window.addEventListener("resize", computeHeroBottom);
-    ScrollTrigger.addEventListener("refresh", computeHeroBottom);
 
     if (lenis) {
       lenis.on("scroll", onScroll);
@@ -215,19 +183,14 @@ export default function ProgressNav() {
     }
 
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", computeHeroBottom);
-      ScrollTrigger.removeEventListener("refresh", computeHeroBottom);
       if (lenis) {
         lenis.off("scroll", onScroll);
       } else {
         window.removeEventListener("scroll", onScroll);
       }
       flipTween?.kill();
-      setHidden(false);
+      document.body.classList.remove("nav--hidden");
     };
-    // `pathname` re-binds the handler per route so heroBottom tracks the new
-    // page's first section (the nav itself never remounts).
   }, [locomotiveScroll, pathname]);
 
   useEffect(() => {

@@ -13,8 +13,8 @@
 
 .circular-steps {
   --accent: #cddfed;
-  --ink: #000c10;
-  --hairline: rgba(0, 12, 16, 0.12);
+  --ink: #ffffff;
+  --hairline: rgba(255, 255, 255, 0.16);
   /* Mobile geometry: the dome fits the viewport width with the side nodes kept
      fully inside (radius + node radius <= half the available width). */
   --ring-radius: min(calc(50vw - 3.25rem), 12rem);
@@ -28,6 +28,17 @@
 /* Mobile: the section is a single, non-pinned full-screen panel. Scrolling
    moves on to the next section; the numbered nodes switch steps on tap. The
    scroll-driven pin is added back only on desktop (see the media query). */
+.circular-steps [data-scroll-fade]:not(.is--inview) {
+  opacity: 0;
+}
+
+/* Dark teal → near-black gradient panel. Lives on the stage (the pinned,
+   viewport-height element) so it stays stable while scrolling through the
+   pinned steps rather than sliding with the tall wrapper. */
+.circular-process__frame {
+  background-color: #000c10;
+}
+
 .circular-steps__stage {
   position: relative;
   width: 100%;
@@ -36,6 +47,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: linear-gradient(180deg, #001a23 0%, #000c10 100%);
 }
 
 .circular-steps__header {
@@ -48,17 +60,26 @@
 /* Hidden on mobile to reclaim vertical space; shown in the desktop column. */
 .circular-steps__intro {
   display: none;
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.625;
+  color: #ffffff;
+}
+
+/* Step copy on the dark gradient. */
+.circular-steps__description {
+  color: #ffffff;
 }
 
 .circular-steps__phase {
   font-size: 0.8125rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(0, 12, 16, 0.45);
+  color: #ffffff;
 }
 
 .circular-steps__title {
-  color: var(--ink);
+  color: #ffffff;
 }
 
 /* The legacy stacked list is no longer rendered as the primary view. */
@@ -120,11 +141,10 @@
   margin-left: calc(var(--node-size) / -2);
   margin-top: calc(var(--node-size) / -2);
   border-radius: 999px;
-  border: 1px solid rgba(0, 12, 16, 0.22);
-  /* Transparent so the section's gradient background shows through and the
-     node blends in (a flat colour can't match the tinted gradient). */
-  background-color: transparent;
-  color: var(--ink);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background-color: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(12px);
+  color: #ffffff;
   cursor: pointer;
   transform-origin: center;
   transition:
@@ -134,8 +154,9 @@
 }
 
 .circular-steps__node.is--active {
-  background-color: var(--accent);
-  border-color: transparent;
+  background-color: rgba(0, 0, 0, 0.28);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #ffffff;
 }
 
 .circular-steps__node-inner {
@@ -170,8 +191,8 @@
   border-radius: 1px;
   background: linear-gradient(
     to bottom,
-    rgba(0, 12, 16, 0.28),
-    rgba(0, 12, 16, 0.06)
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.35)
   );
   transform-origin: top center;
   opacity: 0;
@@ -189,7 +210,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f8fafd;
+  background-color: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 0.625rem;
 }
 
@@ -261,6 +284,7 @@
     display: block;
     margin-top: 1.25rem;
     max-width: 26rem;
+    font-size: 1.25rem;
   }
 
   /* The scene fills the entire right side and anchors the content. */

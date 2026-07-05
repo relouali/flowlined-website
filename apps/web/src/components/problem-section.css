@@ -1,7 +1,15 @@
+.problem-section__frame {
+  background: linear-gradient(180deg, #000c10 0%, #001a23 100%);
+}
+
 .problem-items {
   width: 100%;
   position: relative;
   margin-top: 5rem;
+}
+
+.problem-section [data-scroll-fade]:not(.is--inview) {
+  opacity: 0;
 }
 
 .problem-items[data-gsap-slider-init] {
@@ -72,24 +80,102 @@
   }
 }
 
+.problem-item__line {
+  display: none;
+}
+
 @media (min-width: 640px) {
   .problem-items {
     margin-top: 7rem;
   }
 
-  /* Connected hairline grid (same technique as compliance-section): the
-     1px gap reveals the track's background as dividers, each card paints
-     over it with the section background, and a top hairline caps the row. */
   .problem-items__track {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
-    background-color: rgba(255, 255, 255, 0.09);
-    border-top: 1px solid rgba(255, 255, 255, 0.09);
+    gap: 0;
   }
 
   .problem-item {
-    background-color: #0a1418;
+    position: relative;
+    background-color: transparent;
     padding: 2rem;
+  }
+
+  .problem-item__body {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .problem-item__icon {
+    will-change: transform, opacity;
+    opacity: 0;
+  }
+
+  .problem-item__copy {
+    will-change: opacity;
+    opacity: 0;
+  }
+
+  .problem-item__line {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .problem-item__line--top {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .problem-item__line--bottom {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    display: none;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .problem-item__line--left {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.15) 75%,
+      transparent
+    );
+  }
+
+  .problem-item__line--right {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 1px;
+    display: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.15) 75%,
+      transparent
+    );
+  }
+
+  /* 2-column grid: close the row on the right and the block on the bottom. */
+  .problem-item:nth-child(2n) .problem-item__line--right {
+    display: block;
+  }
+
+  .problem-item:nth-child(n + 3) .problem-item__line--bottom {
+    display: block;
   }
 }
 
@@ -100,8 +186,19 @@
 
   .problem-items__track {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    /* Far-left hairline aligned under the headline, matching the internal
-       dividers — only on desktop where the row reads as one band. */
-    border-left: 1px solid rgba(255, 255, 255, 0.09);
+  }
+
+  /* 4-column: undo 2-column overrides */
+  .problem-item:nth-child(2n) .problem-item__line--right {
+    display: none;
+  }
+
+  .problem-item:nth-child(n + 3) .problem-item__line--bottom {
+    display: none;
+  }
+
+  /* Only the last item closes the right edge */
+  .problem-item:last-child .problem-item__line--right {
+    display: block;
   }
 }

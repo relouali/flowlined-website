@@ -1,13 +1,17 @@
 "use client";
 
+import { CaretRightIcon } from "@phosphor-icons/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
-import HighlightText from "@/components/highlight-text";
-import Cta from "@/components/cta";
 import GsapSlider from "@/components/gsap-slider";
+import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
+import ScrollFadeText from "@/components/scroll-fade-text";
+import SectionFrame from "@/components/section-frame";
+import TransitionLink from "@/components/transition-link";
+import { initCaseStudyGrid } from "@/lib/init-case-study-grid";
 import { MOBILE_CAROUSEL_MQ } from "@/lib/sync-lenis-prevent-mobile";
 
 import "./case-study-section.css";
@@ -248,6 +252,14 @@ function scrambleStatItem(
 export default function CaseStudySection() {
   const statsRef = useRef<HTMLUListElement>(null);
   const syncMobileStatScrambleRef = useRef<() => void>(() => {});
+  const { locomotiveScroll } = useLocomotiveScroll();
+
+  useEffect(() => {
+    if (!locomotiveScroll || !statsRef.current) return;
+
+    const cleanup = initCaseStudyGrid(statsRef.current);
+    return cleanup;
+  }, [locomotiveScroll]);
 
   // Scramble-reveal only the numeric portion of each KPI. Digits count upward
   // through a stat-specific range before settling on the final value.
@@ -409,26 +421,31 @@ export default function CaseStudySection() {
   }, []);
 
   return (
-    <section
+    <SectionFrame
       id="ado-pro"
       data-progress-nav-anchor
-      data-nav-theme="light"
-      className="case-study-section relative flex min-h-[100dvh] flex-col bg-[#fff] lg:h-[100dvh] lg:max-h-[100dvh] lg:flex-row lg:overflow-hidden"
+      data-nav-theme="dark"
+      className="case-study-section"
+      frameClassName="case-study-section__frame relative flex min-h-[100dvh] flex-col lg:h-[100dvh] lg:max-h-[100dvh] lg:flex-row lg:overflow-hidden"
     >
       <div className="case-study-section__content flex flex-1 flex-col px-8 py-16 sm:px-16 lg:min-h-0 lg:px-16 lg:pt-20 lg:pb-14">
         <div className="case-study-section__header flex max-w-3xl shrink-0 flex-col gap-8">
-          <HighlightText className="case-study-section__title type-section-title text-black">
+          <ScrollFadeText className="case-study-section__title type-section-title text-white">
             ADO Pro.{" "}
-            <span className="text-black/45">
+            <span className="text-[#cddfed]">
               Gebouwd voor en met arbeidsdeskundigen.
             </span>
-          </HighlightText>
-          <p className="case-study-section__intro type-section-lead max-w-2xl text-black/80">
+          </ScrollFadeText>
+          <ScrollFadeText
+            as="p"
+            className="case-study-section__intro type-section-lead max-w-2xl text-white"
+            delay={0.12}
+          >
             ADO Pro automatiseert het voorbereidende werk van
             arbeidsdeskundigen, van dossierstudie tot rapportgeneratie. Live
             in productie, gebouwd op de methode die we voor elk domein
             inzetten.
-          </p>
+          </ScrollFadeText>
         </div>
 
         <div className="case-study-section__stats-wrap flex w-full flex-1 flex-col pt-12 lg:min-h-0 lg:pt-6">
@@ -448,11 +465,13 @@ export default function CaseStudySection() {
                 <li
                   key={stat.value}
                   data-gsap-slider-item
-                  className="case-study-stat flex flex-col gap-3 lg:gap-2"
+                  data-case-study-grid-item
+                  className="case-study-stat"
                 >
-                  <div className="case-study-stat__head flex flex-col gap-2 lg:gap-1.5">
+                  <div className="case-study-stat__body">
                     <span
                       className="case-study-stat-value type-stat"
+                      data-case-study-grid-content="kpi"
                       aria-label={stat.value}
                     >
                       <span className="case-study-stat-value__scramble">{integer}</span>
@@ -466,29 +485,40 @@ export default function CaseStudySection() {
                         <span className="case-study-stat-value__unit">{stat.unit}</span>
                       ) : null}
                     </span>
-                    <span className="type-body text-black">
-                      {stat.label}
-                    </span>
+                    <div
+                      className="case-study-stat__copy flex flex-col gap-3"
+                      data-case-study-grid-content="copy"
+                    >
+                      <h3 className="type-body-strong text-white">
+                        {stat.label}
+                      </h3>
+                      <p className="case-study-stat__description type-body font-extralight text-white">
+                        {stat.description}
+                      </p>
+                    </div>
                   </div>
-                  <p className="case-study-stat__description type-body font-extralight text-black/50">
-                    {stat.description}
-                  </p>
                 </li>
               );
             })}
           </GsapSlider>
 
           <div className="case-study-section__cta shrink-0 pt-10 lg:pt-8">
-            <Cta href="/cases/ado-pro" variant="secondary">
-              Plan een gesprek
-            </Cta>
+            <TransitionLink
+              className="case-study-section__cta-link"
+              href="/cases/ado-pro"
+            >
+              <span>Volledige case lezen</span>
+              <CaretRightIcon
+                aria-hidden
+                className="case-study-section__cta-icon"
+                weight="thin"
+              />
+            </TransitionLink>
           </div>
         </div>
       </div>
 
-      <div className="case-study-divider hidden lg:block" aria-hidden />
-
-      <div className="case-study-visual relative flex flex-1 min-h-[40vh] lg:min-h-0 lg:h-full">
+      <div className="case-study-visual relative flex flex-1 min-h-[40vh] lg:min-h-0">
         <Image
           src="/images/ADOPRO-cover2.png"
           alt="Werksessie tijdens het ADO Pro project, domeinexperts werken samen aan dossier- en procesontwerp"
@@ -498,6 +528,6 @@ export default function CaseStudySection() {
           className="case-study-visual__img"
         />
       </div>
-    </section>
+    </SectionFrame>
   );
 }

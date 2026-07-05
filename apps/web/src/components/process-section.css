@@ -1,3 +1,199 @@
-.process-section {
-  background-color: #fff;
+.process-section [data-scroll-fade]:not(.is--inview) {
+  opacity: 0;
+}
+
+/* ── Two-column layout ─────────────────────────────────────────────────────── */
+
+.process-section__layout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.process-section__left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .process-section__layout {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .process-section__left {
+    gap: 2rem;
+  }
+}
+
+/* ── Steps grid ────────────────────────────────────────────────────────────── */
+
+.process-steps-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+.process-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0;
+}
+
+.process-step + .process-step {
+  border-top: 1px solid #ccc;
+}
+
+.process-step__line,
+.process-step__corner {
+  display: none;
+}
+
+.process-step__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.process-step__number {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(0, 12, 16, 0.35);
+}
+
+.process-step__title {
+  width: 100%;
+  text-align: left;
+}
+
+.process-step__desc {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.625;
+  color: rgba(0, 12, 16, 0.6);
+}
+
+@media (max-width: 639px) {
+  .process-step__head,
+  .process-step__desc {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 640px) {
+  .process-steps-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .process-step {
+    padding: 2rem;
+  }
+
+  .process-step + .process-step {
+    border-top: none;
+  }
+
+  /* ── Frame + divider lines ─────────────────────────────────────────────────
+     A full 2×2 frame: outer rectangle + centre cross. Each line is a 1px span
+     pinned to a cell edge; the cells below contribute the edges that build the
+     frame without doubling up. Lines are drawn in on scroll (scaleX/scaleY). */
+  .process-step__line {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    background: rgba(0, 12, 16, 0.14);
+  }
+
+  .process-step__line--top { top: 0; left: 0; right: 0; height: 1px; }
+  .process-step__line--bottom { bottom: 0; left: 0; right: 0; height: 1px; }
+  .process-step__line--left { top: 0; bottom: 0; left: 0; width: 1px; }
+  .process-step__line--right { top: 0; bottom: 0; right: 0; width: 1px; }
+
+  /* Cell 1 (TL): outer-top, outer-left, centre-V (its right), centre-H (its bottom) */
+  .process-step:nth-child(1) .process-step__line--top,
+  .process-step:nth-child(1) .process-step__line--left,
+  .process-step:nth-child(1) .process-step__line--right,
+  .process-step:nth-child(1) .process-step__line--bottom,
+  /* Cell 2 (TR): outer-top, outer-right, centre-H (its bottom) */
+  .process-step:nth-child(2) .process-step__line--top,
+  .process-step:nth-child(2) .process-step__line--right,
+  .process-step:nth-child(2) .process-step__line--bottom,
+  /* Cell 3 (BL): outer-left, outer-bottom, centre-V (its right) */
+  .process-step:nth-child(3) .process-step__line--left,
+  .process-step:nth-child(3) .process-step__line--right,
+  .process-step:nth-child(3) .process-step__line--bottom,
+  /* Cell 4 (BR): outer-right, outer-bottom */
+  .process-step:nth-child(4) .process-step__line--right,
+  .process-step:nth-child(4) .process-step__line--bottom {
+    display: block;
+  }
+
+  .process-step__head,
+  .process-step__desc {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ── "+" registration crosshairs ───────────────────────────────────────────
+     A full plus mark, slightly overshooting, at every grid node. Each node is
+     assigned to a single cell corner so marks never stack. */
+  .process-step__corner {
+    position: absolute;
+    z-index: 3;
+    width: 15px;
+    height: 15px;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .process-step__corner::before,
+  .process-step__corner::after {
+    content: "";
+    position: absolute;
+    background: rgba(0, 12, 16, 0.32);
+  }
+
+  .process-step__corner::before {
+    width: 100%;
+    height: 1px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+
+  .process-step__corner::after {
+    width: 1px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+  }
+
+  .process-step__corner--tl { top: -7.5px; left: -7.5px; }
+  .process-step__corner--tr { top: -7.5px; right: -7.5px; }
+  .process-step__corner--bl { bottom: -7.5px; left: -7.5px; }
+  .process-step__corner--br { bottom: -7.5px; right: -7.5px; }
+
+  /* The 9 unique nodes of a 2×2 grid, one cell each. */
+  .process-step:nth-child(1) .process-step__corner--tl, /* top-left */
+  .process-step:nth-child(1) .process-step__corner--tr, /* top-centre */
+  .process-step:nth-child(1) .process-step__corner--bl, /* left-centre */
+  .process-step:nth-child(1) .process-step__corner--br, /* centre */
+  .process-step:nth-child(2) .process-step__corner--tr, /* top-right */
+  .process-step:nth-child(2) .process-step__corner--br, /* right-centre */
+  .process-step:nth-child(3) .process-step__corner--bl, /* bottom-left */
+  .process-step:nth-child(3) .process-step__corner--br, /* bottom-centre */
+  .process-step:nth-child(4) .process-step__corner--br { /* bottom-right */
+    display: block;
+  }
 }

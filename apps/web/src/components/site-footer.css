@@ -1,55 +1,144 @@
-.footer-newsletter-input {
-  box-sizing: border-box;
+.site-footer {
+  position: relative;
+  z-index: 1;
+  /* Pull up so manifest (above) shows through the rounded top corners. */
+  --footer-top-radius: 0.5rem;
+  margin-top: calc(-1 * var(--footer-top-radius));
+}
+
+.site-footer > .section-frame {
+  border-top-left-radius: var(--footer-top-radius);
+  border-top-right-radius: var(--footer-top-radius);
+  overflow: hidden;
+  background-color: #000000;
+}
+
+
+/* Bottom bar (copyright + legal) uses the mono typeface. */
+.footer-bottom {
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+  text-transform: uppercase;
+}
+
+/* Override the inherited `.type-ui` (1rem) size for the copyright + legal row. */
+.footer-bottom .type-ui {
+  font-size: 0.75rem;
+}
+
+/* Footer content spans the full width (no centred 1320px cap), with the
+   same edge padding as the section gutter. */
+.footer-inner {
   width: 100%;
-  height: 3.5em;
-  min-height: 3.5em;
-  flex-shrink: 0;
-  padding-inline: 1rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  font-weight: 300;
-  color: #ffffff;
-  background-color: #0e181d;
-  border: none;
-  border-radius: 6px;
-  appearance: none;
-}
-
-.footer-newsletter-input::placeholder {
-  font-size: 1rem;
-  color: rgb(255 255 255 / 60%);
-}
-
-.footer-newsletter-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 40%);
-}
-
-.footer-newsletter-submit .btn-icon-content {
-  width: 100%;
-  justify-content: center;
-}
-
-@media (max-width: 639px) {
-  .footer-newsletter-input {
-    height: 4rem;
-    min-height: 4rem;
-    font-size: 1rem;
-  }
-
-  .footer-newsletter-submit .btn-icon-content {
-    height: 4rem;
-  }
+  padding-inline: 1.5rem;
 }
 
 @media (min-width: 640px) {
-  .footer-newsletter-input {
-    min-width: 0;
-    flex: 1 1 0%;
-    padding-inline: 0.75rem;
+  .footer-inner {
+    padding-inline: 2rem;
+  }
+}
+
+/* Intro paragraph under the logo. */
+.footer-about {
+  max-width: 22rem;
+  line-height: 1.6;
+}
+
+.footer-section-title {
+  margin: 0 0 1rem;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #666d70;
+}
+
+/* Company info rows — icon before text. */
+.footer-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.footer-contact-item--link {
+  color: #666d70;
+  transition: color 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer-contact-item--link:hover {
+    color: #ffffff;
+  }
+}
+
+.footer-contact-icon {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* Large brand logo, left column. */
+.footer-logo {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 238 / 32;
+}
+
+@media (min-width: 1024px) {
+  .footer-logo {
+    max-width: 420px;
+  }
+}
+
+/* Menu links, right column — large text stacked with hairline dividers,
+   echoing the reference footer. */
+.footer-menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-menu .footer-section-title {
+  margin-bottom: 1.25rem;
+}
+
+.footer-menu__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: #666d70;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.footer-menu__label {
+  transition: transform 0.35s cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+@media (min-width: 1024px) {
+  .footer-menu__link {
+    font-size: 2rem;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer-menu__link:hover {
+    color: #ffffff;
   }
 
-  .footer-newsletter-submit .btn-icon-content {
-    width: auto;
+  .footer-menu__link:hover .footer-menu__label {
+    transform: translateX(0.5rem);
   }
 }

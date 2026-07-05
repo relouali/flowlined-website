@@ -2,10 +2,11 @@
 
 import { useMemo, useState } from "react";
 
-import HighlightText from "@/components/highlight-text";
 import LogoWall, { type LogoWallLogo } from "@/components/logo-wall";
 import LoopingWords from "@/components/looping-words";
 import MaskTextReveal from "@/components/mask-text-reveal";
+import ScrollFadeText from "@/components/scroll-fade-text";
+import SectionFrame from "@/components/section-frame";
 
 import "./sectors-section.css";
 
@@ -62,12 +63,13 @@ export default function SectorsSection() {
   const sectorTitles = useMemo(() => SECTORS.map((s) => s.title), []);
 
   return (
-    <section
+    <SectionFrame
       id="sectoren"
       data-progress-nav-anchor
-      className="sectors-section relative flex min-h-[100dvh] flex-col overflow-hidden bg-[#0a1418] px-8 py-24 sm:px-16 md:py-32 lg:px-16 lg:pt-40 lg:pb-10"
+      className="sectors-section"
+      frameClassName="sectors-section__frame relative flex min-h-[100dvh] flex-col overflow-hidden py-24 md:py-32 lg:py-40"
     >
-      <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col items-center">
+      <div className="section-inner flex flex-1 flex-col items-center">
         {/* Top: header + picker. Anchored to the top of the available
             space (rather than vertically centered) so the headline sits
             high in the viewport, matching the rhythm of the problem and
@@ -78,14 +80,18 @@ export default function SectorsSection() {
         <div className="flex w-full flex-col items-center">
           {/* Header — same structure & spacing as the problem section */}
           <div className="flex max-w-3xl flex-col items-center gap-8 text-center">
-            <HighlightText className="type-section-title text-white">
+            <ScrollFadeText className="type-section-title text-white">
               Met wie wij <span className="text-[#cddfed]">bouwen</span>
-            </HighlightText>
-            <p className="type-section-lead max-w-2xl text-white/80 hidden lg:block">
+            </ScrollFadeText>
+            <ScrollFadeText
+              as="p"
+              className="type-section-lead max-w-2xl text-white hidden lg:block"
+              delay={0.12}
+            >
               Flowlined werkt met domeinexperts in sectoren waar het vakkundige
               oordeel centraal staat. Professionals die hun vak kennen, een
               markt zien, en er een product van willen maken.
-            </p>
+            </ScrollFadeText>
           </div>
 
           {/* Mobile: title → looping words → detail. Desktop: detail | words. */}
@@ -112,7 +118,7 @@ export default function SectorsSection() {
                         as="p"
                         active={isActive}
                         delay={0.08}
-                        className="type-body text-white/70"
+                        className="type-body text-white"
                       >
                         {sector.subtitle}
                       </MaskTextReveal>
@@ -121,7 +127,7 @@ export default function SectorsSection() {
                       as="p"
                       active={isActive}
                       delay={0.16}
-                      className="type-body text-white/70"
+                      className="type-body text-white"
                     >
                       {sector.description}
                     </MaskTextReveal>
@@ -153,6 +159,6 @@ export default function SectorsSection() {
           />
         </div>
       </div>
-    </section>
+    </SectionFrame>
   );
 }

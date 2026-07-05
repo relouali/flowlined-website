@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
@@ -21,6 +21,7 @@ export default function MobileNav() {
   const [active, setActive] = useState(false);
   const { locomotiveScroll } = useLocomotiveScroll();
   const pathname = usePathname();
+  const router = useRouter();
 
   const close = () => setActive(false);
 
@@ -60,7 +61,7 @@ export default function MobileNav() {
       locomotiveScroll?.scrollTo(0, { duration: 1.2 });
       return;
     }
-    transitionNavigate("/");
+    router.push("/");
   }
 
   function handleCtaClick(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -101,7 +102,7 @@ export default function MobileNav() {
               alt="Flowlined"
               className="object-contain object-left"
               fill
-              sizes="136px"
+              sizes="104px"
               src="/logo/full-Logo.svg"
             />
           </a>

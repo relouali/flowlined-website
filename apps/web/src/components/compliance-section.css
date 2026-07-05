@@ -1,43 +1,144 @@
-/* Compliance section — closing trust block listing security & privacy
-   standards. Dark editorial layout: left-aligned headline + lead, then a
-   row of certificate columns separated by hairline dividers.
-
-   Dividers use the classic 1px-gap grid trick so the vertical/horizontal
-   separators render correctly at any column count without per-cell
-   nth-child math. The grid background is the line color; each card paints
-   over it with the section background, leaving 1px seams between cells. */
-.compliance-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1px;
-  background-color: rgba(255, 255, 255, 0.09);
-  /* Mobile: fully enclose the stack so every card reads as a complete,
-     bordered box (left/right rails + top/bottom caps). The 1px gap
-     supplies the dividers between cards. */
-  border: 1px solid rgba(255, 255, 255, 0.09);
+/* Compliance section — certificate columns on the section gradient, with
+   the same L-shaped line reveal as the problem section grid. */
+.compliance-section {
+  color: #ffffff;
 }
 
-@media (min-width: 768px) {
+.compliance-section__frame {
+  background: linear-gradient(180deg, #001a23 0%, #000c10 100%);
+}
+
+.compliance-section [data-scroll-fade]:not(.is--inview) {
+  opacity: 0;
+}
+
+.compliance-grid {
+  width: 100%;
+  position: relative;
+  margin-top: 5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+.compliance-card__line {
+  display: none;
+}
+
+@media (min-width: 640px) {
   .compliance-grid {
-    grid-template-columns: repeat(2, 1fr);
-    /* Tablet: drop the side/bottom rails, keep only the top hairline. */
-    border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.09);
+    margin-top: 7rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .compliance-card {
+    position: relative;
+    background-color: transparent;
+    min-height: 13.5rem;
+    padding: 2rem;
+  }
+
+  .compliance-card__body {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  .compliance-card__copy {
+    will-change: opacity;
+    opacity: 0;
+  }
+
+  .compliance-card__icon-wrap {
+    will-change: transform, opacity;
+    opacity: 0;
+  }
+
+  .compliance-card__line {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .compliance-card__line--top {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .compliance-card__line--bottom {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    display: none;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .compliance-card__line--left {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.15) 75%,
+      transparent
+    );
+  }
+
+  .compliance-card__line--right {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 1px;
+    display: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.15) 75%,
+      transparent
+    );
+  }
+
+  .compliance-card:nth-child(2n) .compliance-card__line--right {
+    display: block;
+  }
+
+  .compliance-card:nth-child(n + 3) .compliance-card__line--bottom {
+    display: block;
   }
 }
 
 @media (min-width: 1024px) {
   .compliance-grid {
-    grid-template-columns: repeat(4, 1fr);
-    /* Far-left hairline aligned under the headline, matching the
-       internal dividers — only on desktop where the row reads as a
-       single horizontal band. */
-    border-left: 1px solid rgba(255, 255, 255, 0.09);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .compliance-card:nth-child(2n) .compliance-card__line--right {
+    display: none;
+  }
+
+  .compliance-card:nth-child(n + 3) .compliance-card__line--bottom {
+    display: none;
+  }
+
+  .compliance-card:last-child .compliance-card__line--right {
+    display: block;
   }
 }
 
 .compliance-card {
-  background-color: #0a1418;
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

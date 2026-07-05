@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useLocomotiveScroll } from "@/components/locomotive-scroll-provider";
 import { initStickyTitleScroll } from "@/lib/init-sticky-title-scroll";
@@ -8,7 +9,7 @@ import { initStickyTitleScroll } from "@/lib/init-sticky-title-scroll";
 import "./sticky-title-scroll.css";
 
 type StickyTitleScrollProps = {
-  headings: ReadonlyArray<string>;
+  headings: ReadonlyArray<ReactNode>;
   className?: string;
   heightVh?: number;
   gradientBackground?: boolean;
@@ -26,12 +27,40 @@ export default function StickyTitleScroll({
   useEffect(() => {
     if (!locomotiveScroll || !wrapRef.current) return;
 
-    const revert = initStickyTitleScroll(wrapRef.current);
+    let cancelled = false;
+    let revert = () => {};
+
+    // Wait for fonts + layout so the split lines and the trigger's start/end are
+    // measured against the final pinned geometry, then let Locomotive recompute
+    // its scroll height before refreshing ScrollTrigger.
+    const setup = () => {
+      if (cancelled || !wrapRef.current) return;
+
+      revert();
+      revert = initStickyTitleScroll(wrapRef.current);
+      locomotiveScroll.resize();
+      ScrollTrigger.refresh(true);
+    };
+
+    const fonts = (
+      document as Document & { fonts?: { ready: Promise<unknown> } }
+    ).fonts;
+
+    const run = () => {
+      requestAnimationFrame(() => requestAnimationFrame(setup));
+    };
+
+    if (fonts?.ready) {
+      void fonts.ready.then(run);
+    } else {
+      run();
+    }
 
     return () => {
+      cancelled = true;
       revert();
     };
-  }, [locomotiveScroll]);
+  }, [locomotiveScroll, headings]);
 
   return (
     <div
@@ -52,7 +81,7 @@ export default function StickyTitleScroll({
         <div className="sticky-title-inner">
           {headings.map((text, index) => (
             <h2
-              key={text}
+              key={index}
               data-sticky-title="heading"
               className={[
                 "sticky-title-el type-section-title",

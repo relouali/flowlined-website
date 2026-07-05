@@ -1,0 +1,228 @@
+.dropping-stack {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  flex-flow: column;
+  align-items: center;
+  display: flex;
+}
+
+.dropping-stack__collection {
+  padding-bottom: 7.5em;
+  padding-right: 7.5em;
+}
+
+.dropping-stack__list {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+
+.dropping-stack__item {
+  will-change: transform, opacity;
+  -webkit-user-select: none;
+  user-select: none;
+  position: absolute;
+}
+
+.dropping-stack__item:nth-child(1) {
+  position: relative;
+}
+
+/* Hide stacked cards until GSAP positions the visible stack. */
+[data-dropping-stack-init]:not(.is--ready) .dropping-stack__item:not(:first-child) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.dropping-stack-card {
+  color: rgba(255, 255, 255, 0.9);
+  background-color: #0a1418;
+  border-radius: 1.25em;
+  width: min(50em, 100vw - 10em);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Color follows the stack position (front = darkest, lighter toward the back)
+   and is driven from init-dropping-stack.ts so the gradient stays consistent
+   while navigating. #0a1418 below is just the pre-init fallback. */
+
+.dropping-stack-card__before {
+  padding-top: 62.5%;
+}
+
+.dropping-stack-card__content {
+  flex-flow: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 3em;
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.dropping-stack-card__start {
+  justify-content: space-between;
+  display: flex;
+}
+
+.dropping-stack-card__visual {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 0.5em;
+  width: 35%;
+  position: relative;
+}
+
+.dropping-stack-card__visual-before {
+  padding-top: 62.5%;
+}
+
+.droping-stack-card__visual-img {
+  object-fit: cover;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.dropping-stack-card__visual-index {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.dropping-stack-card__words {
+  width: 45%;
+}
+
+.dropping-stack-card__p {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.dropping-stack-card__end {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dropping-stack-card__h {
+  letter-spacing: -0.03em;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 4.75em;
+  font-weight: 600;
+  line-height: 0.9;
+  color: #ffffff;
+}
+
+.dropping-stack-card__desc {
+  margin: 0;
+  max-width: 36em;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.dropping-stack__controls {
+  grid-column-gap: 0.375em;
+  grid-row-gap: 0.375em;
+  display: flex;
+}
+
+.dropping-stack__control {
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.dropping-stack__control-circle {
+  color: #000c10;
+  background-color: #f8fafd;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+  width: 3em;
+  height: 3em;
+  display: flex;
+  position: relative;
+  transition: transform 0.3s ease;
+  transform: translateY(0em) rotate(0.001deg);
+}
+
+.dropping-stack__control:hover .dropping-stack__control-circle {
+  transform: translateY(-0.25em) rotate(0.001deg);
+}
+
+.dropping-stack__control-circle.is--prev {
+  color: rgba(0, 12, 16, 0.45);
+  background-color: #ffffff;
+}
+
+.dropping-stack__control-svg {
+  width: 40%;
+}
+
+.dropping-stack__control.is--prev {
+  transform: scaleX(-1);
+}
+
+@media screen and (max-width: 991px) {
+  .dropping-stack-card__before {
+    padding-top: 75%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .dropping-stack__collection {
+    padding-bottom: 4.5em;
+    padding-right: 4.5em;
+  }
+
+  .dropping-stack-card {
+    width: min(50em, 100vw - 6.5em);
+  }
+
+  .dropping-stack-card__before {
+    padding-top: 150%;
+  }
+
+  .dropping-stack-card__content {
+    padding: 7.5vw;
+  }
+
+  .dropping-stack-card__start {
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+    flex-flow: column;
+  }
+
+  .dropping-stack-card__h {
+    font-size: 10vw;
+  }
+
+  .dropping-stack-card__visual {
+    width: 60%;
+  }
+
+  .dropping-stack-card__words {
+    width: 100%;
+  }
+}

@@ -1,51 +1,11 @@
-/* Manifest section — closing brand statement before the contact section.
-
-   Background: photo over black, with a visible blue-teal wash (#0D252D). */
 .manifest-section {
-  position: relative;
-  background-color: #0D252D;
+  color: #ffffff;
 }
 
-.manifest-section__bg {
-  position: absolute;
-  top: -25%;
-  right: 0;
-  bottom: -25%;
-  left: 0;
-  z-index: 0;
-  pointer-events: none;
-  will-change: transform;
-  overflow: hidden;
-  isolation: isolate;
+.manifest-section__frame {
+  background: linear-gradient(180deg, #000c10 0%, #001a23 100%);
 }
 
-.manifest-section__bg-base {
-  position: absolute;
-  inset: 0;
-  background-color: #000000;
-}
-
-.manifest-section__bg-image {
-  position: absolute;
-  inset: 0;
-  background-image: url("/images/CTA-section-bg.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  filter: brightness(0.74) contrast(1.1) saturate(1.2);
-}
-
-.manifest-section__bg-overlay {
-  position: absolute;
-  inset: 0;
-  background-color: #0D252D;
-  mix-blend-mode: color;
-  pointer-events: none;
-}
-
-.manifest-section__bg-tint {
-  position: absolute;
-  inset: 0;
-  background-color: rgba(13, 37, 45, 0.62);
-  pointer-events: none;
+.manifest-section [data-scroll-fade]:not(.is--inview) {
+  opacity: 0;
 }

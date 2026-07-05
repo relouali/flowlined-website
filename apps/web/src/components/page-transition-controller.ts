@@ -27,6 +27,7 @@ export function registerTransitionNavigate(fn: NavigateFn | null) {
  * the native link navigate normally).
  */
 export function transitionNavigate(href: string): boolean {
+  if (href === "/") return false;
   const controller = getController();
   if (controller.navigate) {
     controller.navigate(href);
