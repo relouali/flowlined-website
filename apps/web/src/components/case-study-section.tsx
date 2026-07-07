@@ -520,8 +520,8 @@ export default function CaseStudySection() {
 
       <div className="case-study-visual relative flex flex-1 min-h-[40vh] lg:min-h-0">
         <Image
-          src="/images/ADOPRO-cover2.png"
-          alt="Werksessie tijdens het ADO Pro project, domeinexperts werken samen aan dossier- en procesontwerp"
+          src="/images/Nick-Mike-ADO-Pro.jpg"
+          alt="Nick en Mike van Flowlined en ADO Pro tijdens een partnerschapsgesprek"
           fill
           loading="lazy"
           sizes="(min-width: 1024px) 50vw, 100vw"

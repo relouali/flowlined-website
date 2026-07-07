@@ -123,11 +123,21 @@ export default function CircularSteps({
     const mm = gsap.matchMedia();
 
     mm.add("(min-width: 768px)", () => {
+      const snapIncrement = stepCount > 1 ? 1 / (stepCount - 1) : 1;
+
       const trigger = ScrollTrigger.create({
         trigger: wrap,
         scroller: document.body,
         start: "top top",
         end: "bottom bottom",
+        // Settle on a single step after each scroll gesture so momentum
+        // scrolling can't glide across several steps at once.
+        snap: {
+          snapTo: snapIncrement,
+          duration: { min: 0.25, max: 0.6 },
+          delay: 0.08,
+          ease: "power2.inOut",
+        },
         onUpdate: (self) => {
           const next = Math.round(self.progress * (stepCount - 1));
           setActiveIndex((prev) => (prev === next ? prev : next));

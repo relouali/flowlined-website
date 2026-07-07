@@ -68,7 +68,7 @@ export default function ProblemSection() {
       >
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center">
           <ScrollFadeText className="type-section-title text-white">
-            Expertwerk draait op ervaring, niet op systemen.{" "}
+            Kenniswerk draait op ervaring, niet op systemen.{" "}
             <span className="text-[#cddfed]">
               Dat werkt, tot het niet meer schaalt.
             </span>
